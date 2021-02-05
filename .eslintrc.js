@@ -1,5 +1,13 @@
+/*
+ * @Descripttion: 
+ * @repository: https://github.com/luzhonglai
+ * @Author: ZhongLai Lu
+ * @Date: 2021-02-05 10:40:53
+ * @LastEditors: Zhonglai Lu
+ * @LastEditTime: 2021-02-05 11:19:01
+ */
 module.exports = {
-  root: true,
+  root: false,
   env: {
     node: true
   },
