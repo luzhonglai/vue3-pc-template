@@ -4,26 +4,28 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:40:53
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-05 11:19:01
+ * @LastEditTime: 2021-02-05 17:34:17
  */
+
 module.exports = {
   root: false,
   env: {
-    node: true
+    node: false
   },
   extends: [
-    "plugin:vue/essential",
-    "eslint:recommended",
+    'plugin:vue/essential',
     "@vue/typescript/recommended",
-    "@vue/prettier",
-    "@vue/prettier/@typescript-eslint"
+    "@vue/standard",
   ],
   parserOptions: {
     ecmaVersion: 2020
   },
   rules: {
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
-    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off"
+    "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
+    '@typescript-eslint/no-inferrable-types': 'off', // 关闭类型推断
+    '@typescript-eslint/no-explicit-any': 'off', // 关闭any警告
+    '@typescript-eslint/no-this-alias':'off'
   },
   overrides: [
     {
