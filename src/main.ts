@@ -1,9 +1,19 @@
-import Vue from "vue";
-import "./plugins/axios";
-import App from "./App.vue";
+/*
+ * @Descripttion: 
+ * @repository: https://github.com/luzhonglai
+ * @Author: ZhongLai Lu
+ * @Date: 2021-02-05 10:40:53
+ * @LastEditors: Zhonglai Lu
+ * @LastEditTime: 2021-02-05 17:22:07
+ */
+import { createApp } from 'vue'
 
-Vue.config.productionTip = false;
+import axios from './plugins/requset'
+import './mock/mock-server'
 
-new Vue({
-  render: h => h(App)
-}).$mount("#app");
+import App from './App.vue'
+const app = createApp(App)
+
+app.use(axios)
+
+app.mount('#app')
