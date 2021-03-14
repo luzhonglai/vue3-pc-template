@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:40:53
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-05 17:34:40
+ * @LastEditTime: 2021-02-13 22:37:14
 -->
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
@@ -22,7 +22,6 @@ import HelloWorld from "./components/HelloWorld.vue";
 })
 export default class App extends Vue {
   created() {
-    this.axios.get("/user/add");
   }
 }
 </script>

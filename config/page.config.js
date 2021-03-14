@@ -1,10 +1,10 @@
 /*
- * @Descripttion: 
+ * @Descripttion:  多页面打包配置
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
  * @Date: 2021-01-29 16:02:15
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-06 23:13:42
+ * @LastEditTime: 2021-02-11 12:42:45
  */
 
 

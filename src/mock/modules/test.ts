@@ -4,11 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-02 15:30:17
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-04 15:33:04
+ * @LastEditTime: 2021-02-07 15:31:48
  */
 
 let Mock = require('mockjs')
-let { responseFake } = require('../utils')
+import { RegExpUrl } from '@/mock/utils'
+
 
 const userInfo = Mock.mock({
   id: '@id()', //得到随机的id
@@ -20,20 +21,19 @@ const userInfo = Mock.mock({
   email: '@email()' //email
 })
 
-
-Mock.mock('/mock/user/add',{
+// 测试数据
+Mock.mock(RegExpUrl('/user/list'), {
   "status": 0,
   "code": 1,
   "data": {
-      "id|1001-11000": 0,
-      "username": "@cname",
-      "email": "admin@51purse.com",
-      "phone": null,
-      "role": 0,
-      "createTime": 1479048325000,
-      "updateTime": 1479048325000
+    "id|1001-11000": 0,
+    "username": "@cname",
+    "email": "admin@51purse.com",
+    "phone": null,
+    "role": 0,
+    "createTime": 1479048325000,
+    "updateTime": 1479048325000
   }
 })
 
-
-Mock.mock('/mock/user/list', 'get' , userInfo)
+Mock.mock(RegExpUrl('/user/info'), 'get', userInfo)
