@@ -1,8 +1,8 @@
 pipeline {
-    agent any
+  agent any
 	options {
-        ansiColor('xterm')
-        timestamps()
+      ansiColor('xterm')
+      timestamps()
     }
     triggers {
         GenericTrigger (
@@ -18,10 +18,10 @@ pipeline {
     stages {
     	stage("测试部署") {
           when {
-                branch 'develop'
+                branch 'main'
             }
     	    steps {
-                echo 'develop branch'
+                echo 'main branch--------'
     	    }
     	}
     	stage("生产部署") {
@@ -29,7 +29,7 @@ pipeline {
                 branch 'master'
           }
     	    steps {
-                echo 'master branch'
+                echo 'master branch------'
     	    }
     	}
     }
