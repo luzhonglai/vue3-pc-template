@@ -1,29 +1,12 @@
 # vue-multiple-pages
 
-## Project setup
-```
-yarn install
-```
+> 前端项目模版 pc 端
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## 项目支持能力
 
-### Compiles and minifies for production
-```
-yarn build
-```
+- 支持 mock 服务
 
-### Run your unit tests
-```
-yarn test:unit
-```
+### 快速开始
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- yarn install
+- yarn run serve
