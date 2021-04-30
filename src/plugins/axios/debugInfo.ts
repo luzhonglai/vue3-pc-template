@@ -4,10 +4,10 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 14:26:10
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-16 17:47:41
+ * @LastEditTime: 2021-04-30 09:40:09
  */
 
-import config from '@/axios/config'
+import config from './config'
 
 const { isDebugInfo } = config
 /**

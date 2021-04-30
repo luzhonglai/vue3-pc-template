@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-18 15:07:23
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-22 13:54:15
+ * @LastEditTime: 2021-04-30 09:40:22
  */
 import request from './request'
 
@@ -12,7 +12,7 @@ import config from './config'
 
 import { AxiosPromise, ResponseType } from 'axios'
 
-import mockAsync from '@/axios/mockAsync'
+import mockAsync from './mockAsync'
 const { defaultHeaders } = config
 
 interface Config {
