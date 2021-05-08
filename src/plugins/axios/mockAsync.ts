@@ -4,12 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-09 17:18:01
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-14 17:06:48
+ * @LastEditTime: 2021-04-30 10:30:30
  */
 
 import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig, AxiosError } from 'axios'
 
-import config from '@/axios/config'
+import config from './config'
 
 import { debugInfo } from './debugInfo'
 

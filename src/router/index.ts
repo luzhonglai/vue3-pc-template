@@ -1,25 +1,60 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
+/*
+ * @Descripttion:
+ * @repository: https://github.com/luzhonglai
+ * @Author: ZhongLai Lu
+ * @Date: 2021-05-07 15:35:43
+ * @LastEditors: Zhonglai Lu
+ * @LastEditTime: 2021-05-08 10:57:29
+ */
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-const routes: Array<RouteRecordRaw> = [
+import { AppRouteRecordRaw } from '@/router/types'
+const Layout = () => import('@/layout/index.vue')
+const constantRouterMap: AppRouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    name: 'home',
+    redirect: 'index',
+    meta: {
+      title: '超时占位',
+      icon: 'menu-authAdmin'
+    },
+    component: Layout,
+    children: [
+      {
+        path: 'whiteList',
+        name: 'index',
+        meta: {
+          title: '白名单管理',
+          icon: ''
+        },
+        component: () => import('@/views/home/whiteList')
+      },
+      {
+        path: '/roleList',
+        name: 'roleList',
+        meta: {
+          title: '规则管理',
+          icon: ''
+        },
+        component: () => import('@/views/home/roleList')
+      },
+      {
+        path: '/orderAdmin',
+        name: 'orderAdmin',
+        meta: {
+          title: '订单管理',
+          icon: ''
+        },
+        component: () => import('@/views/home/orderAdmin')
+      }
+    ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes
+  history: createWebHistory(),
+  routes: constantRouterMap as RouteRecordRaw[]
 })
-
+export { constantRouterMap }
 export default router

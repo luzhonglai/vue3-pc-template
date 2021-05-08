@@ -4,15 +4,28 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:40:53
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-04-29 17:30:05
+ * @LastEditTime: 2021-05-07 16:24:03
  */
+
 import { createApp } from 'vue'
 
-// import './mock/mock-server'
+import App from '@/App.vue'
+import router from '@/router'
+import element from '@/plugins/element'
 
-import App from './App.vue'
-import router from './router'
+// 路由拦截器
+import './permiussion'
 
-const app = createApp(App).use(router)
+/**
+ * @description 全局样式引入
+ * @reset 重置浏览器默认样式
+ * @index 全局样式入口文件
+ */
+import '@/styles/reset.css'
+import '@/styles/index.less'
 
-app.mount('#app')
+const app = createApp(App)
+
+element(app)
+
+app.use(router).mount('#app')
