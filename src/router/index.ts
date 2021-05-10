@@ -4,8 +4,9 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-07 15:35:43
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-08 10:57:29
+ * @LastEditTime: 2021-05-10 17:54:21
  */
+
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import { AppRouteRecordRaw } from '@/router/types'
@@ -14,7 +15,7 @@ const constantRouterMap: AppRouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    redirect: 'index',
+    redirect: 'orderAdmin',
     meta: {
       title: '超时占位',
       icon: 'menu-authAdmin'
@@ -37,7 +38,7 @@ const constantRouterMap: AppRouteRecordRaw[] = [
           title: '规则管理',
           icon: ''
         },
-        component: () => import('@/views/home/roleList')
+        component: () => import('@/views/home/roleList.vue')
       },
       {
         path: '/orderAdmin',
@@ -46,7 +47,7 @@ const constantRouterMap: AppRouteRecordRaw[] = [
           title: '订单管理',
           icon: ''
         },
-        component: () => import('@/views/home/orderAdmin')
+        component: () => import('@/views/home/orderAdmin.vue')
       }
     ]
   }
