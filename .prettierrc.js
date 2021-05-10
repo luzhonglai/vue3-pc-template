@@ -1,11 +1,3 @@
-/*
- * @Descripttion:
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-04-29 17:29:03
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-04-29 17:44:34
- */
 module.exports = {
   printWidth: 120, // 换行字符串阈值
   tabWidth: 2, // 设置工具每一个水平缩进的空格数

@@ -10,18 +10,19 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "element-plus": "^1.0.2-beta.28",
+    "element-plus": "^1.0.2-beta.31",
+    "element-resize-detector": "^1.2.2",
     "vue": "^3.0.0",
-    "vue-class-component": "^8.0.0-0",
-    "vue-property-decorator": "^9.1.2",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0",
-    "vuex-persistedstate": "^4.0.0-beta.3"
+    "web-storage-cache": "^1.1.1"
   },
   "devDependencies": {
+    "@evs-pc/evs-pc-component": "^0.1.7",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
+    "@vue/babel-plugin-jsx": "^1.0.6",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
@@ -32,7 +33,7 @@
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^5.0.2",
     "@vue/test-utils": "^2.0.0-0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "babel-plugin-component": "^1.1.1",
     "compression-webpack-plugin": "^7.1.2",
     "eslint": "^6.7.2",
@@ -47,14 +48,13 @@
     "prettier": "^1.19.1",
     "sass": "^1.27.0",
     "sass-loader": "^10.0.4",
+    "script-loader": "^0.7.2",
     "svg-sprite-loader": "^5.0.0",
     "terser-webpack-plugin": "^5.1.1",
     "typescript": "~3.9.3",
-    "vue-cli-plugin-axios": "~0.0.4",
-    "vue-cli-plugin-element-plus": "^0.0.13",
     "vue-jest": "^5.0.0-0",
     "vue-template-compiler": "^2.6.11",
-    "web-storage-cache": "^1.1.1"
+    "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "browserslist": [
     "> 1%",

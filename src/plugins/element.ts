@@ -1,19 +1,6 @@
 // 按需加载element
 import { App } from 'vue'
 
-// element全局配置项
-const { size, zIndex } = {
-  /**
-   * 尺寸
-   */
-  size: 'mini',
-
-  /**
-   * 层级
-   */
-  zIndex: 2000
-}
-
 import {
   ElSkeleton,
   ElSkeletonItem,
@@ -100,7 +87,9 @@ import {
   // ElMessage,
   ElEmpty,
   ElMessageBox,
-  ElNotification
+  ElNotification,
+  ElDescriptions,
+  ElDescriptionsItem
 } from 'element-plus'
 
 import locale from 'element-plus/lib/locale'
@@ -190,7 +179,9 @@ const components = [
   ElTransfer,
   ElTree,
   ElUpload,
-  ElEmpty
+  ElEmpty,
+  ElDescriptions,
+  ElDescriptionsItem
 ]
 
 const plugins = [
@@ -201,7 +192,7 @@ const plugins = [
   ElNotification
 ]
 
-export default function setElement(app: App<Element>): void {
+export function setElement(app: App<Element>): void {
   components.forEach((component: any) => {
     app.component(component.name, component)
   })
@@ -211,5 +202,5 @@ export default function setElement(app: App<Element>): void {
   })
 
   // 全局配置
-  app.config.globalProperties.$ELEMENT = { size: size, zIndex: zIndex }
+  app.config.globalProperties.$ELEMENT = { size: 'mini', zIndex: 2000 }
 }
