@@ -20,7 +20,7 @@ export default defineComponent({
 
     // matched array，包含当前路由的所有嵌套路径片段的路由记录
     watchEffect(() => {
-      let matchedNames = currentRoute.value.matched.map((item: RouteLocationMatched) => item.meta?.title)
+      const matchedNames = currentRoute.value.matched.map((item: RouteLocationMatched) => item.meta?.title)
       const index = matchedNames.findIndex((item) => item === '首页模块')
       index > -1 && matchedNames.splice(index, 1)
 

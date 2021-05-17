@@ -1,11 +1,3 @@
-<!--
- * @Descripttion: 
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-05-10 17:11:08
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-10 17:19:35
--->
 <template>
   <!-- 配置表头弹框 -->
   <el-popover placement="bottom" :width="200" trigger="click">

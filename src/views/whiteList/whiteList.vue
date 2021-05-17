@@ -1,11 +1,3 @@
-<!--
- * @Descripttion: 
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-05-08 10:41:31
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-10 15:43:05
--->
 <template>
   <div class="content">
     <!-- 搜索top -->
@@ -40,13 +32,6 @@
       @current-change="handleCurrentChange"
       @cell-click="handleClickChange"
     >
-      <!-- 操作按钮逻辑 -->
-      <template v-slot:scope>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">禁用</el-button>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">启用</el-button>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">操作日志</el-button>
-      </template>
     </EvsTablePage>
 
     <!-- 详情 -->
@@ -75,14 +60,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, Ref } from 'vue'
+import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
 
 interface InputProps {
   value: string
 }
 
 export default defineComponent({
-  name: 'orderAdmin',
+  name: 'whiterList',
   setup(props: InputProps, { emit }) {
     const formInline = ref([
       { name: 'stationCode', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
@@ -123,11 +108,6 @@ export default defineComponent({
         {
           label: '地址',
           prop: 'address'
-        },
-        {
-          label: '操作',
-          scope: true,
-          width: 192
         }
       ],
       data: [
@@ -192,9 +172,6 @@ export default defineComponent({
         console.log(val)
       }
     }
-    // const handleCurrentChange = () => {}
-    // const handleSizeChange = () => {}
-
     return {
       drawer,
       resetName,
@@ -225,7 +202,6 @@ export default defineComponent({
       }
     }
   }
-
   :deep(.el-drawer__header) {
     height: 60px;
     padding: 24px 24px;

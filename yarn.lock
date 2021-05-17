@@ -861,10 +861,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@evs-pc/evs-pc-component@^0.1.7":
-  version "0.1.7"
-  resolved "http://10.10.18.122:7001/@evs-pc/evs-pc-component/download/@evs-pc/evs-pc-component-0.1.7.tgz#cc7cf15d219bbd1b2af2af8a1aed75333fd86c2c"
-  integrity sha1-zHzxXSGbvRsq8q+KGu11Mz/YbCw=
+"@evs-pc/evs-pc-component@^0.2.2":
+  version "0.2.2"
+  resolved "http://10.10.18.122:7001/@evs-pc/evs-pc-component/download/@evs-pc/evs-pc-component-0.2.2.tgz#29329639ffdd56b6153752dc20a33d36633a1315"
+  integrity sha1-KTKWOf/dVrYVN1LcIKM9NmM6ExU=
   dependencies:
     core-js "^3.6.5"
     file-saver "^2.0.5"

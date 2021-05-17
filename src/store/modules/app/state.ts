@@ -7,6 +7,7 @@ interface AppState {
   title: ''
   collapsed: boolean
   isAddRouters: boolean
+  isNewRules: boolean
 }
 
 const state: AppState = {
@@ -14,7 +15,8 @@ const state: AppState = {
   userName: 'userName',
   title: '',
   collapsed: false,
-  isAddRouters: false
+  isAddRouters: false,
+  isNewRules: false
 }
 
 const app: Module<AppState, StateType> = {

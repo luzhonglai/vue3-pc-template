@@ -8,7 +8,7 @@
  */
 
 'use strict'
-let buildMoudle = []
+const buildMoudle = []
 const fs = require('fs')
 const path = require('path')
 const minimist = require('minimist')
@@ -18,7 +18,7 @@ const appName = argv.appName || buildMoudle
 const sourcePath = path.resolve(__dirname, '../src/pages')
 const dirents = fs.readdirSync(sourcePath, { encoding: 'utf8', withFileTypes: true })
 
-let apps = {}
+const apps = {}
 dirents
   .filter((dirent) => dirent.isDirectory())
   .forEach(
@@ -35,7 +35,7 @@ dirents
       })
   )
 
-let pages = {}
+const pages = {}
 if (appName) {
   if (Array.isArray(appName) == true) {
     for (const key in appName) {

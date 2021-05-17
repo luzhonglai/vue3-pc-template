@@ -89,7 +89,8 @@ import {
   ElMessageBox,
   ElNotification,
   ElDescriptions,
-  ElDescriptionsItem
+  ElDescriptionsItem,
+  ElMessage
 } from 'element-plus'
 
 import locale from 'element-plus/lib/locale'
@@ -184,19 +185,15 @@ const components = [
   ElDescriptionsItem
 ]
 
-const plugins = [
-  ElInfiniteScroll,
-  ElLoading,
-  // ElMessage,
-  ElMessageBox,
-  ElNotification
-]
+const plugins = [ElInfiniteScroll, ElLoading, ElMessage, ElMessageBox, ElNotification]
 
 export function setElement(app: App<Element>): void {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   components.forEach((component: any) => {
     app.component(component.name, component)
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   plugins.forEach((plugin: any) => {
     app.use(plugin)
   })

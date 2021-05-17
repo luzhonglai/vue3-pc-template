@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-07 15:35:43
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-10 17:54:21
+ * @LastEditTime: 2021-05-11 17:06:46
  */
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
@@ -15,7 +15,7 @@ const constantRouterMap: AppRouteRecordRaw[] = [
   {
     path: '/',
     name: 'home',
-    redirect: 'orderAdmin',
+    redirect: '/rulesView',
     meta: {
       title: '超时占位',
       icon: 'menu-authAdmin'
@@ -23,38 +23,36 @@ const constantRouterMap: AppRouteRecordRaw[] = [
     component: Layout,
     children: [
       {
-        path: 'whiteList',
-        name: 'index',
+        path: '/whiteList',
+
         meta: {
           title: '白名单管理',
           icon: ''
         },
-        component: () => import('@/views/home/whiteList')
+        component: () => import('@/views/whiteList/whiteList.vue')
       },
       {
-        path: '/roleList',
-        name: 'roleList',
+        path: '/rulesView',
         meta: {
           title: '规则管理',
           icon: ''
         },
-        component: () => import('@/views/home/roleList.vue')
+        component: () => import('@/views/rulesView/index.vue')
       },
       {
         path: '/orderAdmin',
-        name: 'orderAdmin',
         meta: {
           title: '订单管理',
           icon: ''
         },
-        component: () => import('@/views/home/orderAdmin.vue')
+        component: () => import('@/views/orderAdmin/index.vue')
       }
     ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes: constantRouterMap as RouteRecordRaw[]
 })
 export { constantRouterMap }

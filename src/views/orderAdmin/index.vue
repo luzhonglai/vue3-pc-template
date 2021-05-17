@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-10 18:01:00
+ * @LastEditTime: 2021-05-12 17:56:40
 -->
 <template>
   <div class="content">
@@ -19,27 +19,17 @@
       <template v-slot:selectStation>
         <SelectStation style="width:100%" @EventChangeStation="changeStation" ref="resetName"></SelectStation>
       </template>
+
+      <template v-slot:othersBtn>
+        <export
+          type="default"
+          :fileName="exportModel.fileName"
+          :url="exportModel.url"
+          :params="exportModel.params"
+          :total="[1]"
+        ></export>
+      </template>
     </EvsSearchArea>
-
-    <div class="list-switch">
-      <div>
-        <el-button @click="onShowMessage()" type="primary">新建规则</el-button>
-        <el-button @click="onShowMessage('open')" plain>批量启用</el-button>
-        <el-button @click="onShowMessage('close')" plain>批量禁用</el-button>
-      </div>
-
-      <!-- 配置表头 -->
-      <configHeader
-        type="text"
-        style="color:#666666"
-        :configData="tableData.data"
-        @checked="
-          (e) => {
-            tableData.checked = e
-          }
-        "
-      />
-    </div>
 
     <!-- 表格 -->
     <EvsTablePage
@@ -50,13 +40,6 @@
       @current-change="handleCurrentChange"
       @cell-click="handleClickChange"
     >
-      <!-- 操作按钮逻辑 -->
-      <template v-slot:scope>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">禁用</el-button>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">启用</el-button>
-        <el-button @click="handleClick(scope.row)" type="text" size="small">操作日志</el-button>
-      </template>
     </EvsTablePage>
 
     <!-- 详情 -->
@@ -92,19 +75,18 @@ interface InputProps {
 }
 
 export default defineComponent({
-  name: 'whiteList',
+  name: 'orderAdmin',
   setup(props: InputProps, { emit }) {
     const formInline = ref([
-      { name: 'stationCode', label: '高级筛选', type: 'selectStation', placeholder: '请输入站编码、站名称' },
-      { name: 'stationCode', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'stationCode', label: '行政单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '运营态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '管理单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '产权单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '开启状态', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
+      { name: 'stationCode', label: '用户手机号', type: 'input', placeholder: '请输入内容' },
+      { name: 'stationCode', label: '订单状态', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '桩编号', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '站编号', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '站名称', type: 'select', placeholder: '请选择' },
       {
         name: 'time',
-        label: '创建时间',
+        label: '交易时间',
         type: 'datetimerange',
         rangeSeparator: '~',
         startPlaceholder: '时间范围起',
@@ -112,7 +94,6 @@ export default defineComponent({
         defaultTime: [new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 1, 1, 23, 59, 59)]
       }
     ])
-
     const tableData: Ref<object> = ref({
       tableColumn: [
         {
@@ -135,11 +116,6 @@ export default defineComponent({
         {
           label: '地址',
           prop: 'address'
-        },
-        {
-          label: '操作',
-          scope: true,
-          width: 192
         }
       ],
       data: [
@@ -169,8 +145,13 @@ export default defineComponent({
         }
       ]
     })
-    const resetName: Ref<null> = ref(null)
-    const tableConfig: object = ref({
+    const resetName = ref(null)
+    const exportModel: Ref<object> = ref({
+      url: 'mvp-charmodel/asset/station/export',
+      params: [],
+      fileName: ''
+    })
+    const tableConfig = ref({
       currentPage: 1,
       pageSizes: [10, 20, 30],
       pageSize: 10,
@@ -186,28 +167,6 @@ export default defineComponent({
       resetSubmit() {},
       changeStation() {
         console.log(resetName.value, '213123')
-      },
-
-      // 弹窗管理
-      onShowMessage(type) {
-        if (type == '') {
-        }
-        if (type == 'open') {
-          this.$messageBox({
-            title: '批量启用',
-            type: 'warning',
-            message: '确认启动当前选中的充电站收取超时占位费？',
-            showCancelButton: true
-          })
-        }
-        if (type == 'close') {
-          this.$messageBox({
-            title: '批量禁用',
-            type: 'warning',
-            message: '确认取消当前选中的充电站收取超时占位费？禁用后当前选中的充电站不在收取占位费。',
-            showCancelButton: true
-          })
-        }
       },
       handleClickChange(row, column, cell, event) {
         if (column.no == 2) {
@@ -230,6 +189,7 @@ export default defineComponent({
       tableConfig,
       formInline,
       tableData,
+      exportModel,
       ...methods
     }
   }
@@ -240,13 +200,9 @@ export default defineComponent({
   padding: 0 24px;
   box-sizing: border-box;
   display: block;
-  .list-switch {
-    margin-top: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+
   :deep(.el-table) {
+    margin-top: 12px;
     .cell {
       padding-right: 10px;
     }
@@ -258,7 +214,6 @@ export default defineComponent({
       }
     }
   }
-
   :deep(.el-drawer__header) {
     height: 60px;
     padding: 24px 24px;
