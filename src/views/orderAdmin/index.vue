@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-12 17:56:40
+ * @LastEditTime: 2021-05-18 16:18:57
 -->
 <template>
   <div class="content">
@@ -26,7 +26,6 @@
           :fileName="exportModel.fileName"
           :url="exportModel.url"
           :params="exportModel.params"
-          :total="[1]"
         ></export>
       </template>
     </EvsSearchArea>
@@ -39,6 +38,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       @cell-click="handleClickChange"
+      @selection-change="selectionChange"
     >
     </EvsTablePage>
 
@@ -70,13 +70,9 @@
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, Ref } from 'vue'
 
-interface InputProps {
-  value: string
-}
-
 export default defineComponent({
   name: 'orderAdmin',
-  setup(props: InputProps, { emit }) {
+  setup(props, { emit }) {
     const formInline = ref([
       { name: 'stationCode', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
       { name: 'stationCode', label: '用户手机号', type: 'input', placeholder: '请输入内容' },
@@ -97,8 +93,7 @@ export default defineComponent({
     const tableData: Ref<object> = ref({
       tableColumn: [
         {
-          type: 'selection',
-          width: '55'
+          type: 'selection'
         },
         { type: 'index', label: '序号' },
         {
@@ -106,15 +101,31 @@ export default defineComponent({
           prop: 'num'
         },
         {
-          label: '名称',
+          label: '手机号',
           prop: 'name'
         },
         {
-          label: '日期',
+          label: '交易流水号',
           prop: 'date'
         },
         {
-          label: '地址',
+          label: '充电桩编号',
+          prop: 'address'
+        },
+        {
+          label: '交易金额（元）',
+          prop: 'address'
+        },
+        {
+          label: '充电时长（小时）',
+          prop: 'address'
+        },
+        {
+          label: '减免次数（次）',
+          prop: 'address'
+        },
+        {
+          label: '封顶条件（元）',
           prop: 'address'
         }
       ],
@@ -173,15 +184,11 @@ export default defineComponent({
           drawer.value = true
         }
       },
-      handleCurrentChange(val) {
-        console.log(val)
-      },
-      handleSizeChange(val) {
-        console.log(val)
+      // 选择table
+      selectionChange(val) {
+        exportModel.value['params'] = val
       }
     }
-    // const handleCurrentChange = () => {}
-    // const handleSizeChange = () => {}
 
     return {
       drawer,

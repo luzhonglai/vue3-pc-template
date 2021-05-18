@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-17 17:57:03
+ * @LastEditTime: 2021-05-18 17:37:43
 -->
 
 <template>
@@ -14,9 +14,11 @@
       <div class="form">
         <h4 class="h4">适用范围</h4>
         <div class="item">
-          <div class="station-list">
+          <div class="station-list" v-if="selectTable.data.length > 0">
             <h4>* 适用电站</h4>
-            <span>已选择 <el-link type="danger">6</el-link> 家电站</span>
+            <span
+              >已选择 <el-link type="danger">{{ selectTable.data.length }}</el-link> 家电站</span
+            >
             <EvsTablePage
               class="rules-table"
               :data="selectTable"
@@ -34,7 +36,7 @@
 
               <!-- 操作按钮逻辑 -->
               <template #scope>
-                <el-button @click="removeItem(scope.row)" type="text" size="small">移出选择</el-button>
+                <el-button @click="removeItem(scope)" type="text" size="small">移出选择</el-button>
               </template>
             </EvsTablePage>
           </div>
@@ -272,9 +274,8 @@ export default defineComponent({
         dialogVisible.value = false
         if (isPushItem == true) {
           selectTable.value['data'] = selectData
-        } else {
-          this.$refs.multipleTable.clearSelection()
         }
+        this.$refs.multipleTable.clearSelection()
       }
     }
     onMounted(async () => {})
