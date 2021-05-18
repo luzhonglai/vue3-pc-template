@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-17 14:37:41
+ * @LastEditTime: 2021-05-18 15:25:23
 -->
 <template>
   <div class="content">
@@ -86,9 +86,9 @@
     <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
       <!-- 表格 -->
       <EvsTablePage
+        style="margin-top:16px"
         :data="tableLogData"
         :border="false"
-        :pagination="tableConfig"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         @cell-click="handleClickChange"
@@ -328,7 +328,7 @@ export default defineComponent({
     background: #ffffff;
     border: 1px solid #dddddd;
     padding: 0 20px;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
     overflow-y: scroll;
   }
   :deep(.el-descriptions) {
