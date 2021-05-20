@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-18 17:37:43
+ * @LastEditTime: 2021-05-20 09:21:21
 -->
 
 <template>
@@ -35,8 +35,8 @@
               </template>
 
               <!-- 操作按钮逻辑 -->
-              <template #scope>
-                <el-button @click="removeItem(scope)" type="text" size="small">移出选择</el-button>
+              <template #scope="{scope}">
+                <el-button @click="handleDelete(scope.$index, scope.row)" type="text" size="small">移出选择</el-button>
               </template>
             </EvsTablePage>
           </div>
@@ -136,7 +136,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
+import { defineComponent, ref, reactive, toRefs, Ref, onMounted, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
 
@@ -165,7 +165,7 @@ export default defineComponent({
           prop: 'num'
         },
         {
-          label: '电站名称',
+          label: '站名称',
           prop: 'name'
         },
         {
@@ -173,9 +173,21 @@ export default defineComponent({
           prop: 'date'
         },
         {
-          label: '操作',
-          scope: true,
-          width: 192
+          label: '运营态',
+          prop: 'date'
+        },
+        {
+          label: '站地址',
+          prop: 'date'
+        },
+        {
+          label: '产权单位',
+          prop: 'date'
+        },
+        {
+          label: '管理单位',
+          prop: 'date',
+          with: 123
         }
       ],
       data: [
@@ -240,7 +252,6 @@ export default defineComponent({
       closeEvent() {
         setStoreState('app', 'isNewRules', false)
       },
-
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       // 临时保存
       setStoreData() {
@@ -259,25 +270,39 @@ export default defineComponent({
       },
 
       selectionChange(val) {
-        console.log(val, '------item')
         selectData = val
       },
 
       // 移除选择
-      removeItem(val) {
-        console.log('移除第一个', val)
-        // this.selected = val
+      handleDelete(index, row) {
+        console.log('移除第一个', index)
+        selectTable.value['data'].splice(index, 1)
       },
 
       // 表格弹窗逻辑 true 添加选择数据 false 清除选择数据
       hideDialog(isPushItem: boolean) {
         dialogVisible.value = false
+
         if (isPushItem == true) {
           selectTable.value['data'] = selectData
         }
+
         this.$refs.multipleTable.clearSelection()
       }
     }
+    watch(
+      () => selectTable.value,
+      (newValue, value) => {
+        // if (arrowUp.value == false) {
+        //   selectTable.value['data'] = selectTable.value['data'].slice(0, 3)
+        // } else {
+        //   selectTable.value['data'] = value
+        // }
+      },
+      {
+        deep: true
+      }
+    )
     onMounted(async () => {})
     return {
       selectTable,
