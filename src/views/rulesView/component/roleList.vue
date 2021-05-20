@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-18 15:25:23
+ * @LastEditTime: 2021-05-19 17:44:23
 -->
 <template>
   <div class="content">
@@ -230,9 +230,7 @@ export default defineComponent({
     const drawer: Ref<boolean> = ref(false)
     const dialogVisible: Ref<boolean> = ref(false)
     const methods = {
-      changeStations() {
-        alert(11)
-      },
+      changeStations() {},
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       resetSubmit() {},
       changeStation() {
