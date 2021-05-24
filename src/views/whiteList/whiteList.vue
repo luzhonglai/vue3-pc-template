@@ -9,22 +9,31 @@
       @resetForm="resetSubmit"
     >
       <template v-slot:selectStation>
-        <SelectStation style="width:100%" @EventChangeStation="changeStation" ref="resetName"></SelectStation>
-      </template>
-
-      <template v-slot:othersBtn>
-        <export
-          type="default"
-          :fileName="exportModel.fileName"
-          :url="exportModel.url"
-          :params="exportModel.params"
-          :total="[1]"
-        ></export>
+        <SelectStation style="width: 100%" @EventChangeStation="changeStation" ref="resetName"></SelectStation>
       </template>
     </EvsSearchArea>
 
+    <div class="list-switch">
+      <div>
+        <el-button @click="onRemoveAll()" plain>批量移除</el-button>
+      </div>
+
+      <!-- 配置表头 -->
+      <configHeader
+        type="text"
+        style="color:#666666"
+        :configData="tableData.data"
+        @checked="
+          (e) => {
+            tableData.checked = e
+          }
+        "
+      />
+    </div>
+
     <!-- 表格 -->
     <EvsTablePage
+      style="margin-top: 12px"
       :data="tableData"
       :border="false"
       :pagination="tableConfig"
@@ -32,7 +41,25 @@
       @current-change="handleCurrentChange"
       @cell-click="handleClickChange"
     >
+      <!-- 操作按钮逻辑 -->
+      <template #scope="{scope}">
+        <el-button @click="onRemoveItem('remove', scope.row)" type="text" size="small">移除</el-button>
+        <el-button @click="dialogVisible = true" type="text" size="small">操作日志</el-button>
+      </template>
     </EvsTablePage>
+
+    <!-- 操作日志 -->
+    <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
+      <!-- 表格 -->
+      <EvsTablePage
+        style="margin-top:16px"
+        :data="tableLogData"
+        :border="false"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        @cell-click="handleClickChange"
+      />
+    </el-dialog>
 
     <!-- 详情 -->
     <el-drawer title="超时占位规则详情" v-model="drawer" :modal="false" size="50%">
@@ -70,12 +97,12 @@ export default defineComponent({
   name: 'whiterList',
   setup(props: InputProps, { emit }) {
     const formInline = ref([
-      { name: 'stationCode', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
-      { name: 'stationCode', label: '用户手机号', type: 'input', placeholder: '请输入内容' },
-      { name: 'stationCode', label: '订单状态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '桩编号', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '站编号', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '站名称', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
+      { name: 'stationCode', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'stationCode', label: '行政单位', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '运营态', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '管理单位', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '产权单位', type: 'select', placeholder: '请选择' },
       {
         name: 'time',
         label: '交易时间',
@@ -108,6 +135,12 @@ export default defineComponent({
         {
           label: '地址',
           prop: 'address'
+        },
+        {
+          label: '操作',
+          fixed: 'right',
+          scope: true,
+          width: 192
         }
       ],
       data: [
@@ -138,10 +171,47 @@ export default defineComponent({
       ]
     })
     const resetName = ref(null)
-    const exportModel: Ref<object> = ref({
-      url: 'mvp-charmodel/asset/station/export',
-      params: [],
-      fileName: ''
+    const dialogVisible: Ref<boolean> = ref(false)
+    const tableLogData: object = ref({
+      tableColumn: [
+        {
+          label: '操作帐号',
+          prop: 'num'
+        },
+        {
+          label: '操作时间',
+          prop: 'date'
+        },
+        {
+          label: '操作项',
+          prop: 'name',
+          fixed: 'left',
+          align: 'left'
+        }
+      ],
+      data: [
+        {
+          num: '12345678',
+          date: '2016-05-02',
+          name: '启用'
+        },
+        {
+          num: '12345678',
+
+          date: '2016-05-04',
+          name: '批量禁用'
+        },
+        {
+          num: '300003000600018405',
+          date: '2016-05-01',
+          name: '批量启用'
+        },
+        {
+          num: '12345678',
+          date: '2016-05-03',
+          name: '修改'
+        }
+      ]
     })
     const tableConfig = ref({
       currentPage: 1,
@@ -170,15 +240,51 @@ export default defineComponent({
       },
       handleSizeChange(val) {
         console.log(val)
+      },
+
+      /**
+       * 移除item
+       *
+       */
+      async onRemoveItem() {
+        // 调用弹窗
+        let isNext = await this.onRemoveMassage(false)
+      },
+
+      /**
+       * 移除删除提示
+       *
+       */
+      async onRemoveMassage(isAll) {
+        const title = isAll ? '批量移除' : '移除'
+        return await this.$messageBox({
+          title: title,
+          type: 'warning',
+          message:
+            '从白名单内移除的充电站不能在进行超时占位费的配置，且已配置完成超时占位费的充电站从白名单内移除后将会自动禁用超时占位费，确认从白名单内移除当前所选充电站？',
+          showCancelButton: true
+        })
+          .then(() => true)
+          .catch(() => false)
+      },
+
+      /**
+       * 批量移除item
+       *
+       */
+      async onRemoveAll() {
+        // 屌用弹窗
+        let isNext = await this.onRemoveMassage(true)
       }
     }
     return {
+      dialogVisible,
       drawer,
       resetName,
       tableConfig,
       formInline,
       tableData,
-      exportModel,
+      tableLogData,
       ...methods
     }
   }
@@ -191,9 +297,9 @@ export default defineComponent({
   display: block;
 
   :deep(.el-table) {
-    .cell {
-      padding-right: 10px;
-    }
+    // .cell {
+    //   padding-right: 10px;
+    // }
     .el-table__row {
       .el-table_1_column_3 {
         color: #487ef0;
@@ -226,6 +332,11 @@ export default defineComponent({
       font-size: 14px;
       color: rgba(0, 0, 0, 0.65);
     }
+  }
+  .list-switch {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
   }
 }
 </style>
