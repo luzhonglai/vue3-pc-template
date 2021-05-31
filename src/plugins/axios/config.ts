@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-16 18:25:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-03-02 12:31:27
+ * @LastEditTime: 2021-05-31 12:08:45
  */
 /**
  * request全局配置
@@ -25,9 +25,9 @@ const config: ConfigOptions = {
    */
   baseUrl: {
     // 开发环境接口前缀
-    dev: '/',
+    dev: '',
     // 生产环境接口前缀
-    pro: '/',
+    pro: '',
     // 测试环境接口前缀
     test: 'http://mockjs.test.cn',
 
