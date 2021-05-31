@@ -4,11 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-01-29 16:02:15
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-04-29 18:28:49
+ * @LastEditTime: 2021-05-31 11:13:56
  */
 
 'use strict'
 const buildMoudle = []
+
 const fs = require('fs')
 const path = require('path')
 const minimist = require('minimist')
@@ -36,9 +37,9 @@ dirents
   )
 
 const pages = {}
-if (appName) {
+if (appName.length > 0) {
   if (Array.isArray(appName) == true) {
-    for (const key in appName) {
+    for (const key of appName) {
       // eslint-disable-next-line no-prototype-builtins
       if (apps.hasOwnProperty(key)) {
         pages[key] = apps[key]

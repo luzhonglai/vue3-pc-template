@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-06 14:01:59
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-07 17:58:55
+ * @LastEditTime: 2021-05-31 11:54:40
  */
 import router from './router'
 
@@ -30,12 +30,12 @@ const whiteList: string[] = ['/login'] // 白名单
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if (1 == 1) {
+  // eslint-disable-next-line no-constant-condition
+  if (true) {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      console.log(to)
-      next()
+      next(to)
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
