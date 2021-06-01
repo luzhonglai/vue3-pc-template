@@ -4,12 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-27 14:20:00
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-31 12:15:48
+ * @LastEditTime: 2021-06-01 10:25:21
  */
 
 import { fetch } from '@/plugins/axios/index'
 
-let baseUrl = '/dev'
+let baseUrl = 'new-order-web'
 
 // 批量删除
 const batchRemove = (params) => fetch({ url: `${baseUrl}/overTimeStation/1v/batchInvalid`, method: 'post', params })

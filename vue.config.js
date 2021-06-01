@@ -6,7 +6,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:58:35
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-31 12:06:34
+ * @LastEditTime: 2021-06-01 10:26:29
  */
 
 // const pageConfig = require("./config/page.config");
@@ -31,10 +31,13 @@ module.exports = {
     port: 8080,
     open: true,
     proxy: {
-      '/dev': {
-        ws: false,
+      '/new-order-web': {
+        ws: true,
         target: 'http://192.168.161.146:8080/new-order-web',
-        changeOrigin: true
+        changeOrigin: true,
+        pathRewrite: {
+          '^/new-order-web': ''
+        }
       }
     },
     overlay: {
