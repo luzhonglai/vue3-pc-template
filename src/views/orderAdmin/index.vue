@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-18 16:18:57
+ * @LastEditTime: 2021-06-02 11:32:19
 -->
 <template>
   <div class="content">
@@ -69,6 +69,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, Ref } from 'vue'
+import { FindOrderList, OrderDetail } from './serivce'
 
 export default defineComponent({
   name: 'orderAdmin',
@@ -77,9 +78,9 @@ export default defineComponent({
       { name: 'stationCode', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
       { name: 'stationCode', label: '用户手机号', type: 'input', placeholder: '请输入内容' },
       { name: 'stationCode', label: '订单状态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '桩编号', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '站编号', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '站名称', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '桩编号', type: 'input', placeholder: '请选择' },
+      { name: 'stationCode', label: '站编号', type: 'input', placeholder: '请选择' },
+      { name: 'stationCode', label: '站名称', type: 'input', placeholder: '请选择' },
       {
         name: 'time',
         label: '交易时间',

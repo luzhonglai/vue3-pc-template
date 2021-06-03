@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-16 18:25:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-01 10:23:46
+ * @LastEditTime: 2021-06-03 14:19:20
  */
 /**
  * request全局配置
@@ -25,7 +25,7 @@ const config: ConfigOptions = {
    */
   baseUrl: {
     // 开发环境接口前缀
-    dev: '/',
+    dev: '/new-order-web',
     // 生产环境接口前缀
     pro: '/',
     // 测试环境接口前缀
