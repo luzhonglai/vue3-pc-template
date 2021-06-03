@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 15:02:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-17 14:10:58
+ * @LastEditTime: 2021-06-02 11:34:32
 -->
 <template>
   <component :is="isNewRules ? 'NewRules' : 'RoleList'"></component>
@@ -12,8 +12,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, Ref, computed } from 'vue'
-import RoleList from './component/roleList.vue'
-import NewRules from './component/newRules.vue'
+import RoleList from './component/RoleList.vue'
+import NewRules from './component/NewRules.vue'
 import { getStoreGetter, setStoreState } from '@/store/utils'
 import store from '@/store'
 export default defineComponent({
