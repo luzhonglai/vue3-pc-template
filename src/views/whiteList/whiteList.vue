@@ -88,7 +88,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
-
+import { batchRemove, removeItem, findByPage ,createOverTimeStation ,queryStationOperationRecord} from '@/api/whiteList'
+import { dateArrToNumArr } from '@/utils/date'
 interface InputProps {
   value: string
 }
@@ -96,16 +97,40 @@ interface InputProps {
 export default defineComponent({
   name: 'whiterList',
   setup(props: InputProps, { emit }) {
+      onMounted(() => {
+       methods.getData()
+    })
     const formInline = ref([
       { name: 'stationCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
-      { name: 'stationCode', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'stationCode', label: '行政单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '运营态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '管理单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '产权单位', type: 'select', placeholder: '请选择' },
+      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options: [
+          {
+            label: '待投运',
+            value: 3
+          },
+          {
+            label: '投运',
+            value: 4
+          },
+           {
+            label: '停运',
+            value: 5
+          },
+          {
+            label: '退运',
+            value:6
+          },
+          {
+            label: '维修',
+            value: 7
+          }
+        ] },
+      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
       {
-        name: 'time',
-        label: '交易时间',
+        name: 'createAt',
+        label: '添加时间',
         type: 'datetimerange',
         rangeSeparator: '~',
         startPlaceholder: '时间范围起',
@@ -220,11 +245,49 @@ export default defineComponent({
       total: 3
     })
     const drawer: Ref<boolean> = ref(false)
+    const stationInfo = reactive({
+      params: {
+        bean: {
+          address: "",
+          area: "",
+          belongOrganization: "",
+          city: "",
+          createAt: '',
+          manageOrganization: "",
+          operateState: "",
+          province: "",
+          stationName: "",
+          stationNo: ""
+        },
+        page: 1,
+        pageSize: 10
+      },
+      // tableList: [],
+      // tableTotal: 0,
+      // totalPages: 0
+    })
 
     const methods = {
-      changeStations() {
-        alert(11)
+      getData(): void{
+        console.log('tableconfig',tableConfig)
+        findByPage({
+          bean:stationInfo.params,
+          page:tableConfig.value.currentPage,
+          pageSize:tableConfig.value.pageSize
+        }).then(res=>{
+   
+        })
       },
+      changeStations(obj?: any) {
+      console.log('obj', obj)
+      stationInfo.params.bean.createAt = dateArrToNumArr(obj.time)[0]
+      // stationInfo.params.bean.createEndTime = dateArrToNumArr(obj.time)[1]
+      Object.assign(stationInfo.params.bean, obj)
+      stationInfo.params.page = 1
+      methods.getData()
+  
+    },
+    
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       resetSubmit() {},
       changeStation() {
@@ -285,6 +348,7 @@ export default defineComponent({
       formInline,
       tableData,
       tableLogData,
+      stationInfo,
       ...methods
     }
   }
