@@ -43,7 +43,8 @@
     >
       <!-- 操作按钮逻辑 -->
       <template #scope="{scope}">
-        <el-button @click="onRemoveItem('remove', scope.row)" type="text" size="small">移除</el-button>
+        <el-button @click="onRemoveItem(scope.row)" type="text" size="small">移除</el-button>
+        <el-button @click="drawer = true" type="text" size="small">查看详情</el-button>
         <el-button @click="dialogVisible = true" type="text" size="small">操作日志</el-button>
       </template>
     </EvsTablePage>
@@ -62,25 +63,30 @@
     </el-dialog>
 
     <!-- 详情 -->
-    <el-drawer title="超时占位规则详情" v-model="drawer" :modal="false" size="50%">
+    <el-drawer title="查看数据" v-model="drawer" :modal="false" size="50%">
       <div class="content">
-        <el-descriptions title="交易信息" :column="2">
-          <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-          <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
+        <el-descriptions title="充电站" :column="2">
+          <el-descriptions-item label="站编码：">{{detailInfo.address}}</el-descriptions-item>
+          <el-descriptions-item label="站名称：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="省市区：">kooriookami</el-descriptions-item>
+          <el-descriptions-item label="站地址：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="管理单位：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="经度：">kooriookami</el-descriptions-item>
+          <el-descriptions-item label="纬度：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="管理单位：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="商户类型：">kooriookami</el-descriptions-item>
+          <el-descriptions-item label="运营单位：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="站长电话：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="是否对外开放：">kooriookami</el-descriptions-item>
+          <el-descriptions-item label="公专用：">18100000000</el-descriptions-item>
+            <el-descriptions-item label="服务电话：">18100000000</el-descriptions-item>
         </el-descriptions>
 
-        <el-descriptions title="用户信息" :column="2">
-          <el-descriptions-item label="用户ID：">32943898021309809423 </el-descriptions-item>
-          <el-descriptions-item label="姓名：">32943898021309809423</el-descriptions-item>
-          <el-descriptions-item label="手机号：">- -</el-descriptions-item>
-          <el-descriptions-item label="卡号：">32943898021309809423</el-descriptions-item>
-          <el-descriptions-item label="是否开票：">是</el-descriptions-item>
-          <el-descriptions-item label="是否冲正：">是</el-descriptions-item>
+        <el-descriptions title="停车区信息" :column="2">
+          <el-descriptions-item label="是否停车收费：">32943898021309809423 </el-descriptions-item>
+          <el-descriptions-item label="停车收费描述：">32943898021309809423</el-descriptions-item>
         </el-descriptions>
-        <el-descriptions title="项目信息" :column="2">
-          <el-descriptions-item label="是否清分：">是</el-descriptions-item>
-          <el-descriptions-item label="是否结算：">是</el-descriptions-item>
-        </el-descriptions>
+      
       </div>
     </el-drawer>
   </div>
@@ -90,16 +96,22 @@
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
 import { batchRemove, removeItem, findByPage ,createOverTimeStation ,queryStationOperationRecord} from '@/api/whiteList'
 import { dateArrToNumArr } from '@/utils/date'
+
 interface InputProps {
   value: string
 }
 
 export default defineComponent({
   name: 'whiterList',
+  components: {
+
+  },
   setup(props: InputProps, { emit }) {
+     
       onMounted(() => {
        methods.getData()
     })
+
     const formInline = ref([
       { name: 'stationCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
@@ -146,20 +158,44 @@ export default defineComponent({
         },
         { type: 'index', label: '序号' },
         {
-          label: '用户ID',
-          prop: 'num'
+          label: '站编码',
+          prop: 'stationNo'
         },
         {
-          label: '名称',
+          label: '站名称',
+          prop: 'stationName'
+        },
+        {
+          label: '运营态',
+          prop: 'operateState'
+        },
+        {
+          label: '站地址',
+          prop: 'address'
+        },
+         {
+          label: '区',
+          prop: 'area'
+        },
+        {
+          label: '市',
+          prop: 'city'
+        },
+        {
+          label: '省',
+          prop: 'province'
+        },
+         {
+          label: '运营商',
           prop: 'name'
         },
         {
-          label: '日期',
-          prop: 'date'
+          label: '管理单位',
+          prop: 'manageOrganization'
         },
         {
-          label: '地址',
-          prop: 'address'
+          label: '产权单位',
+          prop: 'belongOrganization'
         },
         {
           label: '操作',
@@ -170,29 +206,18 @@ export default defineComponent({
       ],
       data: [
         {
-          num: '300003000600018405',
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
+         address: "23456",
+          area: "345",
+          belongOrganization: "佳节快乐",
+          city: "2",
+          createAt: '5',
+          manageOrganization: "fgdsa",
+          operateState: "2345",
+          province: "345",
+          stationName: "fgg",
+          stationNo: "1234567"
         },
-        {
-          num: '300003000600018405',
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
+        
       ]
     })
     const resetName = ref(null)
@@ -245,9 +270,11 @@ export default defineComponent({
       total: 3
     })
     const drawer: Ref<boolean> = ref(false)
+    const detailInfo:object=reactive({
+      address:'123456'
+    })
     const stationInfo = reactive({
       params: {
-        bean: {
           address: "",
           area: "",
           belongOrganization: "",
@@ -258,9 +285,6 @@ export default defineComponent({
           province: "",
           stationName: "",
           stationNo: ""
-        },
-        page: 1,
-        pageSize: 10
       },
       // tableList: [],
       // tableTotal: 0,
@@ -276,14 +300,14 @@ export default defineComponent({
           pageSize:tableConfig.value.pageSize
         }).then(res=>{
    
-        })
+        }) 
       },
       changeStations(obj?: any) {
       console.log('obj', obj)
-      stationInfo.params.bean.createAt = dateArrToNumArr(obj.time)[0]
-      // stationInfo.params.bean.createEndTime = dateArrToNumArr(obj.time)[1]
-      Object.assign(stationInfo.params.bean, obj)
-      stationInfo.params.page = 1
+      // stationInfo.params.bean.createAt = dateArrToNumArr(obj.time)[0]
+      // // stationInfo.params.bean.createEndTime = dateArrToNumArr(obj.time)[1]
+      // Object.assign(stationInfo.params.bean, obj)
+      // stationInfo.params.page = 1
       methods.getData()
   
     },
@@ -294,9 +318,9 @@ export default defineComponent({
         console.log(resetName.value, '213123')
       },
       handleClickChange(row, column, cell, event) {
-        if (column.no == 2) {
-          drawer.value = true
-        }
+        // if (column.no == 2) {
+        //   drawer.value = true
+        // }
       },
       handleCurrentChange(val) {
         console.log(val)
@@ -309,7 +333,8 @@ export default defineComponent({
        * 移除item
        *
        */
-      async onRemoveItem() {
+      async onRemoveItem(item) {
+        console.log('item',item)
         // 调用弹窗
         let isNext = await this.onRemoveMassage(false)
       },
@@ -341,6 +366,7 @@ export default defineComponent({
       }
     }
     return {
+      detailInfo,
       dialogVisible,
       drawer,
       resetName,
