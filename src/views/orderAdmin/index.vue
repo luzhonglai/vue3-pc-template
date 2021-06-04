@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-02 11:32:19
+ * @LastEditTime: 2021-06-04 16:57:21
 -->
 <template>
   <div class="content">
@@ -13,7 +13,7 @@
       :formModel="formInline"
       :initData="initData"
       :hasFold="true"
-      @search="changeStations"
+      @search="fromSubmit"
       @resetForm="resetSubmit"
     >
       <template v-slot:selectStation>
@@ -43,48 +43,49 @@
     </EvsTablePage>
 
     <!-- 详情 -->
-    <el-drawer title="超时占位规则详情" v-model="drawer" :modal="false" size="50%">
-      <div class="content">
-        <el-descriptions title="交易信息" :column="2">
-          <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-          <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-        </el-descriptions>
-
-        <el-descriptions title="用户信息" :column="2">
-          <el-descriptions-item label="用户ID：">32943898021309809423 </el-descriptions-item>
-          <el-descriptions-item label="姓名：">32943898021309809423</el-descriptions-item>
-          <el-descriptions-item label="手机号：">- -</el-descriptions-item>
-          <el-descriptions-item label="卡号：">32943898021309809423</el-descriptions-item>
-          <el-descriptions-item label="是否开票：">是</el-descriptions-item>
-          <el-descriptions-item label="是否冲正：">是</el-descriptions-item>
-        </el-descriptions>
-        <el-descriptions title="项目信息" :column="2">
-          <el-descriptions-item label="是否清分：">是</el-descriptions-item>
-          <el-descriptions-item label="是否结算：">是</el-descriptions-item>
-        </el-descriptions>
-      </div>
-    </el-drawer>
+    <EvsDialog
+      title="超时占位规则详情"
+      :keyLabel="dialongConfg"
+      :data="detailData"
+      :isShow="drawer"
+      :modal="false"
+      size="50%"
+    >
+    </EvsDialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, Ref } from 'vue'
+import { formatDate } from '@/utils/utils'
 import { FindOrderList, OrderDetail } from './serivce'
-
+import EvsDialog from '@/components/EvsDialog/Index.vue'
 export default defineComponent({
   name: 'orderAdmin',
+  component: {
+    EvsDialog
+  },
   setup(props, { emit }) {
     const formInline = ref([
-      { name: 'stationCode', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
-      { name: 'stationCode', label: '用户手机号', type: 'input', placeholder: '请输入内容' },
-      { name: 'stationCode', label: '订单状态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '桩编号', type: 'input', placeholder: '请选择' },
-      { name: 'stationCode', label: '站编号', type: 'input', placeholder: '请选择' },
-      { name: 'stationCode', label: '站名称', type: 'input', placeholder: '请选择' },
+      { name: 'tradeFlowNo', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
+      { name: 'phone', label: '用户手机号', type: 'input', placeholder: '请输入内容' },
+      {
+        name: 'orderState',
+        label: '订单状态',
+        type: 'select',
+        placeholder: '请选择',
+        options: [
+          { label: '已支付', value: 20 },
+          { label: '待支付', value: 70 }
+        ]
+      },
+      { name: 'stakeNo', label: '桩编号', type: 'input', placeholder: '请选择' },
+      { name: 'stationNo', label: '站编号', type: 'input', placeholder: '请选择' },
+      { name: 'stationName', label: '站名称', type: 'input', placeholder: '请选择' },
       {
         name: 'time',
         label: '交易时间',
-        type: 'datetimerange',
+        type: 'daterange',
         rangeSeparator: '~',
         startPlaceholder: '时间范围起',
         endPlaceholder: '时间范围止',
@@ -99,63 +100,50 @@ export default defineComponent({
         { type: 'index', label: '序号' },
         {
           label: '用户ID',
-          prop: 'num'
+          prop: 'userId'
         },
         {
           label: '手机号',
-          prop: 'name'
+          prop: 'phone'
         },
         {
           label: '交易流水号',
-          prop: 'date'
+          prop: 'tradeFlowNo'
         },
         {
           label: '充电桩编号',
-          prop: 'address'
+          prop: 'stakeNo',
+          align: 'center',
+          fixed: true,
+          width: '200'
         },
         {
-          label: '交易金额（元）',
-          prop: 'address'
+          label: '交易金额(元）',
+          prop: 'amount'
         },
         {
-          label: '充电时长（小时）',
-          prop: 'address'
+          label: '充电时长(小时)',
+          prop: 'reduceTime',
+          align: 'center',
+          fixed: true,
+          width: '150'
         },
         {
-          label: '减免次数（次）',
-          prop: 'address'
+          label: '减免次数(次)',
+          prop: 'reduceTime',
+          align: 'center',
+          fixed: true,
+          width: '150'
         },
         {
-          label: '封顶条件（元）',
-          prop: 'address'
+          label: '封顶条件(元)',
+          prop: 'limit',
+          align: 'left',
+          fixed: true,
+          width: '200'
         }
       ],
-      data: [
-        {
-          num: '300003000600018405',
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      data: []
     })
     const resetName = ref(null)
     const exportModel: Ref<object> = ref({
@@ -170,21 +158,206 @@ export default defineComponent({
       total: 3
     })
     const drawer: Ref<boolean> = ref(false)
-
-    const methods = {
-      changeStations() {
-        alert(11)
+    const dialongConfg: object = reactive([
+      {
+        title: '交易信息',
+        keyArr: [
+          {
+            lable: '订单编号：',
+            key: 'tradeFlowNo'
+          },
+          {
+            lable: '支付流水号：',
+            key: 'payId'
+          },
+          {
+            lable: '订单创建时间：',
+            key: 'createTime'
+          },
+          {
+            lable: '支付时间：',
+            key: 'paidTime'
+          },
+          {
+            lable: '订单状态：',
+            key: 'orderState'
+          },
+          {
+            lable: '充电桩编号：',
+            key: 'stakeNo'
+          },
+          {
+            lable: '产权单位：',
+            key: 'stakeOuCode'
+          },
+          {
+            lable: '站名称：',
+            key: 'stationName'
+          },
+          {
+            lable: '站编码：',
+            key: 'stationNo'
+          },
+          {
+            lable: '插枪时间：',
+            key: 'putGunTime'
+          },
+          {
+            lable: '关联充电订单交易流水号1：',
+            key: 'orderTradeFlowNo'
+          },
+          {
+            lable: '启停时间：',
+            key: 'chargeStartTime'
+          },
+          {
+            lable: '关联充电订单交易流水号2：',
+            key: 'orderTradeFlowNo'
+          },
+          {
+            lable: '启停时间：',
+            key: 'chargeStartTime'
+          },
+          {
+            lable: '拔枪时间：',
+            key: 'chargeEndTime'
+          },
+          {
+            lable: '交易金额（元）：',
+            key: 'amount'
+          },
+          {
+            lable: '减免时长（小时）：',
+            key: 'reduceTime'
+          },
+          {
+            lable: '减免次数：',
+            key: 'reduceTimes'
+          },
+          {
+            lable: '封顶条件：',
+            key: 'limit'
+          },
+          {
+            lable: '支付方式：',
+            key: 'payMode'
+          }
+        ]
       },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      resetSubmit() {},
+      {
+        title: '用户信息',
+        keyArr: [
+          {
+            lable: '用户ID：',
+            key: ''
+          },
+          {
+            lable: '姓名：'
+          },
+          {
+            lable: '手机号：'
+          },
+          {
+            lable: '卡号：'
+          },
+          {
+            lable: '是否开票：'
+          },
+          {
+            lable: '是否冲正：'
+          }
+        ]
+      },
+      {
+        title: '项目信息',
+        keyArr: [
+          {
+            lable: '是否清分：',
+            key: ''
+          },
+          {
+            lable: '是否结算：'
+          }
+        ]
+      }
+    ])
+    let detailData: Ref<object> = ref({})
+    const findTableParams = {
+      bean: {
+        // endTime: '',
+        // orderState: 20,
+        // phone: 17726382739,
+        // stakeNo: 72638273,
+        // startTime: '',
+        // stationName: '国网充电站',
+        // stationNo: 72638273,
+        // tradeFlowNo: 'CS872164716721'
+        operateState: 1
+      },
+      page: 1,
+      pageSize: 10,
+      sorts: {
+        additionalProp1: 'string',
+        additionalProp2: 'string',
+        additionalProp3: 'string'
+      }
+    }
+    const methods = {
+      // 表单查询
+      async fromSubmit(from): Promise<void> {
+        // findTableParams.bean.startTime = from.time ? formatDate(from.time[0], 'YMD') : ''
+        // findTableParams.bean.endTime = from.time ? formatDate(from.time[1], 'YMD') : ''
+        findTableParams.bean = { ...findTableParams.bean, ...from }
+        methods.findOrderList()
+      },
+
+      // 列表查询
+      async findOrderList() {
+        try {
+          const {
+            result: { total, list, pageSize },
+            code
+          } = await FindOrderList(findTableParams).catch((e) => null)
+          if (code == 0) return
+          tableData.value['data'] = list
+          tableConfig.value = { ...tableConfig.value, total, pageSize }
+        } catch (e) {
+          //
+        }
+      },
+      handleSizeChange(val) {
+        findTableParams.pageSize = val
+        methods.findOrderList()
+      },
+      //
+      handleCurrentChange(val) {
+        findTableParams.page = val
+        methods.findOrderList()
+      },
+
+      // 重置搜索
+      resetSubmit(val) {
+        // findTableParams.bean.startTime = ''
+        // findTableParams.bean.endTime = ''
+        findTableParams.bean = { ...val }
+      },
+
       changeStation() {
         console.log(resetName.value, '213123')
       },
-      handleClickChange(row, column, cell, event) {
-        if (column.no == 2) {
-          drawer.value = true
+
+      async handleClickChange(row, column, cell, event) {
+        if (column.no !== 2) {
+          return false
         }
+        await OrderDetail(row.id).then((res: any) => {
+          debugger
+          detailData.value = res.result
+          debugger
+        })
+        drawer.value = true
       },
+
       // 选择table
       selectionChange(val) {
         exportModel.value['params'] = val
@@ -193,6 +366,8 @@ export default defineComponent({
 
     return {
       drawer,
+      detailData,
+      dialongConfg,
       resetName,
       tableConfig,
       formInline,

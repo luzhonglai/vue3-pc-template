@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-24 17:11:39
+ * @LastEditTime: 2021-06-04 16:48:29
 -->
 <template>
   <div class="content">
@@ -13,7 +13,7 @@
       :formModel="formInline"
       :initData="initData"
       :hasFold="true"
-      @search="changeStations"
+      @search="fromSubmit"
       @resetForm="resetSubmit"
     >
       <template v-slot:selectStation>
@@ -101,22 +101,50 @@
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
+import cityJson from '@/utils/pca-code'
+import { findByPage } from '../service'
 
 export default defineComponent({
   name: 'roleList',
   setup(props, { emit }) {
     const formInline: Ref<any> = ref([
-      { name: 'stationCode', label: '高级筛选', type: 'selectStation', placeholder: '请输入站编码、站名称' },
-      { name: 'stationCode', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'stationCode', label: '行政单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '运营态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '管理单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '产权单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '开启状态', type: 'select', placeholder: '请选择' },
+      { name: 'stationCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
+      { name: 'stationNo', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'belongOrganization', label: '行政单位', type: 'cascader', placeholder: '请选择', options: cityJson },
+      {
+        name: 'operateState',
+        label: '运营态',
+        type: 'select',
+        placeholder: '请选择',
+        options: [
+          { label: '待投运', value: 2 },
+          { label: '运行', value: 3 },
+          { label: '停运', value: 10 },
+          { label: '退运', value: 11 }
+        ]
+      },
+      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择', options: cityJson },
+      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择', options: cityJson },
+      {
+        name: 'enableStatus',
+        label: '开启状态',
+        type: 'select',
+        placeholder: '请选择',
+        options: [
+          {
+            label: '启用',
+            value: 1
+          },
+          {
+            label: '禁用',
+            value: 0
+          }
+        ]
+      },
       {
         name: 'time',
         label: '创建时间',
-        type: 'datetimerange',
+        type: 'daterange',
         rangeSeparator: '~',
         startPlaceholder: '时间范围起',
         endPlaceholder: '时间范围止',
@@ -221,7 +249,7 @@ export default defineComponent({
       ]
     })
     const resetName: Ref<null> = ref(null)
-    const tableConfig: object = ref({
+    const tableConfig: Ref<object> = ref({
       currentPage: 1,
       pageSizes: [10, 20, 30],
       pageSize: 10,
@@ -229,11 +257,57 @@ export default defineComponent({
     })
     const drawer: Ref<boolean> = ref(false)
     const dialogVisible: Ref<boolean> = ref(false)
+
+    // 列表查询参数配置
+    const findListParams = {
+      bean: {
+        address: 'string',
+        area: 'string',
+        belongOrganization: 'string',
+        city: 'string',
+        enableStatus: 0,
+        endTime: 0,
+        manageOrganization: 'string',
+        operateState: 0,
+        province: 'string',
+        startTime: 0,
+        stationName: 'string',
+        stationNo: 'string'
+      },
+      page: 1,
+      pageSize: 10,
+      sorts: {
+        additionalProp1: 'string',
+        additionalProp2: 'string',
+        additionalProp3: 'string'
+      }
+    }
+
     const methods = {
-      changeStations() {},
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      resetSubmit() {},
-      changeStation() {
+      // 重置表单
+      async resetSubmit(val) {
+        debugger
+      },
+      // 表单提交
+      async fromSubmit(from) {
+        debugger
+        findListParams.bean = { ...from }
+        methods.findByPageData()
+      },
+      // 表单查询
+      async findByPageData() {
+        const {
+          result,
+          result: { total, pageNumber, pageSize, list }
+        } = await findByPage(findListParams).catch((e) => null)
+        if (result == null) return
+        tableData.value = list
+        tableConfig.value = { ...tableConfig.value, total, pageSize }
+      },
+
+      changeStation(val) {
+        debugger
         console.log(resetName.value, '213123')
       },
 
@@ -259,6 +333,7 @@ export default defineComponent({
           })
         }
       },
+
       handleClickChange(row, column, cell, event) {
         if (column.no == 2) {
           drawer.value = true

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-06-02 10:15:49
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-03 14:16:46
+ * @LastEditTime: 2021-06-03 18:07:41
  */
 
 import { fetch } from '@/plugins/axios'
@@ -70,3 +70,14 @@ const updateOverTimeFeeModel = (params) =>
  */
 const valOverTimeModel = (params) =>
   fetch({ url: '/overTimeFeeModel/v1/validOverTimeFeeModel', method: 'post', params })
+
+export {
+  findByPage,
+  updateOverTimeFeeModel,
+  valOverTimeModel,
+  queryStaReacord,
+  invalidOverTimeFeeModel,
+  findByid,
+  createOverModel,
+  overTimeFeeModel
+}

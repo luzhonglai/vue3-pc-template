@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-20 09:21:21
+ * @LastEditTime: 2021-06-03 17:12:17
 -->
 
 <template>
@@ -139,18 +139,57 @@
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
-
+import cityJson from '@/utils/pca-code'
 export default defineComponent({
   name: 'newRules',
   setup(props, { emit }) {
     const dialogVisible: Ref<boolean> = ref(false)
-    const formInline: Ref<object> = ref([
-      { name: 'stationCode', label: '高级筛选', type: 'selectStation', placeholder: '请输入站编码、站名称' },
-      { name: 'stationCode', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'stationCode', label: '行政单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '运营态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '管理单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '产权单位', type: 'select', placeholder: '请选择' }
+    const formInline = ref([
+      {
+        name: 'stationCode',
+        label: '高级筛选',
+        type: 'input',
+        placeholder: '请输入站编码、站名称'
+      },
+      {
+        name: 'stationCode',
+        label: '站地址',
+        type: 'input',
+        placeholder: '请输入站ID'
+      },
+      {
+        name: 'stationCode',
+        label: '行政单位',
+        type: 'select',
+        placeholder: '请选择',
+        options: [cityJson]
+      },
+      {
+        name: 'stationCode',
+        label: '运营态',
+        type: 'select',
+        placeholder: '请选择',
+        options: [
+          { label: '待投运', value: 2 },
+          { label: '运行', value: 3 },
+          { label: '停运', value: 10 },
+          { label: '退运', value: 11 }
+        ]
+      },
+      {
+        name: 'stationCode',
+        label: '管理单位',
+        type: 'select',
+        placeholder: '请选择',
+        options: [cityJson]
+      },
+      {
+        name: 'stationCode',
+        label: '产权单位',
+        type: 'select',
+        placeholder: '请选择',
+        options: [cityJson]
+      }
     ])
     const arrowUp: Ref<boolean> = ref(false)
     const tableData: Ref<object> = ref({
