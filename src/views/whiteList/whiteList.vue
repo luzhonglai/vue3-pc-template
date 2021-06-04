@@ -11,15 +11,18 @@
       <template v-slot:selectStation>
         <SelectStation style="width: 100%" @EventChangeStation="changeStation" ref="resetName"></SelectStation>
       </template>
+      <template #othersBtn>
+        <el-button @click="addModal=true">添加</el-button>
+      </template>
     </EvsSearchArea>
-
+    <addStation v-if="addModal" @close="closeModal"></addStation>
     <div class="list-switch">
       <div>
         <el-button @click="onRemoveAll()" plain>批量移除</el-button>
       </div>
 
       <!-- 配置表头 -->
-      <configHeader
+     <configHeader
         type="text"
         style="color:#666666"
         :configData="tableData.data"
@@ -37,15 +40,17 @@
       :data="tableData"
       :border="false"
       :pagination="tableConfig"
+      @selection-change="selectionChange"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       @cell-click="handleClickChange"
     >
       <!-- 操作按钮逻辑 -->
       <template #scope="{scope}">
-        <el-button @click="onRemoveItem(scope.row)" type="text" size="small">移除</el-button>
-        <el-button @click="drawer = true" type="text" size="small">查看详情</el-button>
-        <el-button @click="dialogVisible = true" type="text" size="small">操作日志</el-button>
+        <el-button @click="onRemoveItem(scope.row.id)" type="text" size="small">移除</el-button>
+        <el-button @click="opendrawer(scope.row.id)" type="text" size="small">查看详情</el-button>
+        <el-button @click="opendialogVisible(scope.row.id)" type="text" size="small">操作日志</el-button>
+
       </template>
     </EvsTablePage>
 
@@ -67,24 +72,24 @@
       <div class="content">
         <el-descriptions title="充电站" :column="2">
           <el-descriptions-item label="站编码：">{{detailInfo.address}}</el-descriptions-item>
-          <el-descriptions-item label="站名称：">18100000000</el-descriptions-item>
-          <el-descriptions-item label="省市区：">kooriookami</el-descriptions-item>
-          <el-descriptions-item label="站地址：">18100000000</el-descriptions-item>
-          <el-descriptions-item label="管理单位：">18100000000</el-descriptions-item>
-          <el-descriptions-item label="经度：">kooriookami</el-descriptions-item>
-          <el-descriptions-item label="纬度：">18100000000</el-descriptions-item>
-          <el-descriptions-item label="管理单位：">18100000000</el-descriptions-item>
-          <el-descriptions-item label="商户类型：">kooriookami</el-descriptions-item>
-          <el-descriptions-item label="运营单位：">18100000000</el-descriptions-item>
-          <el-descriptions-item label="站长电话：">18100000000</el-descriptions-item>
-          <el-descriptions-item label="是否对外开放：">kooriookami</el-descriptions-item>
-          <el-descriptions-item label="公专用：">18100000000</el-descriptions-item>
-            <el-descriptions-item label="服务电话：">18100000000</el-descriptions-item>
+          <el-descriptions-item label="站名称："></el-descriptions-item>
+          <el-descriptions-item label="省市区："></el-descriptions-item>
+          <el-descriptions-item label="站地址："></el-descriptions-item>
+          <el-descriptions-item label="管理单位："></el-descriptions-item>
+          <el-descriptions-item label="经度："></el-descriptions-item>
+          <el-descriptions-item label="纬度："></el-descriptions-item>
+          <el-descriptions-item label="管理单位："></el-descriptions-item>
+          <el-descriptions-item label="商户类型："></el-descriptions-item>
+          <el-descriptions-item label="运营单位："></el-descriptions-item>
+          <el-descriptions-item label="站长电话："></el-descriptions-item>
+          <el-descriptions-item label="是否对外开放："></el-descriptions-item>
+          <el-descriptions-item label="公专用："></el-descriptions-item>
+            <el-descriptions-item label="服务电话："></el-descriptions-item>
         </el-descriptions>
 
         <el-descriptions title="停车区信息" :column="2">
-          <el-descriptions-item label="是否停车收费：">32943898021309809423 </el-descriptions-item>
-          <el-descriptions-item label="停车收费描述：">32943898021309809423</el-descriptions-item>
+          <el-descriptions-item label="是否停车收费："> </el-descriptions-item>
+          <el-descriptions-item label="停车收费描述："></el-descriptions-item>
         </el-descriptions>
       
       </div>
@@ -96,7 +101,7 @@
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
 import { batchRemove, removeItem, findByPage ,createOverTimeStation ,queryStationOperationRecord} from '@/api/whiteList'
 import { dateArrToNumArr } from '@/utils/date'
-
+import addStation from './addStation.vue'
 interface InputProps {
   value: string
 }
@@ -104,19 +109,14 @@ interface InputProps {
 export default defineComponent({
   name: 'whiterList',
   components: {
-
+    addStation
   },
   setup(props: InputProps, { emit }) {
-     
       onMounted(() => {
        methods.getData()
     })
-
-    const formInline = ref([
-      { name: 'stationCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
-      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择' },
-      { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options: [
+    let selectData=[]
+    const operateStateArr= [
           {
             label: '待投运',
             value: 3
@@ -137,7 +137,12 @@ export default defineComponent({
             label: '维修',
             value: 7
           }
-        ] },
+        ]
+    const formInline = ref([
+      { name: 'stationCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
+      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
       { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
       { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
       {
@@ -187,7 +192,7 @@ export default defineComponent({
         },
          {
           label: '运营商',
-          prop: 'name'
+          prop: 'operator'
         },
         {
           label: '管理单位',
@@ -222,6 +227,7 @@ export default defineComponent({
     })
     const resetName = ref(null)
     const dialogVisible: Ref<boolean> = ref(false)
+    const addModal: Ref<boolean> = ref(false)
     const tableLogData: object = ref({
       tableColumn: [
         {
@@ -290,8 +296,23 @@ export default defineComponent({
       // tableTotal: 0,
       // totalPages: 0
     })
-
+    function closeModal(){
+      addModal.value=false
+      }
     const methods = {
+       selectionChange(val) {
+        selectData = val
+      },
+      // checkchange(e){
+      //   console.log('rrrr',e)
+      // },
+      opendrawer(id){
+        drawer.value=true
+        queryStationOperationRecord(id).then(res=>{})
+      },
+      opendialogVisible(id){
+        dialogVisible.value=true
+      },
       getData(): void{
         console.log('tableconfig',tableConfig)
         findByPage({
@@ -299,19 +320,19 @@ export default defineComponent({
           page:tableConfig.value.currentPage,
           pageSize:tableConfig.value.pageSize
         }).then(res=>{
-   
-        }) 
+         tableData.value['data']= res['result'].list.map(item=>({
+                 ...item,
+                 operateState:operateStateArr[item.operateState].label
+               }))
+          tableConfig.value.total=res['result'].total
+          tableConfig.value.currentPage=res['result'].pageNumber
+        })
       },
       changeStations(obj?: any) {
       console.log('obj', obj)
-      // stationInfo.params.bean.createAt = dateArrToNumArr(obj.time)[0]
-      // // stationInfo.params.bean.createEndTime = dateArrToNumArr(obj.time)[1]
-      // Object.assign(stationInfo.params.bean, obj)
-      // stationInfo.params.page = 1
       methods.getData()
   
     },
-    
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       resetSubmit() {},
       changeStation() {
@@ -333,18 +354,24 @@ export default defineComponent({
        * 移除item
        *
        */
-      async onRemoveItem(item) {
-        console.log('item',item)
+      async onRemoveItem(id) {
+        console.log('item',id)
         // 调用弹窗
-        let isNext = await this.onRemoveMassage(false)
+        let isNext = await this.onRemoveMassage(false,id)
       },
 
       /**
        * 移除删除提示
        *
        */
-      async onRemoveMassage(isAll) {
+      async onRemoveMassage(isAll,id) {
         const title = isAll ? '批量移除' : '移除'
+        if(isAll&&selectData.length<=0){
+          this.$message({
+             message: '请先选择要移除的数据',
+            type: 'warning'
+             })
+        }else{
         return await this.$messageBox({
           title: title,
           type: 'warning',
@@ -352,8 +379,31 @@ export default defineComponent({
             '从白名单内移除的充电站不能在进行超时占位费的配置，且已配置完成超时占位费的充电站从白名单内移除后将会自动禁用超时占位费，确认从白名单内移除当前所选充电站？',
           showCancelButton: true
         })
-          .then(() => true)
-          .catch(() => false)
+          .then(() => {
+             if(isAll){
+               let idList=selectData.map(item=>item.id)
+               batchRemove(idList).then(res=>{
+                  this.$message({
+                message: '批量移除成功',
+              type: 'success'
+                  })
+                  methods.getData()
+               })
+             }else{
+               removeItem(id).then(res=>{
+                  this.$message({
+                   message: '移除成功',
+                   type: 'success'
+                  })
+                   methods.getData()
+               })
+               
+             }
+          })
+          .catch(() => {
+             
+          })
+        }
       },
 
       /**
@@ -366,6 +416,8 @@ export default defineComponent({
       }
     }
     return {
+      closeModal,
+      addModal,
       detailInfo,
       dialogVisible,
       drawer,
@@ -373,6 +425,7 @@ export default defineComponent({
       tableConfig,
       formInline,
       tableData,
+      operateStateArr,
       tableLogData,
       stationInfo,
       ...methods
