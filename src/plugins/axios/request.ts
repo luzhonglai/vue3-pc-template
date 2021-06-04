@@ -45,6 +45,7 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
+    debugInfo(response)
     if (~response.headers['content-type'].indexOf('application/vnd.ms-excel')) {
       console.log('response拦截器----->', response)
       return response.data as any
@@ -58,12 +59,11 @@ service.interceptors.response.use(
     // 从新登录
     if (API_AUTH_STATUS.includes(response.data.code)) {
       Storage.clear()
-      router.replace('/login')
+      // router.replace('/login')
     }
   },
   async (error: AxiosError) => {
     const response: any = error.response
-    console.log(response)
     // mock 服务开启条件
     if (process.env.NODE_ENV !== 'production' && isMock == true) {
       const options = Object.assign(response.config)

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-18 15:07:23
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-04-30 09:40:22
+ * @LastEditTime: 2021-06-04 16:18:07
  */
 import request from './request'
 
@@ -18,13 +18,13 @@ const { defaultHeaders } = config
 interface Config {
   url: string
   method: 'get' | 'post' | 'delete' | 'put'
-  params: any
+  params?: any
   headersType?: string
   responseType?: ResponseType
   isMock?: boolean
 }
 
-function fetch({ url, method = 'post', params, headersType, responseType, isMock }: Config): AxiosPromise {
+function fetch({ url, method = 'post', params = {}, headersType, responseType, isMock }: Config): AxiosPromise {
   const options = {
     url: url,
     method,
