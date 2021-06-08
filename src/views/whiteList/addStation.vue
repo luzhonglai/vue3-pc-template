@@ -25,8 +25,9 @@
       </EvsSearchArea>
       <!-- 表格 -->
       <EvsTablePage
-        ref="multipleTable"
+        ref="addmultipleTable"
         :data="tableData"
+        :pagination="tableConfig"
         :border="false"
         @selection-change="selectionChange"
         @size-change="handleSizeChange"
@@ -50,23 +51,34 @@
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
-import { shallowMount } from '_@vue_test-utils@2.0.0-rc.6@@vue/test-utils'
-import { createOverTimeStation } from '@/api/whiteList'
-
+import { createOverTimeStation,findByPage } from '@/api/whiteList'
+import { formatDate } from '@/utils/utils'
 export default defineComponent({
   name: 'addStation',
   setup(props, { emit }) {
-       
+      onMounted(()=>{
+        console.log('methods',methods)
+        methods.getData()
+    })
     const  dialogVisible: Ref<boolean> = ref(true)
-    const formInline: Ref<object> = ref([
-      { name: 'stationCode', label: '高级筛选', type: 'selectStation', placeholder: '请输入站编码、站名称' },
-      { name: 'stationCode', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'stationCode', label: '行政单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '运营态', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '管理单位', type: 'select', placeholder: '请选择' },
-      { name: 'stationCode', label: '产权单位', type: 'select', placeholder: '请选择' }
-    ])
     const arrowUp: Ref<boolean> = ref(false)
+    const formInline = ref([
+      { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
+      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
+      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
+      {
+        name: 'createAt',
+        label: '添加时间',
+        type: 'datetimerange',
+        rangeSeparator: '~',
+        startPlaceholder: '时间范围起',
+        endPlaceholder: '时间范围止',
+        defaultTime: [new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 1, 1, 23, 59, 59)]
+      }
+    ])
     const tableData: Ref<object> = ref({
       tableColumn: [
         {
@@ -75,61 +87,76 @@ export default defineComponent({
         },
         { type: 'index', label: '序号' },
         {
-          label: '电站编号',
-          prop: 'num'
+          label: '站编码',
+          prop: 'stationNo'
         },
         {
           label: '站名称',
-          prop: 'name'
-        },
-        {
-          label: '电站地址',
-          prop: 'date'
+          prop: 'stationName'
         },
         {
           label: '运营态',
-          prop: 'date'
+          prop: 'operateState'
         },
         {
           label: '站地址',
-          prop: 'date'
+          prop: 'address'
+        },
+         {
+          label: '区',
+          prop: 'area'
         },
         {
-          label: '产权单位',
-          prop: 'date'
+          label: '市',
+          prop: 'city'
+        },
+        {
+          label: '省',
+          prop: 'province'
+        },
+         {
+          label: '运营商',
+          prop: 'operator'
         },
         {
           label: '管理单位',
-          prop: 'date',
-          with: 123
-        }
+          prop: 'manageOrganization'
+        },
+        {
+          label: '产权单位',
+          prop: 'belongOrganization'
+        },
       ],
-      data: [
-        {
-          num: '300003000600018405',
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      data: []
+    })
+      const operateStateArr= [
+          {
+            label: '待投运',
+            value: 2
+          },
+          {
+            label: '投运',
+            value: 3
+          },
+           {
+            label: '停运',
+            value: 10
+          },
+          {
+            label: '退运',
+            value:11
+          },
+        //   {
+        //     label: '维修',
+        //     value: 7
+        //   }
+        ]
+      const stationInfo = reactive({})
+      const tableConfig = ref({
+      currentPage: 1,
+      pageSizes: [10, 20, 30],
+      pageSize: 10,
+      total: 0
     })
     const selectTable: Ref<object> = ref({
       tableColumn: [
@@ -154,14 +181,34 @@ export default defineComponent({
       data: []
     })
     let selectData = []
-    const methods: object = {
+    const methods= {
       selectionChange(val) {
         selectData = val
       },
-         handleCancle () {
+      handleCancle () {
         emit('close','')
         dialogVisible.value = false
-         this.$refs.multipleTable.clearSelection()
+      },
+      getData(): void{
+        console.log('tableconfig',tableConfig)
+        let key=Object.keys(stationInfo)
+        let startTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][0],'Y/M/D h:m:s')
+        let endTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][1],'Y/M/D h:m:s')
+        stationInfo['startTime']=new Date(startTime).getTime()
+        stationInfo['endTime']=new Date(endTime).getTime()
+        stationInfo['createAt']=undefined
+        findByPage({
+          bean:key.length<=0?undefined:stationInfo,
+          page:tableConfig.value.currentPage,
+          pageSize:tableConfig.value.pageSize
+        }).then(res=>{
+         tableData.value['data']= res['result'].list.map(item=>({
+                 ...item,
+                 operateState:item.operateState&&operateStateArr[item.operateState].label
+               }))
+          tableConfig.value.total=res['result'].total
+          tableConfig.value.currentPage=res['result'].pageNumber
+        })
       },
       // 表格弹窗逻辑 true 添加选择数据 false 清除选择数据
       hideDialog(isPushItem: boolean) {
@@ -169,16 +216,40 @@ export default defineComponent({
             console.log('selectTable',selectTable)
           selectTable.value['data'] = selectData
         createOverTimeStation(selectTable.value['data']).then(res=>{
-        emit('close','')
+             this.$message({
+                message: '添加成功',
+                type: 'success'
+                  })
+        emit('close',true)
         dialogVisible.value = false
         })
         }else{
-            emit('close','')
+        emit('close','')
         dialogVisible.value = false 
         }
-
-        this.$refs.multipleTable.clearSelection()
-      }
+        this.$refs.addmultipleTable.clearSelection()
+      },
+      handleCurrentChange(val) {
+         tableConfig.value.currentPage=val
+         methods.getData()
+      },
+       handleSizeChange(val) {
+        console.log(val)
+        tableConfig.value.pageSize=val
+        methods.getData()
+      },
+      resetSubmit() {
+        for(let key in stationInfo){
+        delete stationInfo[key];
+        }
+      },
+     changeStations(obj?: any) {
+        for(let key in obj){
+        if(!obj[key]){delete obj[key]};
+        }
+       Object.assign(stationInfo, obj)
+       methods.getData()
+    },
     }
     watch(
       () => selectTable.value,
@@ -193,9 +264,10 @@ export default defineComponent({
         deep: true
       }
     )
-    
-    onMounted(async () => {})
     return {
+      tableConfig,
+      stationInfo,
+      operateStateArr,
       selectTable,
       arrowUp,
       dialogVisible,

@@ -36,24 +36,25 @@
 
     <!-- 表格 -->
     <EvsTablePage
+      id="whiteList"
       style="margin-top: 12px"
       :data="tableData"
       :border="false"
       :pagination="tableConfig"
+      ref="inittable"
       @selection-change="selectionChange"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       @cell-click="handleClickChange"
     >
       <!-- 操作按钮逻辑 -->
+    
       <template #scope="{scope}">
         <el-button @click="onRemoveItem(scope.row.id)" type="text" size="small">移除</el-button>
         <el-button @click="opendrawer(scope.row.id)" type="text" size="small">查看详情</el-button>
         <el-button @click="opendialogVisible(scope.row.id)" type="text" size="small">操作日志</el-button>
-
       </template>
     </EvsTablePage>
-
     <!-- 操作日志 -->
     <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
       <!-- 表格 -->
@@ -61,9 +62,7 @@
         style="margin-top:16px"
         :data="tableLogData"
         :border="false"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        @cell-click="handleClickChange"
+      
       />
     </el-dialog>
 
@@ -99,8 +98,10 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
-import { batchRemove, removeItem, findByPage ,createOverTimeStation ,queryStationOperationRecord} from '@/api/whiteList'
+import { batchRemove, removeItem, findByPage ,findByIdDetail,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findManageOrganizationList} from '@/api/whiteList'
 import { dateArrToNumArr } from '@/utils/date'
+import  administrativeUnits  from '@/utils/pca-code'
+import { formatDate ,deepClone} from '@/utils/utils'
 import addStation from './addStation.vue'
 interface InputProps {
   value: string
@@ -113,35 +114,70 @@ export default defineComponent({
   },
   setup(props: InputProps, { emit }) {
       onMounted(() => {
+        // findBelongOrganizationList().then(res=>{})
+        // findManageOrganizationList().then(res=>{})
+        // findByIdDetail(2).then(res=>{})
        methods.getData()
     })
+    let aa=''
     let selectData=[]
     const operateStateArr= [
           {
             label: '待投运',
-            value: 3
+            value: "2"
           },
           {
             label: '投运',
-            value: 4
+            value: '3'
           },
            {
             label: '停运',
-            value: 5
+            value: '10'
           },
           {
             label: '退运',
-            value:6
+            value:'11'
           },
-          {
-            label: '维修',
-            value: 7
-          }
+          // {
+          //   label: '维修',
+          //   value: 7
+          // }
         ]
+     const  options=[  {
+          value: 'zhinan',
+          label: '指南',
+          children: [{
+            value: 'shejiyuanze',
+            label: '设计原则',
+            children: [{
+              value: 'yizhi',
+              label: '一致'
+            }, {
+              value: 'fankui',
+              label: '反馈'
+            }, {
+              value: 'xiaolv',
+              label: '效率'
+            }, {
+              value: 'kekong',
+              label: '可控'
+            }]
+          }, {
+            value: 'daohang',
+            label: '导航',
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航'
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航'
+            }]
+          }]
+        }, ] 
     const formInline = ref([
-      { name: 'stationCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
-      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
+      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站地址' },
+      { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits},
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
       { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
       { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
@@ -164,7 +200,8 @@ export default defineComponent({
         { type: 'index', label: '序号' },
         {
           label: '站编码',
-          prop: 'stationNo'
+          prop: 'stationNo',
+         
         },
         {
           label: '站名称',
@@ -202,6 +239,15 @@ export default defineComponent({
           label: '产权单位',
           prop: 'belongOrganization'
         },
+         {
+          label: '所属模型',
+          prop: 'owningModel'
+        },
+         {
+          label: '添加时间',
+          prop: 'createdAt',
+          width:150,
+        },
         {
           label: '操作',
           fixed: 'right',
@@ -209,145 +255,149 @@ export default defineComponent({
           width: 192
         }
       ],
-      data: [
-        {
-         address: "23456",
-          area: "345",
-          belongOrganization: "佳节快乐",
-          city: "2",
-          createAt: '5',
-          manageOrganization: "fgdsa",
-          operateState: "2345",
-          province: "345",
-          stationName: "fgg",
-          stationNo: "1234567"
-        },
-        
-      ]
+      data: []
     })
     const resetName = ref(null)
     const dialogVisible: Ref<boolean> = ref(false)
     const addModal: Ref<boolean> = ref(false)
-    const tableLogData: object = ref({
+    const tableLogData: Ref<object>= ref({
       tableColumn: [
         {
           label: '操作帐号',
-          prop: 'num'
+          prop: 'operatorAccount'
         },
         {
           label: '操作时间',
-          prop: 'date'
+          prop: 'createdAt',
+          width:150
         },
         {
           label: '操作项',
-          prop: 'name',
+          prop: 'operatorType',
           fixed: 'left',
           align: 'left'
         }
       ],
-      data: [
-        {
-          num: '12345678',
-          date: '2016-05-02',
-          name: '启用'
-        },
-        {
-          num: '12345678',
-
-          date: '2016-05-04',
-          name: '批量禁用'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-01',
-          name: '批量启用'
-        },
-        {
-          num: '12345678',
-          date: '2016-05-03',
-          name: '修改'
-        }
-      ]
+      data: []
     })
     const tableConfig = ref({
       currentPage: 1,
       pageSizes: [10, 20, 30],
       pageSize: 10,
-      total: 3
+      total: 0
     })
     const drawer: Ref<boolean> = ref(false)
     const detailInfo:object=reactive({
       address:'123456'
     })
     const stationInfo = reactive({
-      params: {
-          address: "",
-          area: "",
-          belongOrganization: "",
-          city: "",
-          createAt: '',
-          manageOrganization: "",
-          operateState: "",
-          province: "",
-          stationName: "",
-          stationNo: ""
-      },
-      // tableList: [],
-      // tableTotal: 0,
-      // totalPages: 0
+      
+          // address: "",
+          // area: "",
+          // belongOrganization: "",
+          // city: "",
+          // createAt: '',
+          // manageOrganization: "",
+          // operateState: "",
+          // province: "",
+          // stationName: "",
+          // stationNo: ""
+   
+      
     })
-    function closeModal(){
+    function closeModal(val){
       addModal.value=false
+      if(val){
+        methods.getData()
+      }
       }
     const methods = {
+      hand(val){
+        console.log('1234',val,aa)
+      },
        selectionChange(val) {
         selectData = val
       },
+    
       // checkchange(e){
       //   console.log('rrrr',e)
       // },
       opendrawer(id){
+        console.log('drawer',id)
         drawer.value=true
-        queryStationOperationRecord(id).then(res=>{})
       },
       opendialogVisible(id){
-        dialogVisible.value=true
+         queryStationOperationRecord(id).then(res=>{
+             dialogVisible.value=true
+            tableLogData.value['data']=res['result'].map(item=>({
+              ...item,
+              createdAt:formatDate(item.createdAt,'Y/M/D h:m:s')
+            }))
+         })
       },
       getData(): void{
         console.log('tableconfig',tableConfig)
+        let key=Object.keys(stationInfo)
+        if(stationInfo['createAt']){
+        let startTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][0],'Y/M/D h:m:s')
+        let endTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][1],'Y/M/D h:m:s')
+        stationInfo['startTime']=new Date(startTime).getTime()
+        stationInfo['endTime']=new Date(endTime).getTime()
+        stationInfo['createAt']=undefined
+        }
+        let administrative=stationInfo["administrative"]
+        stationInfo['province']=administrative&&administrative[0]
+        stationInfo['city']=administrative&&administrative[1]
+        stationInfo['area']=administrative&&administrative[2]
+        stationInfo['administrative']=undefined
+        stationInfo['manageOrganization']= stationInfo['manageOrganization']&& stationInfo['manageOrganization'][2]
+        stationInfo['belongOrganization']=stationInfo['belongOrganization']&& stationInfo['belongOrganization'][2]
         findByPage({
-          bean:stationInfo.params,
+          bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
           pageSize:tableConfig.value.pageSize
         }).then(res=>{
          tableData.value['data']= res['result'].list.map(item=>({
                  ...item,
-                 operateState:operateStateArr[item.operateState].label
-               }))
+                 operateState:item.operateState&&operateStateArr.filter(o=>o.value===item.operateState)[0].label,
+                 createdAt:item.createdAt&&formatDate(item.createdAt,'Y/M/D h:m:s')
+               })
+               )
           tableConfig.value.total=res['result'].total
-          tableConfig.value.currentPage=res['result'].pageNumber
+          tableConfig.value.currentPage=res['result'].pageNumber+1
         })
       },
       changeStations(obj?: any) {
-      console.log('obj', obj)
-      methods.getData()
-  
+        console.log('obj',obj)
+        for(let key in obj){
+        if(!obj[key]||obj[key]===null){delete obj[key]};
+        }
+        Object.assign(stationInfo, obj)
+        methods.getData()
     },
+  
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      resetSubmit() {},
+      resetSubmit() {
+        for(let key in stationInfo){
+          delete stationInfo[key];
+        }
+      },
       changeStation() {
         console.log(resetName.value, '213123')
       },
       handleClickChange(row, column, cell, event) {
-        // if (column.no == 2) {
-        //   drawer.value = true
-        // }
+        if (column.no == 2) {
+          drawer.value = true
+        }
       },
       handleCurrentChange(val) {
-        console.log(val)
+         tableConfig.value.currentPage=val
+         methods.getData()
       },
       handleSizeChange(val) {
         console.log(val)
+        tableConfig.value.pageSize=val
+        methods.getData()
       },
 
       /**
@@ -382,12 +432,21 @@ export default defineComponent({
           .then(() => {
              if(isAll){
                let idList=selectData.map(item=>item.id)
-               batchRemove(idList).then(res=>{
-                  this.$message({
-                message: '批量移除成功',
-              type: 'success'
+               batchRemove({
+                 idList:idList,
+                 validState:false
+               })
+               .then(res=>{
+                //  console.log('remove1',res)
+                this.$message({
+                 message: res['msg'],
+                // type: 'success'
                   })
+                  this.$refs.inittable.clearSelection()
+                  console.log('data',selectData)
                   methods.getData()
+               }).catch(rej=>{
+                   console.log('remove2',rej)
                })
              }else{
                removeItem(id).then(res=>{
@@ -416,6 +475,7 @@ export default defineComponent({
       }
     }
     return {
+      aa,
       closeModal,
       addModal,
       detailInfo,
@@ -428,6 +488,7 @@ export default defineComponent({
       operateStateArr,
       tableLogData,
       stationInfo,
+      options,
       ...methods
     }
   }
@@ -439,12 +500,12 @@ export default defineComponent({
   box-sizing: border-box;
   display: block;
 
-  :deep(.el-table) {
+  /deep/#whiteList .el-table {
     // .cell {
     //   padding-right: 10px;
     // }
     .el-table__row {
-      .el-table_1_column_3 {
+      td:nth-child(3) {
         color: #487ef0;
         font-weight: 400;
         font-size: 12;
