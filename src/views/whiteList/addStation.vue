@@ -219,7 +219,7 @@ export default defineComponent({
                  operateState:item.operateState&&operateStateArr[item.operateState].label
                }))
           tableConfig.value.total=res['result'].total
-          tableConfig.value.currentPage=res['result'].pageNumber+
+          tableConfig.value.currentPage=res['result'].pageNumber+1
         })
       },
       // 表格弹窗逻辑 true 添加选择数据 false 清除选择数据
