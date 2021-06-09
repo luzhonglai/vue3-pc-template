@@ -4,10 +4,14 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 15:02:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-02 11:34:32
+ * @LastEditTime: 2021-06-08 16:15:55
 -->
 <template>
-  <component :is="isNewRules ? 'NewRules' : 'RoleList'"></component>
+  <component
+    :is="isNewRules ? 'NewRules' : 'RoleList'"
+    :newRules="newRulesData"
+    @setComponents="setComponent"
+  ></component>
 </template>
 
 <script lang="ts">
@@ -23,8 +27,15 @@ export default defineComponent({
     NewRules
   },
   setup(props, { emit }) {
-    const data: object = reactive({})
-    const methods: object = {}
+    const data: any = reactive({
+      newRulesData: {}
+    })
+    const methods: object = {
+      setComponent(val) {
+        debugger
+        data.newRulesData = val
+      }
+    }
     const isNewRules = computed(() => store.state.app.isNewRules)
     return {
       isNewRules,

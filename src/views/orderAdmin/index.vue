@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-04 16:57:21
+ * @LastEditTime: 2021-06-04 17:51:21
 -->
 <template>
   <div class="content">
@@ -79,9 +79,9 @@ export default defineComponent({
           { label: '待支付', value: 70 }
         ]
       },
-      { name: 'stakeNo', label: '桩编号', type: 'input', placeholder: '请选择' },
-      { name: 'stationNo', label: '站编号', type: 'input', placeholder: '请选择' },
-      { name: 'stationName', label: '站名称', type: 'input', placeholder: '请选择' },
+      { name: 'stakeNo', label: '桩编号', type: 'input', placeholder: '请输入内容' },
+      { name: 'stationNo', label: '站编号', type: 'input', placeholder: '请输入内容' },
+      { name: 'stationName', label: '站名称', type: 'input', placeholder: '请输入内容' },
       {
         name: 'time',
         label: '交易时间',
@@ -282,16 +282,16 @@ export default defineComponent({
       }
     ])
     let detailData: Ref<object> = ref({})
-    const findTableParams = {
+    const findTableParams: any = {
       bean: {
-        // endTime: '',
-        // orderState: 20,
-        // phone: 17726382739,
-        // stakeNo: 72638273,
-        // startTime: '',
-        // stationName: '国网充电站',
-        // stationNo: 72638273,
-        // tradeFlowNo: 'CS872164716721'
+        endTime: '',
+        orderState: 1,
+        phone: '',
+        stakeNo: '',
+        startTime: '',
+        stationName: '',
+        stationNo: '',
+        tradeFlowNo: '',
         operateState: 1
       },
       page: 1,
@@ -305,8 +305,12 @@ export default defineComponent({
     const methods = {
       // 表单查询
       async fromSubmit(from): Promise<void> {
-        // findTableParams.bean.startTime = from.time ? formatDate(from.time[0], 'YMD') : ''
-        // findTableParams.bean.endTime = from.time ? formatDate(from.time[1], 'YMD') : ''
+        if (from.time) {
+          const startTime = new Date(from.time[0]).getTime()
+          const endTime = new Date(from.time[1]).getTime()
+          findTableParams.bean.startTime = startTime
+          findTableParams.bean.endTime = endTime
+        }
         findTableParams.bean = { ...findTableParams.bean, ...from }
         methods.findOrderList()
       },
@@ -337,8 +341,8 @@ export default defineComponent({
 
       // 重置搜索
       resetSubmit(val) {
-        // findTableParams.bean.startTime = ''
-        // findTableParams.bean.endTime = ''
+        findTableParams.bean.startTime = ''
+        findTableParams.bean.endTime = ''
         findTableParams.bean = { ...val }
       },
 
@@ -351,9 +355,7 @@ export default defineComponent({
           return false
         }
         await OrderDetail(row.id).then((res: any) => {
-          debugger
           detailData.value = res.result
-          debugger
         })
         drawer.value = true
       },

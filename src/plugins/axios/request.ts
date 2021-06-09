@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @repository: https://github.com/luzhonglai
+ * @Author: ZhongLai Lu
+ * @Date: 2021-06-04 17:08:22
+ * @LastEditors: Zhonglai Lu
+ * @LastEditTime: 2021-06-09 09:47:38
+ */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { Message } from '@/components/Message'
 import qs from 'qs'
@@ -46,14 +54,16 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     debugInfo(response)
-    if (~response.headers['content-type'].indexOf('application/vnd.ms-excel')) {
-      console.log('response拦截器----->', response)
-      return response.data as any
-    }
+    // if (~response.headers['content-type'].indexOf('application/vnd.ms-excel')) {
+    //   console.log('response拦截器----->', response)
+    //   return response.data as any
+    // }
+
     if (response.data.code == resultCode) {
       return response.data as any
     } else {
       Message.error(response.data.msg)
+      return Promise.reject()
     }
 
     // 从新登录

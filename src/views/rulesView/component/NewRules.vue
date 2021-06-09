@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-03 17:12:17
+ * @LastEditTime: 2021-06-09 11:29:28
 -->
 
 <template>
@@ -40,43 +40,43 @@
               </template>
             </EvsTablePage>
           </div>
-          <el-button round icon="el-icon-plus" @click="dialogVisible = true">添加适用电站</el-button>
+          <el-button
+            plain
+            v-if="isModify"
+            style="border: 1px solid #DDDDDD;color:#333333;border-radius:8px"
+            icon="el-icon-plus"
+            @click="dialogVisible = true"
+            >添加适用电站</el-button
+          >
         </div>
       </div>
       <div class="form">
         <h4 class="h4">规则配置</h4>
         <div class="item">
-          <el-form
-            :model="ruleForm"
-            :rules="rules"
-            ref="ruleForm"
-            label-width="80px"
-            label-position="top"
-            :hide-required-asterisk="false"
-          >
-            <el-form-item label="起止时间" prop="name">
-              <el-input class="item-input" placeholder="请选择起始时间" prefix-icon="el-icon-time" v-model="input1">
-              </el-input>
-              <el-input class="item-input" placeholder="请选择结束时间" prefix-icon="el-icon-time" v-model="input2">
-              </el-input>
+          <el-form :model="ruleForm" ref="formRef" :rules="formRules" label-width="80px" label-position="top">
+            <el-form-item label="起止时间" prop="startTime">
+              <el-date-picker style="width:204px" type="date" v-model="ruleForm.startTime" placeholder="开始时间">
+              </el-date-picker>
+              <el-date-picker style="width:204px" type="date" v-model="ruleForm.endTime" placeholder="结束时间">
+              </el-date-picker>
             </el-form-item>
-            <el-form-item label="超时占位费单价" prop="region">
-              <el-input v-model="ruleForm.name" type="text">
+            <el-form-item label="超时占位费单价" prop="price">
+              <el-input v-model="ruleForm.price">
                 <template #append>元/分钟</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="超时占位费减免时长" prop="region">
-              <el-input v-model="ruleForm.name" type="text">
+            <el-form-item label="超时占位费减免时长" prop="reduceTime">
+              <el-input v-model="ruleForm.reduceTime">
                 <template #append>小时</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="超时占位费减免次数" prop="region">
-              <el-input v-model="ruleForm.name" type="text">
+            <el-form-item label="超时占位费减免次数" prop="reduceTimes">
+              <el-input v-model="ruleForm.reduceTimes">
                 <template #append>次</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="超时占位费封顶条件" prop="region">
-              <el-input v-model="ruleForm.name" type="text">
+            <el-form-item label="超时占位费封顶条件" prop="limit">
+              <el-input v-model="ruleForm.limit">
                 <template #append>元</template>
               </el-input>
             </el-form-item>
@@ -85,9 +85,9 @@
       </div>
       <div class="state">
         <h4 class="stateTitle">计费说明：</h4>
-        <span class="text"
-          >1.一笔超时占位费的订单周期为一个插拔枪时间，所以一笔超时占位费订单可能对应多笔充电订单;</span
-        >
+        <span class="text">
+          1.一笔超时占位费的订单周期为一个插拔枪时间，所以一笔超时占位费订单可能对应多笔充电订单;
+        </span>
         <span class="text">2.减免时长依据每笔超时占位费的订单时长减免；</span>
         <span class="text">3.减免次数依据用户的超时占位费的订单次数减免。</span>
       </div>
@@ -129,20 +129,30 @@
     <!-- 返回 保存 提交 -->
     <div class="fotter">
       <el-button @click="closeEvent()" plain size="small">返回</el-button>
-      <el-button @click="setStoreData()" size="small">临时保存</el-button>
       <el-button @click="submitInt()" type="primary" size="small">提交</el-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, Ref, onMounted, watch, computed } from 'vue'
+import { createOverModel, updateOverTimeFeeModel } from '../service'
+import { defineComponent, ref, Ref, onBeforeMount, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
 import cityJson from '@/utils/pca-code'
 export default defineComponent({
   name: 'newRules',
-  setup(props, { emit }) {
+  props: {
+    newRules: {
+      type: Object,
+      // eslint-disable-next-line vue/require-valid-default-prop
+      default: () => {
+        //
+      }
+    }
+  },
+  setup(props: any, { emit }) {
+    const formRef: Ref<any> = ref(null)
     const dialogVisible: Ref<boolean> = ref(false)
     const formInline = ref([
       {
@@ -191,6 +201,44 @@ export default defineComponent({
         options: [cityJson]
       }
     ])
+    // 提现正则
+    const formRules: Ref<object> = ref({
+      startTime: [
+        {
+          required: true,
+          message: '请选择',
+          trigger: 'blur'
+        }
+      ],
+      price: [
+        {
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }
+      ],
+      reduceTime: [
+        {
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }
+      ],
+      reduceTimes: [
+        {
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }
+      ],
+      limit: [
+        {
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }
+      ]
+    })
     const arrowUp: Ref<boolean> = ref(false)
     const tableData: Ref<object> = ref({
       tableColumn: [
@@ -257,25 +305,30 @@ export default defineComponent({
       ]
     })
     const ruleForm: Ref<object> = ref({
-      name: '',
-      region: '',
-      date1: '',
-      date2: '',
-      desc: ''
+      stationNo: '',
+      id: 0,
+      startTime: '',
+      endTime: '',
+      price: '',
+      reduceTime: '',
+      reduceTimes: '',
+      limit: '',
+      ...props.newRules
     })
+    const isModify: Ref<boolean> = ref(true)
     const selectTable: Ref<object> = ref({
       tableColumn: [
         {
           label: '电站编号',
-          prop: 'num'
+          prop: 'stationNo'
         },
         {
           label: '电站名称',
-          prop: 'name'
+          prop: 'stationName'
         },
         {
           label: '电站地址',
-          prop: 'date'
+          prop: 'address'
         },
         {
           label: '操作',
@@ -290,6 +343,7 @@ export default defineComponent({
       // 返回勤换视图
       closeEvent() {
         setStoreState('app', 'isNewRules', false)
+        return false
       },
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       // 临时保存
@@ -302,9 +356,36 @@ export default defineComponent({
 
       // 提交信息
       submitInt() {
-        this.$message.success({
-          message: '新规则提交成功',
-          type: 'success'
+        formRef.value.validate(async (result: boolean) => {
+          if (!result) {
+            return
+          }
+          const params: any = ruleForm.value
+          // 添加充电站id
+          params.startTime = new Date(params.startTime).getTime()
+          params.endTime = new Date(params.endTime).getTime() || ''
+          debugger
+          //
+          if (isModify.value == true) {
+            // 修改规则
+            await updateOverTimeFeeModel(params).then((res) => {
+              this.$message.success({
+                message: '修改则提交成功',
+                type: 'success'
+              })
+            })
+          } else {
+            // 批量创建规则
+            params.stationNoList = selectTable.value['data'].map((item) => item.id)
+            await createOverModel(params).then((res) => {
+              this.$message.success({
+                message: '新规则提交成功',
+                type: 'success'
+              })
+            })
+          }
+
+          formRef.value.resetStationName()
         })
       },
 
@@ -325,25 +406,21 @@ export default defineComponent({
         if (isPushItem == true) {
           selectTable.value['data'] = selectData
         }
-
         this.$refs.multipleTable.clearSelection()
       }
     }
-    watch(
-      () => selectTable.value,
-      (newValue, value) => {
-        // if (arrowUp.value == false) {
-        //   selectTable.value['data'] = selectTable.value['data'].slice(0, 3)
-        // } else {
-        //   selectTable.value['data'] = value
-        // }
-      },
-      {
-        deep: true
+    onBeforeMount(() => {
+      if (Object.keys(props.newRules).length > 0) {
+        debugger
+        isModify.value = false
+        selectTable.value['data'].push(props.newRules)
+        selectTable.value['tableColumn'].pop()
       }
-    )
-    onMounted(async () => {})
+    })
     return {
+      isModify,
+      formRules,
+      formRef,
       selectTable,
       arrowUp,
       ruleForm,
@@ -365,6 +442,15 @@ export default defineComponent({
   align-items: center;
   background: #ffffff;
   box-shadow: 0px 0px 8px 0px #ebebeb;
+  position: absolute;
+  left: 0;
+  ::before {
+    display: tabel;
+    content: '';
+    width: 100%;
+    height: 20px;
+    background: #f5f5f5;
+  }
 }
 .content {
   padding: 0 24px;
@@ -385,6 +471,7 @@ export default defineComponent({
     padding-left: 24px;
     width: 100%;
     box-sizing: border-box;
+    margin-bottom: 72px;
     .form {
       display: flex;
       justify-content: flex-start;
@@ -412,6 +499,12 @@ export default defineComponent({
           :deep(.el-input__icon) {
             line-height: 32px;
           }
+        }
+      }
+      :deep(.el-form-item__content) {
+        ::after,
+        ::before {
+          display: none;
         }
       }
       :deep(.el-form-item__content) {

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-06-02 10:15:49
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-03 18:07:41
+ * @LastEditTime: 2021-06-08 15:10:14
  */
 
 import { fetch } from '@/plugins/axios'
@@ -30,7 +30,14 @@ const createOverModel = (params) =>
  * @return {*}
  * @param {*} params
  */
-const findByid = (params) => fetch({ url: '/overTimeFeeModel/v1/findById/{id}', method: 'get', params })
+const findByid = (id) => fetch({ url: `/overTimeFeeModel/v1/findById/${id}`, method: 'get' })
+
+/**
+ * @name:查看详情
+ * @return {*}
+ * @param {*} params
+ */
+const findByIdDetail = (id) => fetch({ url: `/overTimeFeeModel/v1/findByIdDetail/${id}`, method: 'get' })
 
 /**
  * @name: 列表条件查询
@@ -44,16 +51,15 @@ const findByPage = (params) => fetch({ url: '/overTimeFeeModel/v1/findByPage', m
  * @return {*}
  * @param {*} params
  */
-const invalidOverTimeFeeModel = (params) =>
-  fetch({ url: '/overTimeFeeModel/v1/invalidOverTimeFeeModel', method: 'post', params })
+const invalidOverTimeFeeModel = (id) =>
+  fetch({ url: `/overTimeFeeModel/v1/invalidOverTimeFeeModel/${id}`, method: 'get' })
 
 /**
  * @name:查看白名单操作日志
  * @return {*}
  * @param {*} params
  */
-const queryStaReacord = (params) =>
-  fetch({ url: '/overTimeFeeModel/v1/queryStationOperationRecord/{id}', method: 'post', params })
+const queryStaReacord = (id) => fetch({ url: `/overTimeFeeModel/v1/queryStationOperationRecord/${id}`, method: 'post' })
 
 /**
  * @name:修改
@@ -68,8 +74,7 @@ const updateOverTimeFeeModel = (params) =>
  * @return {*}
  * @param {*} params
  */
-const valOverTimeModel = (params) =>
-  fetch({ url: '/overTimeFeeModel/v1/validOverTimeFeeModel', method: 'post', params })
+const valOverTimeModel = (id) => fetch({ url: `/overTimeFeeModel/v1/validOverTimeFeeModel/${id}`, method: 'get' })
 
 export {
   findByPage,
@@ -79,5 +84,6 @@ export {
   invalidOverTimeFeeModel,
   findByid,
   createOverModel,
-  overTimeFeeModel
+  overTimeFeeModel,
+  findByIdDetail
 }
