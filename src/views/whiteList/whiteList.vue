@@ -422,7 +422,14 @@ export default defineComponent({
              message: '请先选择要移除的数据',
             type: 'warning'
              })
-        }else{
+        }
+        else if(isAll&&tableConfig.value.total<=0){
+          this.$message({
+             message: '暂无数据',
+            type: 'warning'
+             })
+        }
+        else{
         return await this.$messageBox({
           title: title,
           type: 'warning',
@@ -438,7 +445,7 @@ export default defineComponent({
                  validState:false
                })
                .then(res=>{
-                 console.log('remove1',res)
+                
                   this.$message({
                  message: res['msg'],
                   type: 'success'

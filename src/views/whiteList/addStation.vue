@@ -37,8 +37,8 @@
       </EvsTablePage>
       <template #footer>
         <span class="dialog-footer">
-          <el-button size="mini" @click="hideDialog(false)">取 消</el-button>
-          <el-button size="mini" type="primary" @click="hideDialog(true)">确 定</el-button>
+          <el-button size="mini" @click="hideDialog(false)">取消</el-button>
+          <el-button size="mini" type="primary" @click="hideDialog(true)">确定添加</el-button>
         </span>
       </template>
     </el-dialog>
@@ -57,10 +57,10 @@ import  administrativeUnits  from '@/utils/pca-code'
 export default defineComponent({
   name: 'addStation',
   setup(props, { emit }) {
-      onMounted(()=>{
-        console.log('methods',methods)
-        methods.getData()
-    })
+    //   onMounted(()=>{
+    //     console.log('methods',methods)
+    //     methods.getData()
+    // })
     const  dialogVisible: Ref<boolean> = ref(true)
     const arrowUp: Ref<boolean> = ref(false)
      const operateStateArr= [
@@ -233,11 +233,17 @@ export default defineComponent({
                 message: '添加成功',
                 type: 'success'
                   })
-            emit('close',true)
-            dialogVisible.value = false
+             emit('close',true)
+             dialogVisible.value = false
         })
-          }else{
+          }else if(tableConfig.value.total<=0){
              this.$message({
+             message: '暂无数据',
+              type: 'warning'
+                  })  
+          }
+          else{
+              this.$message({
              message: '请先选择要添加的数据',
              type: 'warning'
                   })
@@ -250,12 +256,12 @@ export default defineComponent({
       },
       handleCurrentChange(val) {
          tableConfig.value.currentPage=val
-         methods.getData()
+        //  methods.getData()
       },
        handleSizeChange(val) {
         console.log(val)
         tableConfig.value.pageSize=val
-        methods.getData()
+        // methods.getData()
       },
       resetSubmit() {
         for(let key in stationInfo){
@@ -267,7 +273,7 @@ export default defineComponent({
         if(!obj[key]){delete obj[key]};
         }
        Object.assign(stationInfo, obj)
-       methods.getData()
+    //    methods.getData()
     },
     }
     watch(
