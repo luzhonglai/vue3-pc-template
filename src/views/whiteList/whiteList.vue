@@ -59,13 +59,11 @@
     <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
       <!-- 表格 -->
       <EvsTablePage
-        style="margin-top:16px"
+        style="margin-top:16px;"
         :data="tableLogData"
-        :border="false"
-      
+        :border="false" 
       />
     </el-dialog>
-
     <!-- 详情 -->
     <el-drawer title="查看数据" v-model="drawer" :modal="false" size="50%">
       <div class="content">
@@ -328,7 +326,7 @@ export default defineComponent({
       },
       opendialogVisible(id){
          queryStationOperationRecord(id).then(res=>{
-             dialogVisible.value=true
+            dialogVisible.value=true
             tableLogData.value['data']=res['result'].map(item=>({
               ...item,
               createdAt:formatDate(item.createdAt,'Y/M/D h:m:s')
@@ -337,6 +335,9 @@ export default defineComponent({
       },
       getData(): void{
         console.log('tableconfig',tableConfig)
+         for(let key in stationInfo){
+         if(!stationInfo[key]||stationInfo[key]===null){delete stationInfo[key]};
+        }
         let key=Object.keys(stationInfo)
         if(stationInfo['createAt']){
         let startTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][0],'Y/M/D h:m:s')
@@ -350,8 +351,8 @@ export default defineComponent({
         stationInfo['city']=administrative&&administrative[1]
         stationInfo['area']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
-        stationInfo['manageOrganization']= stationInfo['manageOrganization']&& stationInfo['manageOrganization'][2]
-        stationInfo['belongOrganization']=stationInfo['belongOrganization']&& stationInfo['belongOrganization'][2]
+        // stationInfo['manageOrganization']= stationInfo['manageOrganization']&& stationInfo['manageOrganization'][2]
+        // stationInfo['belongOrganization']=stationInfo['belongOrganization']&& stationInfo['belongOrganization'][2]
         findByPage({
           bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
@@ -437,10 +438,10 @@ export default defineComponent({
                  validState:false
                })
                .then(res=>{
-                //  console.log('remove1',res)
-                this.$message({
+                 console.log('remove1',res)
+                  this.$message({
                  message: res['msg'],
-                // type: 'success'
+                  type: 'success'
                   })
                   this.$refs.inittable.clearSelection()
                   console.log('data',selectData)

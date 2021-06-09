@@ -53,6 +53,7 @@ import store from '@/store'
 import { setStoreState } from '@/store/utils'
 import { createOverTimeStation,findByPage } from '@/api/whiteList'
 import { formatDate } from '@/utils/utils'
+import  administrativeUnits  from '@/utils/pca-code'
 export default defineComponent({
   name: 'addStation',
   setup(props, { emit }) {
@@ -62,10 +63,32 @@ export default defineComponent({
     })
     const  dialogVisible: Ref<boolean> = ref(true)
     const arrowUp: Ref<boolean> = ref(false)
+     const operateStateArr= [
+          {
+            label: '待投运',
+            value: 2
+          },
+          {
+            label: '投运',
+            value: 3
+          },
+           {
+            label: '停运',
+            value: 10
+          },
+          {
+            label: '退运',
+            value:11
+          },
+        //   {
+        //     label: '维修',
+        //     value: 7
+        //   }
+        ]
     const formInline = ref([
       { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
       { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
       { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
@@ -129,28 +152,7 @@ export default defineComponent({
       ],
       data: []
     })
-      const operateStateArr= [
-          {
-            label: '待投运',
-            value: 2
-          },
-          {
-            label: '投运',
-            value: 3
-          },
-           {
-            label: '停运',
-            value: 10
-          },
-          {
-            label: '退运',
-            value:11
-          },
-        //   {
-        //     label: '维修',
-        //     value: 7
-        //   }
-        ]
+
       const stationInfo = reactive({})
       const tableConfig = ref({
       currentPage: 1,
@@ -190,13 +192,23 @@ export default defineComponent({
         dialogVisible.value = false
       },
       getData(): void{
+        for(let key in stationInfo){
+         if(!stationInfo[key]||stationInfo[key]===null){delete stationInfo[key]};
+        }
         console.log('tableconfig',tableConfig)
         let key=Object.keys(stationInfo)
+        if(stationInfo['createAt']){
         let startTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][0],'Y/M/D h:m:s')
         let endTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][1],'Y/M/D h:m:s')
         stationInfo['startTime']=new Date(startTime).getTime()
         stationInfo['endTime']=new Date(endTime).getTime()
         stationInfo['createAt']=undefined
+          }
+         let administrative=stationInfo["administrative"]
+        stationInfo['province']=administrative&&administrative[0]
+        stationInfo['city']=administrative&&administrative[1]
+        stationInfo['area']=administrative&&administrative[2]
+        stationInfo['administrative']=undefined
         findByPage({
           bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
@@ -207,7 +219,7 @@ export default defineComponent({
                  operateState:item.operateState&&operateStateArr[item.operateState].label
                }))
           tableConfig.value.total=res['result'].total
-          tableConfig.value.currentPage=res['result'].pageNumber
+          tableConfig.value.currentPage=res['result'].pageNumber+
         })
       },
       // 表格弹窗逻辑 true 添加选择数据 false 清除选择数据
@@ -215,14 +227,21 @@ export default defineComponent({
          if (isPushItem == true) {
             console.log('selectTable',selectTable)
           selectTable.value['data'] = selectData
-        createOverTimeStation(selectTable.value['data']).then(res=>{
+          if(selectTable.value['data'].length>0){
+        createOverTimeStation({list:selectTable.value['data']}).then(res=>{
              this.$message({
                 message: '添加成功',
                 type: 'success'
                   })
-        emit('close',true)
-        dialogVisible.value = false
+            emit('close',true)
+            dialogVisible.value = false
         })
+          }else{
+             this.$message({
+             message: '请先选择要添加的数据',
+             type: 'warning'
+                  })
+          }
         }else{
         emit('close','')
         dialogVisible.value = false 
