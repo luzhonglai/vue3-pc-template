@@ -22,7 +22,13 @@
       </div>
 
       <!-- 配置表头 -->
-     <configHeader
+      <HeaderTable
+        type="text"
+        style="color:#666666"
+        :allTable="allTable"
+        @handleCheckedChangelist="handleCheckedChangelist"
+      />
+     <!-- <configHeader
         type="text"
         style="color:#666666"
         :configData="tableData.data"
@@ -31,7 +37,7 @@
             tableData.checked = e
           }
         "
-      />
+      /> -->
     </div>
 
     <!-- 表格 -->
@@ -55,6 +61,8 @@
         <el-button @click="opendialogVisible(scope.row.id)" type="text" size="small">操作日志</el-button>
       </template>
     </EvsTablePage>
+       <!-- 配置表头 -->
+      
     <!-- 操作日志 -->
     <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
       <!-- 表格 -->
@@ -68,14 +76,13 @@
     <el-drawer title="查看数据" v-model="drawer" :modal="false" size="50%">
       <div class="content">
         <el-descriptions title="充电站" :column="2">
-          <el-descriptions-item label="站编码：">{{detailInfo.address}}</el-descriptions-item>
-          <el-descriptions-item label="站名称："></el-descriptions-item>
-          <el-descriptions-item label="省市区："></el-descriptions-item>
-          <el-descriptions-item label="站地址："></el-descriptions-item>
-          <el-descriptions-item label="管理单位："></el-descriptions-item>
-          <el-descriptions-item label="经度："></el-descriptions-item>
-          <el-descriptions-item label="纬度："></el-descriptions-item>
-          <el-descriptions-item label="管理单位："></el-descriptions-item>
+          <el-descriptions-item label="站编码：">{{detailInfo['stationNo']}}</el-descriptions-item>
+          <el-descriptions-item label="站名称：">{{detailInfo['stationName']}}</el-descriptions-item>
+          <el-descriptions-item label="省市区：">{{detailInfo['province']}}</el-descriptions-item>
+          <el-descriptions-item label="站地址：">{{detailInfo['address']}}</el-descriptions-item>
+          <el-descriptions-item label="管理单位：">{{detailInfo['manageOrganization']}}</el-descriptions-item>
+          <el-descriptions-item label="经度：">{{detailInfo['lng']}}</el-descriptions-item>
+          <el-descriptions-item label="纬度：">{{detailInfo['lat']}}</el-descriptions-item>
           <el-descriptions-item label="商户类型："></el-descriptions-item>
           <el-descriptions-item label="运营单位："></el-descriptions-item>
           <el-descriptions-item label="站长电话："></el-descriptions-item>
@@ -95,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, Ref, onMounted } from 'vue'
+import { defineComponent, ref, reactive, toRefs, Ref, onMounted ,onBeforeMount} from 'vue'
 import { batchRemove, removeItem, findByPage ,findByIdDetail,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findManageOrganizationList} from '@/api/whiteList'
 import { dateArrToNumArr } from '@/utils/date'
 import  administrativeUnits  from '@/utils/pca-code'
@@ -117,8 +124,74 @@ export default defineComponent({
         // findByIdDetail(2).then(res=>{})
        methods.getData()
     })
+     onBeforeMount(async () => {
+      methods.nowHeaderClass()
+    })
     let aa=''
     let selectData=[]
+    const allTable:any = ref([
+         {
+          type: 'selection',
+          width: '55'
+        },
+        { type: 'index', label: '序号' },
+        {
+          label: '站编码',
+          prop: 'stationNo',
+         
+        },
+        {
+          label: '站名称',
+          prop: 'stationName'
+        },
+        {
+          label: '运营态',
+          prop: 'operateState'
+        },
+        {
+          label: '站地址',
+          prop: 'address'
+        },
+         {
+          label: '区',
+          prop: 'area'
+        },
+        {
+          label: '市',
+          prop: 'city'
+        },
+        {
+          label: '省',
+          prop: 'province'
+        },
+         {
+          label: '运营商',
+          prop: 'operator'
+        },
+        {
+          label: '管理单位',
+          prop: 'manageOrganization'
+        },
+        {
+          label: '产权单位',
+          prop: 'belongOrganization'
+        },
+         {
+          label: '所属模型',
+          prop: 'owningModel'
+        },
+         {
+          label: '添加时间',
+          prop: 'createdAt',
+          width:150,
+        },
+        {
+          label: '操作',
+          fixed: 'right',
+          scope: true,
+          width: 192
+        }
+    ])
     const operateStateArr= [
           {
             label: '待投运',
@@ -286,7 +359,6 @@ export default defineComponent({
     })
     const drawer: Ref<boolean> = ref(false)
     const detailInfo:object=reactive({
-      address:'123456'
     })
     const stationInfo = reactive({
       
@@ -316,7 +388,22 @@ export default defineComponent({
        selectionChange(val) {
         selectData = val
       },
-    
+         nowHeaderClass() {
+        // 配置要显示的
+        const defalutLabel = tableData.value['tableColumn'].filter((item) => item.prop).map((item) => item.prop)
+        allTable.value = allTable.value.map((item) => {
+          if (item.prop) {
+            // 添加标记 --- 默认显示true --- 没有false
+            item.isShow = defalutLabel.includes(item.prop)
+          }
+          return item
+        })
+      },
+
+      // 勾选更新当前表头
+      handleCheckedChangelist(newArr) {
+        tableData.value['tableColumn'] = newArr
+      },
       // checkchange(e){
       //   console.log('rrrr',e)
       // },
@@ -484,6 +571,7 @@ export default defineComponent({
     }
     return {
       aa,
+      allTable,
       closeModal,
       addModal,
       detailInfo,
