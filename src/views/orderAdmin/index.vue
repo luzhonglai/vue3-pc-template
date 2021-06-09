@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-04 17:51:21
+ * @LastEditTime: 2021-06-09 19:16:09
 -->
 <template>
   <div class="content">
@@ -284,14 +284,14 @@ export default defineComponent({
     let detailData: Ref<object> = ref({})
     const findTableParams: any = {
       bean: {
-        endTime: '',
-        orderState: 1,
-        phone: '',
-        stakeNo: '',
-        startTime: '',
-        stationName: '',
-        stationNo: '',
-        tradeFlowNo: '',
+        // endTime: '',
+        // orderState: 1,
+        // phone: '',
+        // stakeNo: '',
+        // startTime: '',
+        // stationName: '',
+        // stationNo: '',
+        // tradeFlowNo: '',
         operateState: 1
       },
       page: 1,
@@ -319,7 +319,7 @@ export default defineComponent({
       async findOrderList() {
         try {
           const {
-            result: { total, list, pageSize },
+            result: { total, list, pageNumber: pageSize },
             code
           } = await FindOrderList(findTableParams).catch((e) => null)
           if (code == 0) return

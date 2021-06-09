@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 17:21:55
+ * @LastEditTime: 2021-06-09 19:08:10
 -->
 <template>
   <div class="content">
@@ -237,6 +237,7 @@ export default defineComponent({
         },
         {
           label: '操作',
+          fixed: 'right',
           scope: true,
           width: 192
         }
@@ -325,8 +326,8 @@ export default defineComponent({
         label: '运营态',
         prop: 'operateState',
         formatter(row, colimn) {
-          const value = status.filter((result) => result.value == row.operateState)[0].label || '待投运'
-          return value
+          // const value = status.filter((result) => result.value == row.operateState)[0].label || '待投运'
+          // return value
         }
       },
       {
@@ -356,13 +357,13 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       // 重置表单
       async resetSubmit(val) {
-        // 时间
-        findListParams.bean.startTime = ''
-        findListParams.bean.endTime = ''
-        // 省市区
-        findListParams.bean.address = ''
-        findListParams.bean.province = ''
-        findListParams.bean.city = ''
+        // // 时间
+        // findListParams.bean.startTime = ''
+        // findListParams.bean.endTime = ''
+        // // 省市区
+        // findListParams.bean.address = ''
+        // findListParams.bean.province = ''
+        // findListParams.bean.city = ''
 
         findListParams.bean = { ...val }
       },
@@ -381,6 +382,7 @@ export default defineComponent({
 
       // 勾选更新当前表头
       handleCheckedChangelist(newArr) {
+        tableData.value['tableColumn'] = []
         tableData.value['tableColumn'] = newArr
       },
 

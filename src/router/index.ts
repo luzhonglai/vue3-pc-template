@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-07 15:35:43
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-31 11:53:23
+ * @LastEditTime: 2021-06-09 19:16:47
  */
 
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
@@ -49,16 +49,6 @@ const constantRouterMap: AppRouteRecordRaw[] = [
         component: () => import('@/views/orderAdmin/index.vue')
       }
     ]
-  },
-  //测试Page
-  {
-    path: '/test',
-    name: 'test',
-    meta: {
-      title: '测试',
-      icon: ''
-    },
-    component: () => import('@/views/test/index.vue')
   }
 ]
 

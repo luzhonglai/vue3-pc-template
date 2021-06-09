@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 11:29:28
+ * @LastEditTime: 2021-06-09 19:33:12
 -->
 
 <template>
@@ -45,7 +45,7 @@
             v-if="isModify"
             style="border: 1px solid #DDDDDD;color:#333333;border-radius:8px"
             icon="el-icon-plus"
-            @click="dialogVisible = true"
+            @click="saveSubmit((dialogVisible = true))"
             >添加适用电站</el-button
           >
         </div>
@@ -97,10 +97,11 @@
     <el-dialog title="添加适用电站" v-model="dialogVisible" center show-close width="1140px">
       <!-- 搜索top -->
       <EvsSearchArea
+        ref="dialogRef"
         :formModel="formInline"
         :initData="initData"
         :hasFold="true"
-        @search="changeStations"
+        @search="saveSubmit"
         @resetForm="resetSubmit"
       >
         <template v-slot:selectStation>
@@ -112,6 +113,7 @@
         ref="multipleTable"
         :data="tableData"
         :border="false"
+        :loading="tableLoading"
         @selection-change="selectionChange"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -136,6 +138,7 @@
 
 <script lang="ts">
 import { createOverModel, updateOverTimeFeeModel } from '../service'
+import { findByPage } from '@/api/whiteList'
 import { defineComponent, ref, Ref, onBeforeMount, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
@@ -153,29 +156,31 @@ export default defineComponent({
   },
   setup(props: any, { emit }) {
     const formRef: Ref<any> = ref(null)
+    const dialogRef: Ref<any> = ref(null)
     const dialogVisible: Ref<boolean> = ref(false)
+    const tableLoading: Ref<boolean> = ref(false)
     const formInline = ref([
       {
-        name: 'stationCode',
+        name: 'seniorSearch',
         label: '高级筛选',
         type: 'input',
         placeholder: '请输入站编码、站名称'
       },
       {
-        name: 'stationCode',
+        name: 'address',
         label: '站地址',
         type: 'input',
         placeholder: '请输入站ID'
       },
       {
-        name: 'stationCode',
+        name: 'administrative',
         label: '行政单位',
         type: 'select',
         placeholder: '请选择',
         options: [cityJson]
       },
       {
-        name: 'stationCode',
+        name: 'operateState',
         label: '运营态',
         type: 'select',
         placeholder: '请选择',
@@ -187,14 +192,14 @@ export default defineComponent({
         ]
       },
       {
-        name: 'stationCode',
+        name: 'manageOrganization',
         label: '管理单位',
         type: 'select',
         placeholder: '请选择',
         options: [cityJson]
       },
       {
-        name: 'stationCode',
+        name: 'belongOrganization',
         label: '产权单位',
         type: 'select',
         placeholder: '请选择',
@@ -248,61 +253,31 @@ export default defineComponent({
         },
         { type: 'index', label: '序号' },
         {
-          label: '电站编号',
-          prop: 'num'
+          label: '站编码',
+          prop: 'stationNo'
         },
         {
           label: '站名称',
-          prop: 'name'
-        },
-        {
-          label: '电站地址',
-          prop: 'date'
+          prop: 'stationName'
         },
         {
           label: '运营态',
-          prop: 'date'
+          prop: 'operateState'
         },
         {
           label: '站地址',
-          prop: 'date'
+          prop: 'address'
         },
         {
           label: '产权单位',
-          prop: 'date'
+          prop: 'belongOrganization'
         },
         {
           label: '管理单位',
-          prop: 'date',
-          with: 123
+          prop: 'manageOrganization'
         }
       ],
-      data: [
-        {
-          num: '300003000600018405',
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          num: '300003000600018405',
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      data: []
     })
     const ruleForm: Ref<object> = ref({
       stationNo: '',
@@ -312,8 +287,7 @@ export default defineComponent({
       price: '',
       reduceTime: '',
       reduceTimes: '',
-      limit: '',
-      ...props.newRules
+      limit: ''
     })
     const isModify: Ref<boolean> = ref(true)
     const selectTable: Ref<object> = ref({
@@ -339,19 +313,60 @@ export default defineComponent({
       data: []
     })
     let selectData = []
+
+    // 列表查询参数配置
+    const findListParams: any = {
+      // bean: {
+      //   address: '',
+      //   area: 'sing',
+      //   belongOrganization: '',
+      //   city: '',
+      //   endTime: 0,
+      //   manageOrganization: '',
+      //   operateState: 0,
+      //   province: '',
+      //   seniorSearch: '',
+      //   startTime: 0,
+      //   stationName: '',
+      //   stationNo: ''
+      // },
+      page: 1,
+      pageSize: 10,
+      sorts: {
+        additionalProp1: '',
+        additionalProp2: '',
+        additionalProp3: ''
+      }
+    }
     const methods: object = {
       // 返回勤换视图
       closeEvent() {
         setStoreState('app', 'isNewRules', false)
         return false
       },
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      // 临时保存
-      setStoreData() {
-        this.$message.success({
-          message: '临时保存成功',
-          type: 'success'
-        })
+
+      // 重置
+      async resetSubmit(form) {
+        findListParams.bean = { ...form }
+      },
+
+      // 查询
+      async saveSubmit(form = {}) {
+        findListParams.bean = { ...findListParams.bean, ...form }
+        try {
+          tableLoading.value = true
+          const {
+            result,
+            result: { total, pageNumber: pageSize, list }
+          } = await findByPage(findListParams).catch((e) => null)
+          if (result == null) return
+          tableData.value['data'] = list
+          tableLoading.value = false
+        } catch (e) {
+          tableLoading.value = false
+          dialogVisible.value = true
+          //  tableLoading.value = true
+        }
       },
 
       // 提交信息
@@ -364,7 +379,6 @@ export default defineComponent({
           // 添加充电站id
           params.startTime = new Date(params.startTime).getTime()
           params.endTime = new Date(params.endTime).getTime() || ''
-          debugger
           //
           if (isModify.value == true) {
             // 修改规则
@@ -411,13 +425,14 @@ export default defineComponent({
     }
     onBeforeMount(() => {
       if (Object.keys(props.newRules).length > 0) {
-        debugger
         isModify.value = false
         selectTable.value['data'].push(props.newRules)
         selectTable.value['tableColumn'].pop()
+        Object.assign(ruleForm.value, props.newRules)
       }
     })
     return {
+      dialogRef,
       isModify,
       formRules,
       formRef,
@@ -501,12 +516,13 @@ export default defineComponent({
           }
         }
       }
-      :deep(.el-form-item__content) {
-        ::after,
-        ::before {
+      :deep(.el-form) {
+        .el-form-item__content::after,
+        .el-form-item__content::before {
           display: none;
         }
       }
+
       :deep(.el-form-item__content) {
         height: 32px;
         width: 428px;
