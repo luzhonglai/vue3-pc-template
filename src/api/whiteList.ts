@@ -26,5 +26,7 @@ const findManageOrganizationList= () => fetch({ url: `/overTimeStation/v1/findMa
 //查看详情
 const findByIdDetail= (id) => fetch({ url: `/overTimeStation/v1/findByIdDetail/${id}`, method: 'get',  })
 
+//资产站列表
+const getStationList= (params) => fetch({ url: `/overTimeStation/v1/getStationList`, method: 'post',params  })
 
-export { batchRemove, removeItem, findByPage,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findManageOrganizationList,findByIdDetail}
+export { batchRemove, removeItem, findByPage,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findManageOrganizationList,findByIdDetail,getStationList}

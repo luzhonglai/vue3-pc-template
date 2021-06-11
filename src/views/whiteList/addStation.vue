@@ -51,34 +51,33 @@
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
-import { createOverTimeStation,findByPage } from '@/api/whiteList'
+import { createOverTimeStation,findByPage ,getStationList} from '@/api/whiteList'
 import { formatDate } from '@/utils/utils'
 import  administrativeUnits  from '@/utils/pca-code'
 export default defineComponent({
   name: 'addStation',
   setup(props, { emit }) {
-    //   onMounted(()=>{
-    //     console.log('methods',methods)
-    //     methods.getData()
-    // })
+      onMounted(()=>{
+        methods.getData()
+    })
     const  dialogVisible: Ref<boolean> = ref(true)
     const arrowUp: Ref<boolean> = ref(false)
      const operateStateArr= [
           {
             label: '待投运',
-            value: 2
+            value: '2'
           },
           {
             label: '投运',
-            value: 3
+            value: '3'
           },
            {
             label: '停运',
-            value: 10
+            value: '10'
           },
           {
             label: '退运',
-            value:11
+            value:'11'
           },
         //   {
         //     label: '维修',
@@ -209,14 +208,14 @@ export default defineComponent({
         stationInfo['city']=administrative&&administrative[1]
         stationInfo['area']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
-        findByPage({
+        getStationList({
           bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
           pageSize:tableConfig.value.pageSize
         }).then(res=>{
          tableData.value['data']= res['result'].list.map(item=>({
                  ...item,
-                 operateState:item.operateState&&operateStateArr[item.operateState].label
+                 operateState:item.operateState && operateStateArr.filter(o=>o.value===item.operateState)[0].label,
                }))
           tableConfig.value.total=res['result'].total
           tableConfig.value.currentPage=res['result'].pageNumber+1
@@ -256,12 +255,12 @@ export default defineComponent({
       },
       handleCurrentChange(val) {
          tableConfig.value.currentPage=val
-        //  methods.getData()
+         methods.getData()
       },
        handleSizeChange(val) {
         console.log(val)
         tableConfig.value.pageSize=val
-        // methods.getData()
+        methods.getData()
       },
       resetSubmit() {
         for(let key in stationInfo){
@@ -273,7 +272,7 @@ export default defineComponent({
         if(!obj[key]){delete obj[key]};
         }
        Object.assign(stationInfo, obj)
-    //    methods.getData()
+       methods.getData()
     },
     }
     watch(

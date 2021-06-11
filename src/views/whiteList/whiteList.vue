@@ -78,13 +78,13 @@
         <el-descriptions title="充电站" :column="2">
           <el-descriptions-item label="站编码：">{{detailInfo['stationNo']}}</el-descriptions-item>
           <el-descriptions-item label="站名称：">{{detailInfo['stationName']}}</el-descriptions-item>
-          <el-descriptions-item label="省市区：">{{detailInfo['province']}}</el-descriptions-item>
+          <el-descriptions-item label="省市区：">{{detailInfo['province']}}{{detailInfo['city']}}{{detailInfo['area']}}</el-descriptions-item>
           <el-descriptions-item label="站地址：">{{detailInfo['address']}}</el-descriptions-item>
           <el-descriptions-item label="管理单位：">{{detailInfo['manageOrganization']}}</el-descriptions-item>
           <el-descriptions-item label="经度：">{{detailInfo['lng']}}</el-descriptions-item>
           <el-descriptions-item label="纬度：">{{detailInfo['lat']}}</el-descriptions-item>
           <el-descriptions-item label="商户类型："></el-descriptions-item>
-          <el-descriptions-item label="运营单位："></el-descriptions-item>
+          <el-descriptions-item label="运营单位：">{{detailInfo['belongOrganization']}}</el-descriptions-item>
           <el-descriptions-item label="站长电话："></el-descriptions-item>
           <el-descriptions-item label="是否对外开放："></el-descriptions-item>
           <el-descriptions-item label="公专用："></el-descriptions-item>
@@ -121,7 +121,7 @@ export default defineComponent({
       onMounted(() => {
         // findBelongOrganizationList().then(res=>{})
         // findManageOrganizationList().then(res=>{})
-        // findByIdDetail(2).then(res=>{})
+       
        methods.getData()
     })
      onBeforeMount(async () => {
@@ -358,7 +358,7 @@ export default defineComponent({
       total: 0
     })
     const drawer: Ref<boolean> = ref(false)
-    const detailInfo:object=reactive({
+    const detailInfo:Ref<object>= ref({
     })
     const stationInfo = reactive({
       
@@ -409,7 +409,11 @@ export default defineComponent({
       // },
       opendrawer(id){
         console.log('drawer',id)
-        drawer.value=true
+         findByIdDetail(id).then(res=>{
+              detailInfo.value=res['result']
+              drawer.value=true
+         })
+     
       },
       opendialogVisible(id){
          queryStationOperationRecord(id).then(res=>{
@@ -475,7 +479,10 @@ export default defineComponent({
       },
       handleClickChange(row, column, cell, event) {
         if (column.no == 2) {
-          drawer.value = true
+           findByIdDetail(row['id']).then(res=>{
+              detailInfo.value=res['result']
+              drawer.value=true
+         })
         }
       },
       handleCurrentChange(val) {
