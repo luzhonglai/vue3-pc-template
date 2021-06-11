@@ -51,7 +51,7 @@
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
-import { createOverTimeStation,findByPage ,getStationList} from '@/api/whiteList'
+import { createOverTimeStation,findByPage ,getStationList,findBelongOrganizationList} from '@/api/whiteList'
 import { formatDate } from '@/utils/utils'
 import  administrativeUnits  from '@/utils/pca-code'
 export default defineComponent({
@@ -59,7 +59,9 @@ export default defineComponent({
   setup(props, { emit }) {
       onMounted(()=>{
         methods.getData()
+        methods.getList()
     })
+    let arr=[]
     const  dialogVisible: Ref<boolean> = ref(true)
     const arrowUp: Ref<boolean> = ref(false)
      const operateStateArr= [
@@ -89,8 +91,8 @@ export default defineComponent({
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
       { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
-      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
-      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
+      // { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' ,options:arr},
       {
         name: 'createAt',
         label: '添加时间',
@@ -183,6 +185,18 @@ export default defineComponent({
     })
     let selectData = []
     const methods= {
+       getList(){
+        findBelongOrganizationList().then(res=>{
+          arr= methods.getChildren(res['result'])
+        })  
+      },
+      getChildren(list){
+        return list.map(item=>({
+          label:item.ouName,
+          value:item.ouName,
+          children:item.listBean?methods.getChildren(item.listBean):null
+        }))
+      },
       selectionChange(val) {
         selectData = val
       },
@@ -208,6 +222,7 @@ export default defineComponent({
         stationInfo['city']=administrative&&administrative[1]
         stationInfo['area']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
+        stationInfo['belongOrganization']=stationInfo['belongOrganization']&& stationInfo['belongOrganization'][2]
         getStationList({
           bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
@@ -289,6 +304,7 @@ export default defineComponent({
       }
     )
     return {
+      arr,
       tableConfig,
       stationInfo,
       operateStateArr,

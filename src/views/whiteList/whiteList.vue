@@ -118,16 +118,14 @@ export default defineComponent({
     addStation
   },
   setup(props: InputProps, { emit }) {
-      onMounted(() => {
-        // findBelongOrganizationList().then(res=>{})
-        // findManageOrganizationList().then(res=>{})
-       
+      onMounted(() => {     
        methods.getData()
+       methods.getList()
     })
      onBeforeMount(async () => {
       methods.nowHeaderClass()
     })
-    let aa=''
+    let arr=[]
     let selectData=[]
     const allTable:any = ref([
          {
@@ -214,44 +212,13 @@ export default defineComponent({
           //   value: 7
           // }
         ]
-     const  options=[  {
-          value: 'zhinan',
-          label: '指南',
-          children: [{
-            value: 'shejiyuanze',
-            label: '设计原则',
-            children: [{
-              value: 'yizhi',
-              label: '一致'
-            }, {
-              value: 'fankui',
-              label: '反馈'
-            }, {
-              value: 'xiaolv',
-              label: '效率'
-            }, {
-              value: 'kekong',
-              label: '可控'
-            }]
-          }, {
-            value: 'daohang',
-            label: '导航',
-            children: [{
-              value: 'cexiangdaohang',
-              label: '侧向导航'
-            }, {
-              value: 'dingbudaohang',
-              label: '顶部导航'
-            }]
-          }]
-        }, ] 
     const formInline = ref([
       { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站地址' },
       { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits},
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
-      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
-      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
+      // { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' ,options:arr},
       {
         name: 'createAt',
         label: '添加时间',
@@ -380,10 +347,22 @@ export default defineComponent({
       if(val){
         methods.getData()
       }
-      }
+      } 
     const methods = {
+      getList(){
+        findBelongOrganizationList().then(res=>{
+          arr= methods.getChildren(res['result'])
+        })  
+      },
+      getChildren(list){
+        return list.map(item=>({
+          label:item.ouName,
+          value:item.ouName,
+          children:item.listBean?methods.getChildren(item.listBean):null
+        }))
+      },
       hand(val){
-        console.log('1234',val,aa)
+        console.log('1234',val)
       },
        selectionChange(val) {
         selectData = val
@@ -443,7 +422,7 @@ export default defineComponent({
         stationInfo['area']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
         // stationInfo['manageOrganization']= stationInfo['manageOrganization']&& stationInfo['manageOrganization'][2]
-        // stationInfo['belongOrganization']=stationInfo['belongOrganization']&& stationInfo['belongOrganization'][2]
+        stationInfo['belongOrganization']=stationInfo['belongOrganization']&& stationInfo['belongOrganization'][2]
         findByPage({
           bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
@@ -577,7 +556,7 @@ export default defineComponent({
       }
     }
     return {
-      aa,
+      arr,
       allTable,
       closeModal,
       addModal,
@@ -591,7 +570,6 @@ export default defineComponent({
       operateStateArr,
       tableLogData,
       stationInfo,
-      options,
       ...methods
     }
   }

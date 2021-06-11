@@ -20,13 +20,12 @@ const createOverTimeStation = (params) => fetch({url: `/overTimeStation/v1/creat
 const queryStationOperationRecord = (id) => fetch({url: `/overTimeStation/v1/queryStationOperationRecord/${id}`, method: 'get'})
 const findByPage = (params) => fetch({ url: `/overTimeStation/v1/findByPage`, method: 'post', params })
 //产权单位
-const findBelongOrganizationList= () => fetch({ url: `/overTimeStation/v1/findBelongOrganizationList`, method: 'get',  })
-//管理单位
-const findManageOrganizationList= () => fetch({ url: `/overTimeStation/v1/findManageOrganizationList`, method: 'get',  })
+const findBelongOrganizationList= () => fetch({ url: `/overTimeStation/v1/getSysOrgsByPOuCode`, method: 'get',  })
+
 //查看详情
 const findByIdDetail= (id) => fetch({ url: `/overTimeStation/v1/findByIdDetail/${id}`, method: 'get',  })
 
 //资产站列表
 const getStationList= (params) => fetch({ url: `/overTimeStation/v1/getStationList`, method: 'post',params  })
 
-export { batchRemove, removeItem, findByPage,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findManageOrganizationList,findByIdDetail,getStationList}
+export { batchRemove, removeItem, findByPage,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findByIdDetail,getStationList}
