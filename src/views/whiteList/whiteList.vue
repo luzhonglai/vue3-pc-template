@@ -103,7 +103,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, reactive, toRefs, Ref, onMounted ,onBeforeMount} from 'vue'
-import { batchRemove, removeItem, findByPage ,findByIdDetail,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findManageOrganizationList} from '@/api/whiteList'
+import { batchRemove, removeItem, findByPage ,findByIdDetail,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList} from '@/api/whiteList'
 import { dateArrToNumArr } from '@/utils/date'
 import  administrativeUnits  from '@/utils/pca-code'
 import { formatDate ,deepClone} from '@/utils/utils'
