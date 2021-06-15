@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 19:08:10
+ * @LastEditTime: 2021-06-15 15:12:02
 -->
 <template>
   <div class="content">
@@ -82,7 +82,7 @@
             >{{ detailsData['validStatus'] ? '是' : '否' }}
           </el-descriptions-item>
           <el-descriptions-item label="起止时间：">{{
-            detailsData['startTime'] + '-' + detailsData['endTime']
+            detailsData['startTime'] + '～' + detailsData['endTime']
           }}</el-descriptions-item>
           <el-descriptions-item label="启用时间：">{{ detailsData['enableTime'] }}</el-descriptions-item>
           <el-descriptions-item label="禁用时间：">{{ detailsData['forbiddenTime'] }}</el-descriptions-item>
@@ -116,7 +116,7 @@
 import { defineComponent, ref, Ref, onMounted, onBeforeMount } from 'vue'
 import { setStoreState } from '@/store/utils'
 import { formatDate } from '@/utils/utils'
-// import cityJson from '@/utils/pca-code'
+import { findBelongOrganizationList } from '@/api/whiteList'
 import store from '@/store'
 
 import {
@@ -131,6 +131,7 @@ import {
 export default defineComponent({
   name: 'roleList',
   setup(props, ctx) {
+    let arr = []
     // 运营态 状态
     const status = [
       { label: '待投运', value: 2 },
@@ -139,9 +140,9 @@ export default defineComponent({
       { label: '退运', value: 11 }
     ]
     const formInline: Ref<any> = ref([
-      { name: 'createdAt', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
-      { name: 'stationNo', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'belongOrganization', label: '行政单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
+      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择' },
       {
         name: 'operateState',
         label: '运营态',
@@ -154,8 +155,7 @@ export default defineComponent({
           { label: '退运', value: 11 }
         ]
       },
-      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
-      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择', options: arr },
       {
         name: 'enableStatus',
         label: '开启状态',
@@ -202,11 +202,7 @@ export default defineComponent({
         {
           label: '运营态',
           prop: 'operateState',
-          show: true,
-          formatter(row, colimn) {
-            // const value = status.filter((result) => result.value == row.operateState)[0].label || '待投运'
-            // return value
-          }
+          show: true
         },
         {
           label: '站地址',
@@ -216,14 +212,7 @@ export default defineComponent({
         {
           label: '超时占位费状态',
           prop: 'enableStatus',
-          show: true,
-          formatter(row, colimn) {
-            if (row.enableStatus) {
-              return '启用'
-            } else {
-              return '禁用'
-            }
-          }
+          show: true
         },
         {
           label: '超时占位费单价（元/分钟）',
@@ -232,7 +221,7 @@ export default defineComponent({
         },
         {
           label: '减免时长',
-          prop: 'address',
+          prop: 'REDUCE_TIME',
           show: true
         },
         {
@@ -279,25 +268,25 @@ export default defineComponent({
     // 列表查询参数配置
     const findListParams: any = {
       bean: {
-        // address: 'string',
-        // area: 'string',
-        // belongOrganization: 'string',
-        // city: 'string',
+        // address: '',
+        // area: '',
+        // belongOrganization: '',
+        // city: '',
         // enableStatus: 0,
         // endTime: 0,
-        // manageOrganization: 'string',
+        // manageOrganization: '',
         // operateState: 0,
-        // province: 'string',
+        // province: '',
         // startTime: 0,
-        // stationName: 'string',
-        // stationNo: 'string'
+        // stationName: '',
+        // stationNo: ''
       },
       page: 1,
       pageSize: 10,
       sorts: {
-        additionalProp1: 'string',
-        additionalProp2: 'string',
-        additionalProp3: 'string'
+        additionalProp1: '',
+        additionalProp2: '',
+        additionalProp3: ''
       }
     }
 
@@ -326,8 +315,10 @@ export default defineComponent({
         label: '运营态',
         prop: 'operateState',
         formatter(row, colimn) {
-          // const value = status.filter((result) => result.value == row.operateState)[0].label || '待投运'
-          // return value
+          const value = status.filter((result) => result.value == row.operateState)[0]
+          if (value && value.label != undefined) {
+            return value.label
+          }
         }
       },
       {
@@ -336,7 +327,14 @@ export default defineComponent({
       },
       {
         label: '超时占位费状态',
-        prop: 'enableStatus'
+        prop: 'enableStatus',
+        formatter(row) {
+          if (row.validStatus == 'VALID') {
+            return '启用'
+          } else {
+            return '禁用'
+          }
+        }
       },
       {
         label: '超时占位费单价（元/分钟）',
@@ -344,10 +342,19 @@ export default defineComponent({
       },
       {
         label: '减免时长',
-        prop: 'address'
+        prop: 'reduceTime'
+      },
+      {
+        label: '减免次数',
+        prop: 'reduceTimes'
+      },
+      {
+        label: '封顶条件',
+        prop: 'limit'
       },
       {
         label: '操作',
+        fixed: 'right',
         scope: true,
         width: 192
       }
@@ -357,15 +364,21 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       // 重置表单
       async resetSubmit(val) {
-        // // 时间
-        // findListParams.bean.startTime = ''
-        // findListParams.bean.endTime = ''
-        // // 省市区
-        // findListParams.bean.address = ''
-        // findListParams.bean.province = ''
-        // findListParams.bean.city = ''
-
         findListParams.bean = { ...val }
+      },
+
+      getList() {
+        findBelongOrganizationList().then((res) => {
+          arr = methods.getChildren(res['result'])
+        })
+      },
+
+      getChildren(list) {
+        return list.map((item) => ({
+          label: item.ouName,
+          value: item.ouName,
+          children: item.listBean ? methods.getChildren(item.listBean) : null
+        }))
       },
 
       nowHeaderClass() {
@@ -388,7 +401,7 @@ export default defineComponent({
 
       // 表单提交
       async fromSubmit(from): Promise<void> {
-        const { time = false, address = false } = from
+        const { time = false, administrative = false } = from
         const bean = findListParams.bean
 
         if (time) {
@@ -399,10 +412,10 @@ export default defineComponent({
         }
 
         // 省市区
-        if (address) {
-          bean.address = address[0]
-          bean.province = address[1]
-          bean.city = address[2]
+        if (administrative) {
+          bean.address = administrative[0]
+          bean.province = administrative[1]
+          bean.city = administrative[2]
         }
 
         findListParams.bean = { ...bean, ...from }
@@ -453,7 +466,7 @@ export default defineComponent({
             message: '确认启动当前选中的充电站收取超时占位费？',
             showCancelButton: true
           }).then((res) => {
-            batchParasm.validState = false
+            batchParasm.validState = true
           })
         }
         if (type == 'close') {
@@ -463,7 +476,7 @@ export default defineComponent({
             message: '确认取消当前选中的充电站收取超时占位费？禁用后当前选中的充电站不在收取占位费。',
             showCancelButton: true
           }).then((res) => {
-            batchParasm.validState = true
+            batchParasm.validState = false
           })
         }
         // 批量开启禁用接口
@@ -532,8 +545,11 @@ export default defineComponent({
           drawer.value = true
 
           result.operateState = status.filter((item) => item.value == result.operateState)[0].label
-          result.endTime = formatDate(result.endTime, 'Y-M-D')
-          result.startTime = formatDate(result.startTime, 'Y-M-D')
+          result.endTime = formatDate(result.endTime, 'Y.M.D')
+          result.startTime = formatDate(result.startTime, 'Y.M.D')
+          result.createdAt = formatDate(result.createdAt, 'Y.D.M')
+          result.forbiddenTime = formatDate(result.forbiddenTime, 'Y.M.D')
+          result.enableTime = formatDate(result.enableTime, 'Y.M.D')
           detailsData.value = result
         }
       },
@@ -556,6 +572,7 @@ export default defineComponent({
     onBeforeMount(async () => {
       methods.findByPageData()
       methods.nowHeaderClass()
+      methods.getList()
     })
 
     return {
@@ -632,6 +649,15 @@ export default defineComponent({
     .el-descriptions__content {
       font-size: 14px;
       color: rgba(0, 0, 0, 0.65);
+    }
+  }
+  :deep(.cell) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .el-button--small {
+      margin: 0;
     }
   }
 }

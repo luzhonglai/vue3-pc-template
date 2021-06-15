@@ -6,7 +6,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:58:35
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-01 10:26:29
+ * @LastEditTime: 2021-06-10 09:51:13
  */
 
 // const pageConfig = require("./config/page.config");
@@ -26,7 +26,8 @@ function resolve(dir) {
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/' : './',
   lintOnSave: true,
-  productionSourceMap: false,
+  productionSourceMap: process.env.NODE_ENV !== 'production',
+  // 跨域代理
   devServer: {
     port: 8080,
     open: true,
@@ -45,6 +46,20 @@ module.exports = {
       errors: false
     }
   },
+  css: {
+    loaderOptions: {
+      less: {
+        lessOptions: {
+          javascriptEnabled: true
+        }
+      }
+    }
+  },
+  // configureWebpack: {
+  //   externals: {
+  //     AMap: 'AMap' // 高德地图配置
+  //   }
+  // },
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@', resolve('src'))

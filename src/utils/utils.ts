@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-07 14:21:53
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-06 14:48:48
+ * @LastEditTime: 2021-06-15 10:36:27
  */
 
 /**
@@ -36,6 +36,9 @@ export const npNull = (accessor: any, defaultValue?: any) => {
  */
 
 export const formatDate = (number: string, format: string) => {
+  if (number == null || number == undefined) {
+    return '--'
+  }
   function formatNumber(n: any) {
     n = n.toString()
     return n[1] ? n : '0' + n

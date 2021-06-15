@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-06-04 17:08:22
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 09:47:38
+ * @LastEditTime: 2021-06-15 15:49:49
  */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { Message } from '@/components/Message'
@@ -35,11 +35,9 @@ service.interceptors.request.use(
       config.data = qs.stringify(config.data)
     }
     config['startDate'] = Date.now()
-
+    config.headers.token = 'o::24320CBD08C74AD895AB806799154317'
     if (Storage.get('token')) {
-      config.headers = {
-        token: Storage.get('token') //携带权限参数
-      }
+      config.headers.token = Storage.get('token') //携带权限参数
     }
     return config
   },

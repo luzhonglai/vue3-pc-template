@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 19:33:12
+ * @LastEditTime: 2021-06-15 14:03:08
 -->
 
 <template>
@@ -42,7 +42,7 @@
           </div>
           <el-button
             plain
-            v-if="isModify"
+            v-if="isNewAdd"
             style="border: 1px solid #DDDDDD;color:#333333;border-radius:8px"
             icon="el-icon-plus"
             @click="saveSubmit((dialogVisible = true))"
@@ -137,8 +137,7 @@
 </template>
 
 <script lang="ts">
-import { createOverModel, updateOverTimeFeeModel } from '../service'
-import { findByPage } from '@/api/whiteList'
+import { createOverModel, updateOverTimeFeeModel, findByPageNoAddRule, findByIdDetail } from '../service'
 import { defineComponent, ref, Ref, onBeforeMount, watch, computed } from 'vue'
 import store from '@/store'
 import { setStoreState } from '@/store/utils'
@@ -154,7 +153,7 @@ export default defineComponent({
       }
     }
   },
-  setup(props: any, { emit }) {
+  setup(props: any, { emit }: any) {
     const formRef: Ref<any> = ref(null)
     const dialogRef: Ref<any> = ref(null)
     const dialogVisible: Ref<boolean> = ref(false)
@@ -289,7 +288,7 @@ export default defineComponent({
       reduceTimes: '',
       limit: ''
     })
-    const isModify: Ref<boolean> = ref(true)
+    const isNewAdd: Ref<boolean> = ref(true)
     const selectTable: Ref<object> = ref({
       tableColumn: [
         {
@@ -338,11 +337,12 @@ export default defineComponent({
         additionalProp3: ''
       }
     }
-    const methods: object = {
+    const methods = {
       // 返回勤换视图
       closeEvent() {
+        emit('setComponents', '')
         setStoreState('app', 'isNewRules', false)
-        return false
+        isNewAdd.value = false
       },
 
       // 重置
@@ -358,49 +358,54 @@ export default defineComponent({
           const {
             result,
             result: { total, pageNumber: pageSize, list }
-          } = await findByPage(findListParams).catch((e) => null)
+          } = await findByPageNoAddRule(findListParams).catch((e) => null)
           if (result == null) return
           tableData.value['data'] = list
           tableLoading.value = false
         } catch (e) {
           tableLoading.value = false
           dialogVisible.value = true
-          //  tableLoading.value = true
         }
       },
 
       // 提交信息
       submitInt() {
         formRef.value.validate(async (result: boolean) => {
+          const params: any = ruleForm.value
           if (!result) {
             return
           }
-          const params: any = ruleForm.value
-          // 添加充电站id
+          debugger
           params.startTime = new Date(params.startTime).getTime()
-          params.endTime = new Date(params.endTime).getTime() || ''
-          //
-          if (isModify.value == true) {
-            // 修改规则
-            await updateOverTimeFeeModel(params).then((res) => {
-              this.$message.success({
-                message: '修改则提交成功',
-                type: 'success'
-              })
+          params.endTime = new Date(params.endTime).getTime()
+          if (isNewAdd.value == true) {
+            // 批量创建规则
+            params.stationNoList = selectTable.value['data'].map((item) => item.stationNo)
+            await createOverModel(params)
+            this.$message.success({
+              message: '新规则提交成功',
+              type: 'success'
             })
           } else {
-            // 批量创建规则
-            params.stationNoList = selectTable.value['data'].map((item) => item.id)
-            await createOverModel(params).then((res) => {
-              this.$message.success({
-                message: '新规则提交成功',
-                type: 'success'
-              })
+            // 修改规则
+            await updateOverTimeFeeModel(params)
+            this.$message.success({
+              message: '修改则提交成功',
+              type: 'success'
             })
           }
-
-          formRef.value.resetStationName()
         })
+        methods.closeEvent()
+        methods.resetFormData()
+      },
+
+      resetFormData() {
+        const formInit: any = ruleForm.value
+        for (let key in formInit) {
+          formInit[key] = ''
+        }
+        isNewAdd.value = true
+        selectTable.value['data'] = []
       },
 
       selectionChange(val) {
@@ -409,31 +414,33 @@ export default defineComponent({
 
       // 移除选择
       handleDelete(index, row) {
-        console.log('移除第一个', index)
         selectTable.value['data'].splice(index, 1)
       },
 
       // 表格弹窗逻辑 true 添加选择数据 false 清除选择数据
       hideDialog(isPushItem: boolean) {
         dialogVisible.value = false
-
         if (isPushItem == true) {
           selectTable.value['data'] = selectData
         }
         this.$refs.multipleTable.clearSelection()
       }
     }
-    onBeforeMount(() => {
+
+    onBeforeMount(async () => {
+      const { id } = props.newRules
       if (Object.keys(props.newRules).length > 0) {
-        isModify.value = false
-        selectTable.value['data'].push(props.newRules)
+        const { result }: any = await findByIdDetail(id)
+        result.id = id
+        selectTable.value['data'].push(result)
         selectTable.value['tableColumn'].pop()
-        Object.assign(ruleForm.value, props.newRules)
+        Object.assign(ruleForm.value, result)
+        isNewAdd.value = false
       }
     })
     return {
       dialogRef,
-      isModify,
+      isNewAdd,
       formRules,
       formRef,
       selectTable,

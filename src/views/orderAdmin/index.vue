@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 19:16:09
+ * @LastEditTime: 2021-06-15 10:36:01
 -->
 <template>
   <div class="content">
@@ -44,10 +44,10 @@
 
     <!-- 详情 -->
     <EvsDialog
+      ref="dialogRef"
       title="超时占位规则详情"
       :keyLabel="dialongConfg"
       :data="detailData"
-      :isShow="drawer"
       :modal="false"
       size="50%"
     >
@@ -56,16 +56,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, toRefs, Ref } from 'vue'
-import { formatDate } from '@/utils/utils'
+import { defineComponent, ref, reactive, toRefs, Ref, onBeforeMount } from 'vue'
 import { FindOrderList, OrderDetail } from './serivce'
+import { findBelongOrganizationList } from '@/api/whiteList'
 import EvsDialog from '@/components/EvsDialog/Index.vue'
+import { formatDate } from '@/utils/utils'
 export default defineComponent({
   name: 'orderAdmin',
   component: {
     EvsDialog
   },
   setup(props, { emit }) {
+    let arr = []
+    const dialogRef: any = ref('null')
     const formInline = ref([
       { name: 'tradeFlowNo', label: '交易流水号', type: 'input', placeholder: '请输入内容' },
       { name: 'phone', label: '用户手机号', type: 'input', placeholder: '请输入内容' },
@@ -157,7 +160,6 @@ export default defineComponent({
       pageSize: 10,
       total: 3
     })
-    const drawer: Ref<boolean> = ref(false)
     const dialongConfg: object = reactive([
       {
         title: '交易信息',
@@ -204,23 +206,23 @@ export default defineComponent({
           },
           {
             lable: '关联充电订单交易流水号1：',
-            key: 'orderTradeFlowNo'
+            key: 'orderTradeFlowNo1'
           },
           {
             lable: '启停时间：',
-            key: 'chargeStartTime'
+            key: 'chargeStartTime1'
           },
           {
             lable: '关联充电订单交易流水号2：',
-            key: 'orderTradeFlowNo'
+            key: 'orderTradeFlowNo2'
           },
           {
             lable: '启停时间：',
-            key: 'chargeStartTime'
+            key: 'chargeStartTime2'
           },
           {
             lable: '拔枪时间：',
-            key: 'chargeEndTime'
+            key: 'pllGunTime'
           },
           {
             lable: '交易金额（元）：',
@@ -249,19 +251,23 @@ export default defineComponent({
         keyArr: [
           {
             lable: '用户ID：',
-            key: ''
+            key: 'userId'
           },
           {
-            lable: '姓名：'
+            lable: '姓名：',
+            key: 'userName'
           },
           {
-            lable: '手机号：'
+            lable: '手机号：',
+            key: 'phone'
           },
           {
-            lable: '卡号：'
+            lable: '卡号：',
+            key: 'cardNo'
           },
           {
-            lable: '是否开票：'
+            lable: '是否开票：',
+            key: 'isInvoice'
           },
           {
             lable: '是否冲正：'
@@ -273,10 +279,11 @@ export default defineComponent({
         keyArr: [
           {
             lable: '是否清分：',
-            key: ''
+            key: 'clearDistribution'
           },
           {
-            lable: '是否结算：'
+            lable: '是否结算：',
+            key: 'closeAccount'
           }
         ]
       }
@@ -314,7 +321,6 @@ export default defineComponent({
         findTableParams.bean = { ...findTableParams.bean, ...from }
         methods.findOrderList()
       },
-
       // 列表查询
       async findOrderList() {
         try {
@@ -355,9 +361,14 @@ export default defineComponent({
           return false
         }
         await OrderDetail(row.id).then((res: any) => {
+          const { orderTradeFlowNo, startTime, endTime } = res.result.chargeOrderVoList[0]
+          res.result.orderTradeFlowNo1 = orderTradeFlowNo
+          res.result.chargeStartTime1 = `${formatDate(startTime, 'Y.M.D')}-${formatDate(endTime, 'Y.M.D')}`
+          res.result.putGunTime = formatDate(res.result.putGunTime, 'Y.M.D')
+          res.result.pllGunTime = formatDate(res.result.pllGunTime, 'Y.M.D')
           detailData.value = res.result
         })
-        drawer.value = true
+        dialogRef.value.showDialog()
       },
 
       // 选择table
@@ -366,8 +377,12 @@ export default defineComponent({
       }
     }
 
+    onBeforeMount(() => {
+      methods.findOrderList()
+    })
+
     return {
-      drawer,
+      dialogRef,
       detailData,
       dialongConfg,
       resetName,

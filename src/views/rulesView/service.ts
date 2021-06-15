@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-06-02 10:15:49
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-08 15:10:14
+ * @LastEditTime: 2021-06-10 16:15:40
  */
 
 import { fetch } from '@/plugins/axios'
@@ -23,7 +23,7 @@ const overTimeFeeModel = (params) => fetch({ url: '/overTimeFeeModel/v1/batchVal
  * @param {*} params
  */
 const createOverModel = (params) =>
-  fetch({ url: '/overTimeFeeModel/v1/createOverTimeFeeModel', method: 'post', params })
+  fetch({ url: '/overTimeFeeModel/v1/createOverTimeFeeModelList', method: 'post', params })
 
 /**
  * @name:修改回显/查看详情
@@ -76,6 +76,9 @@ const updateOverTimeFeeModel = (params) =>
  */
 const valOverTimeModel = (id) => fetch({ url: `/overTimeFeeModel/v1/validOverTimeFeeModel/${id}`, method: 'get' })
 
+const findByPageNoAddRule = (params) =>
+  fetch({ url: '/overTimeStation/v1/findByPageNoAddRule', method: 'post', params })
+
 export {
   findByPage,
   updateOverTimeFeeModel,
@@ -85,5 +88,6 @@ export {
   findByid,
   createOverModel,
   overTimeFeeModel,
-  findByIdDetail
+  findByIdDetail,
+  findByPageNoAddRule
 }

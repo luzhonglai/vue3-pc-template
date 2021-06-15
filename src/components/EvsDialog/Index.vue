@@ -4,15 +4,15 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-06-04 15:56:19
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-04 16:56:10
+ * @LastEditTime: 2021-06-11 09:55:57
 -->
 
 <template>
-  <el-drawer :title="dialogTitle" v-model="isShow" :modal="modal" :size="size">
+  <el-drawer :title="dialogTitle" v-model="dialogVisible" :modal="modal" :size="size">
     <div class="content">
       <el-descriptions v-for="(options, index) of keyLabel" :key="index" :title="options.title" :column="2">
         <el-descriptions-item v-for="item of options.keyArr" :key="item.key" :label="item.lable">
-          {{ data[item.key] }}
+          {{ data[item.key] || '--' }}
         </el-descriptions-item>
       </el-descriptions>
     </div>
@@ -34,10 +34,6 @@ export default defineComponent({
       // eslint-disable-next-line vue/require-valid-default-prop
       default: {}
     },
-    isShow: {
-      type: Boolean,
-      default: () => false
-    },
     size: {
       type: String
     },
@@ -47,7 +43,16 @@ export default defineComponent({
     }
   },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setup(props) {}
+  setup(props) {
+    const dialogVisible: Ref<boolean> = ref(false)
+    const showDialog = () => {
+      dialogVisible.value = true
+    }
+    return {
+      showDialog,
+      dialogVisible
+    }
+  }
 })
 </script>
 
