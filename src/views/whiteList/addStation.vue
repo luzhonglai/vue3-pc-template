@@ -91,12 +91,11 @@ export default defineComponent({
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
       { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
-      // { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' },
-      { name: 'belongOrganization', label: '产权单位', type: 'cascader', placeholder: '请选择' ,options:arr},
+      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:arr},
       {
         name: 'createAt',
         label: '添加时间',
-        type: 'datetimerange',
+        type: 'daterange',
         rangeSeparator: '~',
         startPlaceholder: '时间范围起',
         endPlaceholder: '时间范围止',
@@ -136,7 +135,8 @@ export default defineComponent({
         },
         {
           label: '省',
-          prop: 'province'
+          prop: 'province',
+          width:60,
         },
          {
           label: '运营商',
@@ -146,10 +146,10 @@ export default defineComponent({
           label: '管理单位',
           prop: 'manageOrganization'
         },
-        {
-          label: '产权单位',
-          prop: 'belongOrganization'
-        },
+        // {
+        //   label: '产权单位',
+        //   prop: 'belongOrganization'
+        // },
       ],
       data: []
     })
@@ -211,8 +211,8 @@ export default defineComponent({
         console.log('tableconfig',tableConfig)
         let key=Object.keys(stationInfo)
         if(stationInfo['createAt']){
-        let startTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][0],'Y/M/D h:m:s')
-        let endTime=stationInfo['createAt']&&formatDate(stationInfo['createAt'][1],'Y/M/D h:m:s')
+        let startTime=stationInfo['createAt']&&stationInfo['createAt'][0]
+        let endTime=stationInfo['createAt']&&stationInfo['createAt'][1]
         stationInfo['startTime']=new Date(startTime).getTime()
         stationInfo['endTime']=new Date(endTime).getTime()
         stationInfo['createAt']=undefined
@@ -222,7 +222,7 @@ export default defineComponent({
         stationInfo['city']=administrative&&administrative[1]
         stationInfo['area']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
-        stationInfo['belongOrganization']=stationInfo['belongOrganization']&& stationInfo['belongOrganization'][2]
+        stationInfo['manageOrganization']=stationInfo['manageOrganization']&& stationInfo['belongOrganization'][2]
         getStationList({
           bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
@@ -230,10 +230,11 @@ export default defineComponent({
         }).then(res=>{
          tableData.value['data']= res['result'].list.map(item=>({
                  ...item,
-                 operateState:item.operateState && operateStateArr.filter(o=>o.value===item.operateState)[0].label,
+                 operateState:item.operateState&&operateStateArr.filter(o=>o.value===item.operateState)[0]?operateStateArr.filter(o=>o.value===item.operateState)[0].label:'',
                }))
           tableConfig.value.total=res['result'].total
           tableConfig.value.currentPage=res['result'].pageNumber+1
+            methods.resetSubmit()
         })
       },
       // 表格弹窗逻辑 true 添加选择数据 false 清除选择数据
