@@ -118,12 +118,10 @@ export default defineComponent({
     addStation
   },
   setup(props: InputProps, { emit }) {
-      onMounted(() => {     
-       methods.getData()
-       methods.getList()
-    })
      onBeforeMount(async () => {
-      methods.nowHeaderClass()
+       methods.getList()
+       methods.getData()
+       methods.nowHeaderClass()
     })
     let arr=[]
     let selectData=[]
