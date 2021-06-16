@@ -4,11 +4,11 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-10 17:11:08
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 17:19:16
+ * @LastEditTime: 2021-06-10 11:24:50
 -->
 <template>
   <!-- 配置表头弹框 -->
-  <el-popover placement="bottom" :width="200" trigger="click">
+  <el-popover placement="bottom" :width="200" trigger="click" v-model:visible="visible">
     <div class="config_table_title">
       <div class="title">
         配置表头
@@ -21,6 +21,10 @@
         </div>
       </el-checkbox-group>
     </div>
+    <div class="hea-button">
+      <el-button @click="visible = false" trigger="click" size="mini">取消</el-button>
+      <el-button @click="visible = false" trigger="click" type="primary" size="mini">确定</el-button>
+    </div>
     <template #reference>
       <el-button :type="type">
         <i class="el-icon-circle-plus"></i>
@@ -31,7 +35,6 @@
 </template>
 <script lang="ts">
 import { defineComponent, watch, onBeforeMount, reactive, toRefs } from 'vue'
-import wsCache from '@/utils/cache'
 export default defineComponent({
   name: 'headerTable',
 
@@ -41,7 +44,8 @@ export default defineComponent({
 
   setup(props: any, { emit }: any) {
     const data: any = reactive({
-      checkedList: props.allTable.map((item) => item.prop)
+      checkedList: props.allTable.map((item) => item.prop),
+      visible: false
     })
 
     watch(
@@ -81,5 +85,18 @@ export default defineComponent({
       font-size: 12px;
     }
   }
+  margin-bottom: 76px;
+}
+.hea-button {
+  padding: 24px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 76px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: flex-start;
+  background: #ffffff;
 }
 </style>

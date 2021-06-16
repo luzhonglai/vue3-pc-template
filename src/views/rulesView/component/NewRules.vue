@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-15 14:03:08
+ * @LastEditTime: 2021-06-15 17:59:00
 -->
 
 <template>
@@ -375,28 +375,37 @@ export default defineComponent({
           if (!result) {
             return
           }
-          debugger
           params.startTime = new Date(params.startTime).getTime()
           params.endTime = new Date(params.endTime).getTime()
           if (isNewAdd.value == true) {
             // 批量创建规则
             params.stationNoList = selectTable.value['data'].map((item) => item.stationNo)
-            await createOverModel(params)
-            this.$message.success({
-              message: '新规则提交成功',
-              type: 'success'
-            })
+            try {
+              await createOverModel(params)
+              this.$message.success({
+                message: '新规则提交成功',
+                type: 'success'
+              })
+              methods.closeEvent()
+              methods.resetFormData()
+            } catch (error) {
+              return false
+            }
           } else {
-            // 修改规则
-            await updateOverTimeFeeModel(params)
-            this.$message.success({
-              message: '修改则提交成功',
-              type: 'success'
-            })
+            try {
+              // 修改规则
+              await updateOverTimeFeeModel(params)
+              this.$message.success({
+                message: '修改则提交成功',
+                type: 'success'
+              })
+              methods.closeEvent()
+              methods.resetFormData()
+            } catch (error) {
+              return false
+            }
           }
         })
-        methods.closeEvent()
-        methods.resetFormData()
       },
 
       resetFormData() {

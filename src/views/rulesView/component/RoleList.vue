@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-15 15:12:02
+ * @LastEditTime: 2021-06-16 09:45:36
 -->
 <template>
   <div class="content">
@@ -100,7 +100,7 @@
     <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
       <!-- 表格 -->
       <EvsTablePage
-        style="margin-top:16px;"
+        style="margin-top:16px;width:456px"
         :data="tableLogData"
         height="300px"
         :border="false"
@@ -155,7 +155,13 @@ export default defineComponent({
           { label: '退运', value: 11 }
         ]
       },
-      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择', options: arr },
+      {
+        name: 'manageOrganization',
+        label: '管理单位',
+        type: 'cascader',
+        placeholder: '请选择',
+        options: arr
+      },
       {
         name: 'enableStatus',
         label: '开启状态',
@@ -243,7 +249,7 @@ export default defineComponent({
           label: '操作时间',
           prop: 'createdAt',
           formatter(row, colimn) {
-            return formatDate(row.createdAt, 'Y-D-M')
+            return formatDate(row.createdAt, 'Y/M/D h:m:s')
           }
         },
         {
@@ -363,7 +369,7 @@ export default defineComponent({
     const methods = {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       // 重置表单
-      async resetSubmit(val) {
+      async resetSubmit(val = {}) {
         findListParams.bean = { ...val }
       },
 
@@ -438,6 +444,7 @@ export default defineComponent({
           tableLoading.value = false
           //  tableLoading.value = true
         }
+        methods.resetSubmit()
       },
 
       changeStation(val) {
