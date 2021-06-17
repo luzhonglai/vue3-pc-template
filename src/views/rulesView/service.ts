@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-06-02 10:15:49
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-10 16:15:40
+ * @LastEditTime: 2021-06-17 09:44:37
  */
 
 import { fetch } from '@/plugins/axios'
@@ -59,7 +59,8 @@ const invalidOverTimeFeeModel = (id) =>
  * @return {*}
  * @param {*} params
  */
-const queryStaReacord = (id) => fetch({ url: `/overTimeFeeModel/v1/queryStationOperationRecord/${id}`, method: 'post' })
+const queryStaReacord = (params) =>
+  fetch({ url: `/overTimeOperationRecord/v1/queryStationOperationRecordPage`, method: 'post', params })
 
 /**
  * @name:修改

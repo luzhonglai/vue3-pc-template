@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-16 09:45:36
+ * @LastEditTime: 2021-06-17 14:31:47
 -->
 <template>
   <div class="content">
@@ -100,7 +100,7 @@
     <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
       <!-- 表格 -->
       <EvsTablePage
-        style="margin-top:16px;width:456px"
+        style="margin-top:16px"
         :data="tableLogData"
         height="300px"
         :border="false"
@@ -119,19 +119,11 @@ import { formatDate } from '@/utils/utils'
 import { findBelongOrganizationList } from '@/api/whiteList'
 import store from '@/store'
 
-import {
-  findByPage,
-  overTimeFeeModel,
-  invalidOverTimeFeeModel,
-  valOverTimeModel,
-  queryStaReacord,
-  findByIdDetail
-} from '../service'
+import { findByPage, overTimeFeeModel, queryStaReacord, findByIdDetail } from '../service'
 
 export default defineComponent({
   name: 'roleList',
   setup(props, ctx) {
-    let arr = []
     // 运营态 状态
     const status = [
       { label: '待投运', value: 2 },
@@ -160,7 +152,7 @@ export default defineComponent({
         label: '管理单位',
         type: 'cascader',
         placeholder: '请选择',
-        options: arr
+        options: []
       },
       {
         name: 'enableStatus',
@@ -249,7 +241,7 @@ export default defineComponent({
           label: '操作时间',
           prop: 'createdAt',
           formatter(row, colimn) {
-            return formatDate(row.createdAt, 'Y/M/D h:m:s')
+            return formatDate(row.createdAt, 'Y/M/D h:m')
           }
         },
         {
@@ -373,16 +365,16 @@ export default defineComponent({
         findListParams.bean = { ...val }
       },
 
-      getList() {
-        findBelongOrganizationList().then((res) => {
-          arr = methods.getChildren(res['result'])
-        })
+      async getList() {
+        const { result }: any = await findBelongOrganizationList()
+        const manageOrganization = formInline.value.filter((item) => item.name == 'manageOrganization')[0]
+        manageOrganization.options = methods.getChildren(result)[0].children
       },
 
       getChildren(list) {
         return list.map((item) => ({
           label: item.ouName,
-          value: item.ouName,
+          value: item.ouCode,
           children: item.listBean ? methods.getChildren(item.listBean) : null
         }))
       },
@@ -407,7 +399,7 @@ export default defineComponent({
 
       // 表单提交
       async fromSubmit(from): Promise<void> {
-        const { time = false, administrative = false } = from
+        const { time = false, administrative = false, manageOrganization = false } = from
         const bean = findListParams.bean
 
         if (time) {
@@ -417,13 +409,16 @@ export default defineComponent({
           bean.endTime = endTime
         }
 
-        // 省市区
+        // 行政单位 --- 省市区
         if (administrative) {
           bean.address = administrative[0]
           bean.province = administrative[1]
           bean.city = administrative[2]
         }
-
+        // if (manageOrganization) {
+        //   debugger
+        //   from.manageOrganization = manageOrganization.jion('')
+        // }
         findListParams.bean = { ...bean, ...from }
         methods.findByPageData()
       },
@@ -510,7 +505,11 @@ export default defineComponent({
       //  禁用状态
       async onDisable(row) {
         try {
-          const { code, msg }: any = await invalidOverTimeFeeModel(row.id)
+          const params = {
+            idList: [row.id],
+            validState: false
+          }
+          const { code, msg }: any = await overTimeFeeModel(params)
           this.$message.success({
             message: msg,
             type: 'success'
@@ -524,7 +523,11 @@ export default defineComponent({
       //  开启状态
       async onEnable(row) {
         try {
-          const { code, msg }: any = await valOverTimeModel(row.id)
+          const params = {
+            idList: [row.id],
+            validState: true
+          }
+          const { code, msg }: any = await overTimeFeeModel(params)
           this.$message.success({
             message: msg,
             type: 'success'
@@ -538,8 +541,12 @@ export default defineComponent({
       // 操作log
       async onUserLog(row) {
         try {
-          const { code, msg, result }: any = await queryStaReacord(row.id)
-          tableLogData.value['data'] = result
+          const params = {
+            operationTableId: row.id,
+            operatorChannel: 2001
+          }
+          const { code, msg, result }: any = await queryStaReacord(params)
+          tableLogData.value['data'] = result.list
           dialogVisible.value = true
         } catch (e) {
           //
@@ -576,10 +583,10 @@ export default defineComponent({
       }
     }
 
-    onBeforeMount(async () => {
+    onBeforeMount(() => {
+      methods.getList()
       methods.findByPageData()
       methods.nowHeaderClass()
-      methods.getList()
     })
 
     return {

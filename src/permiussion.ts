@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-06 14:01:59
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-17 09:18:43
+ * @LastEditTime: 2021-06-17 10:42:51
  */
 import router from './router'
 
@@ -33,7 +33,7 @@ const whiteList: string[] = ['/login'] // 白名单
 router.beforeEach((to, from, next) => {
   NProgress.start()
   const { token = false } = to.query
-  if (token !== null) {
+  if (token) {
     wsCache.set('token', token)
   }
   // eslint-disable-next-line no-constant-condition
