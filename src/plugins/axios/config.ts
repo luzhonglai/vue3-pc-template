@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-16 18:25:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-10 10:20:44
+ * @LastEditTime: 2021-06-17 16:01:21
  */
 /**
  * request全局配置
@@ -29,7 +29,7 @@ const config: ConfigOptions = {
     // 生产环境接口前缀
     pro: '/new-order-web',
     // 测试环境接口前缀
-    test: 'http://mockjs.test.cn',
+    test: '/new-order-web',
 
     // 线上mock
     proMock: 'http://10.10.18.122:7300/mock/602228e4eb87c8001524ef8d/example',
