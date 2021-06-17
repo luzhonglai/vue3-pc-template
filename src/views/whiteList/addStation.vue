@@ -58,8 +58,9 @@ export default defineComponent({
   name: 'addStation',
   setup(props, { emit }) {
       onMounted(()=>{
-        methods.getData()
         methods.getList()
+        methods.getData()
+       
     })
     let arr=[]
     const  dialogVisible: Ref<boolean> = ref(true)
@@ -91,7 +92,7 @@ export default defineComponent({
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
       { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
-      { name: 'manageOrganizationCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:arr},
+      { name: 'manageOrganizationCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:[]},
       {
         name: 'createAt',
         label: '添加时间',
@@ -185,10 +186,10 @@ export default defineComponent({
     })
     let selectData = []
     const methods= {
-       getList(){
-        findBelongOrganizationList().then(res=>{
-          arr= methods.getChildren(res['result'])
-        })  
+      async getList() {
+        const { result }: any = await findBelongOrganizationList()
+        const manageOrganizationCode = formInline.value.filter((item) => item.name == 'manageOrganizationCode')[0]
+        manageOrganizationCode.options = methods.getChildren(result)
       },
       getChildren(list){
         return list.map(item=>{
