@@ -83,7 +83,7 @@ export default defineComponent({
           },
           {
             label: '维修',
-            value: 8
+            value: '8'
           }
         ]
     const formInline = ref([
