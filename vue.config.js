@@ -6,7 +6,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:58:35
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-17 16:02:09
+ * @LastEditTime: 2021-06-17 16:34:47
  */
 
 // const pageConfig = require("./config/page.config");
@@ -32,20 +32,18 @@ module.exports = {
     port: 8080,
     open: true,
     proxy: {
-      // '/new-order-web': {
-      //   target: 'http://192.168.161.146:8080/new-order-web',
-      //   ws: true,
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     '^/new-order-web': ''
-      //   }
-      // },
-      '/new-order-web': {
-        ws: true,
+      '/new-order-web-dev': {
+        target: 'http://192.168.161.146:8080/new-order-web',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/new-order-web-dev': ''
+        }
+      },
+      '/new-order-web-test': {
         target: 'http://192.168.172.82:8080/new-order-web',
         changeOrigin: true,
         pathRewrite: {
-          '^/new-order-web': ''
+          '^/new-order-web-test': ''
         }
       }
     },

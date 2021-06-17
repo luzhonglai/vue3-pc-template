@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-16 18:25:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-17 16:01:21
+ * @LastEditTime: 2021-06-17 16:34:25
  */
 /**
  * request全局配置
@@ -25,11 +25,11 @@ const config: ConfigOptions = {
    */
   baseUrl: {
     // 开发环境接口前缀
-    dev: '/new-order-web',
+    dev: '/new-order-web-dev',
     // 生产环境接口前缀
-    pro: '/new-order-web',
+    pro: '/new-order-web-dev',
     // 测试环境接口前缀
-    test: '/new-order-web',
+    test: '/new-order-web-test',
 
     // 线上mock
     proMock: 'http://10.10.18.122:7300/mock/602228e4eb87c8001524ef8d/example',
