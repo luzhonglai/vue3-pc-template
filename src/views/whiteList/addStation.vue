@@ -91,7 +91,7 @@ export default defineComponent({
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
       { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
-      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:arr},
+      { name: 'manageOrganizationCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:arr},
       {
         name: 'createAt',
         label: '添加时间',
@@ -191,11 +191,16 @@ export default defineComponent({
         })  
       },
       getChildren(list){
-        return list.map(item=>({
-          label:item.ouName,
-          value:item.ouName,
-          children:item.listBean?methods.getChildren(item.listBean):null
-        }))
+        return list.map(item=>{
+          let obj={
+          value:item.ouCode,
+          label:item.ouName
+          }
+          if(item.listBean){
+        obj['children']=methods.getChildren(item.listBean)
+          }
+        return obj  
+        })
       },
       selectionChange(val) {
         selectData = val
@@ -218,22 +223,22 @@ export default defineComponent({
         stationInfo['createAt']=undefined
           }
          let administrative=stationInfo["administrative"]
-        stationInfo['province']=administrative&&administrative[0]
-        stationInfo['city']=administrative&&administrative[1]
-        stationInfo['area']=administrative&&administrative[2]
+        stationInfo['provinceCode']=administrative&&administrative[0]
+        stationInfo['cityCode']=administrative&&administrative[1]
+        stationInfo['areaCode']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
-        stationInfo['manageOrganization']=stationInfo['manageOrganization']&& stationInfo['belongOrganization'][2]
+        stationInfo['manageOrganizationCode']=stationInfo['manageOrganizationCode']&&stationInfo['manageOrganizationCode'][2]
         getStationList({
           bean:key.length<=0?undefined:stationInfo,
-          page:tableConfig.value.currentPage,
-          pageSize:tableConfig.value.pageSize
+          startNumber:tableConfig.value.currentPage,
+          endNumber:tableConfig.value.pageSize
         }).then(res=>{
          tableData.value['data']= res['result'].list.map(item=>({
                  ...item,
                  operateState:item.operateState&&operateStateArr.filter(o=>o.value===item.operateState)[0]?operateStateArr.filter(o=>o.value===item.operateState)[0].label:'',
                }))
-          tableConfig.value.total=res['result'].total
-          tableConfig.value.currentPage=res['result'].pageNumber+1
+          tableConfig.value.total=res['result'].totalNum
+          tableConfig.value.currentPage=res['result'].pageNum+1
             methods.resetSubmit()
         })
       },

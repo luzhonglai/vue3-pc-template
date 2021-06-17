@@ -26,6 +26,6 @@ const findBelongOrganizationList= () => fetch({ url: `/overTimeStation/v1/getSys
 const findByIdDetail= (id) => fetch({ url: `/overTimeStation/v1/findByIdDetail/${id}`, method: 'get',  })
 
 //资产站列表
-const getStationList= (params) => fetch({ url: `/overTimeStation/v1/getStationList`, method: 'post',params  })
+const getStationList= (params) => fetch({ url: `/overTimeStation/v1/queryAssetsStationPage`, method: 'post',params  })
 
 export { batchRemove, removeItem, findByPage,createOverTimeStation ,queryStationOperationRecord,findBelongOrganizationList,findByIdDetail,getStationList}

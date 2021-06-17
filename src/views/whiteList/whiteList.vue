@@ -20,7 +20,6 @@
       <div>
         <el-button @click="onRemoveAll()" plain>批量移除</el-button>
       </div>
-
       <!-- 配置表头 -->
       <HeaderTable
         type="text"
@@ -120,9 +119,9 @@ export default defineComponent({
   },
   setup(props: InputProps, { emit }) {
      onBeforeMount(async () => {
-       methods.getList()
        methods.getData()
        methods.nowHeaderClass()
+       methods.getList()
     })
     let arr=[]
     let selectData=[]
@@ -218,7 +217,7 @@ export default defineComponent({
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站地址' },
       { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits},
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
-      { name: 'manageOrganization', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:arr},
+      { name: 'manageOrganizationCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:arr},
       {
         name: 'createAt',
         label: '添加时间',
@@ -330,19 +329,6 @@ export default defineComponent({
     const detailInfo:Ref<object>= ref({
     })
     const stationInfo = reactive({
-      
-          // address: "",
-          // area: "",
-          // belongOrganization: "",
-          // city: "",
-          // createAt: '',
-          // manageOrganization: "",
-          // operateState: "",
-          // province: "",
-          // stationName: "",
-          // stationNo: ""
-   
-      
     })
     function closeModal(val){
       addModal.value=false
@@ -353,15 +339,21 @@ export default defineComponent({
     const methods = {
       getList(){
         findBelongOrganizationList().then(res=>{
-          arr= methods.getChildren(res['result'])
-        })  
+           arr= methods.getChildren(res['result'])
+           console.log('1234',arr)
+        })   
       },
       getChildren(list){
-        return list.map(item=>({
-          label:item.ouName,
-          value:item.ouName,
-          children:item.listBean?methods.getChildren(item.listBean):null
-        }))
+        return list.map(item=>{
+          let obj={
+          value:item.ouCode,
+          label:item.ouName
+          }
+          if(item.listBean){
+        obj['children']=methods.getChildren(item.listBean)
+          }
+        return obj  
+        })
       },
       hand(val){
         console.log('1234',val)
@@ -369,7 +361,7 @@ export default defineComponent({
        selectionChange(val) {
         selectData = val
       },
-         nowHeaderClass() {
+       nowHeaderClass() {
         // 配置要显示的
         const defalutLabel = tableData.value['tableColumn'].filter((item) => item.prop).map((item) => item.prop)
         allTable.value = allTable.value.map((item) => {
@@ -425,12 +417,12 @@ export default defineComponent({
         stationInfo['createAt']=undefined
         }
         let administrative=stationInfo["administrative"]
-        stationInfo['province']=administrative&&administrative[0]
-        stationInfo['city']=administrative&&administrative[1]
-        stationInfo['area']=administrative&&administrative[2]
+        stationInfo['provinceCode']=administrative&&administrative[0]
+        stationInfo['cityCode']=administrative&&administrative[1]
+        stationInfo['areaCode']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
         // stationInfo['manageOrganization']= stationInfo['manageOrganization']&& stationInfo['manageOrganization'][2]
-        stationInfo['manageOrganization']=stationInfo['manageOrganization']&& stationInfo['manageOrganization'][2]
+        stationInfo['manageOrganizationCode']=stationInfo['manageOrganizationCode']&& stationInfo['manageOrganizationCode'][2]
         findByPage({
           bean:key.length<=0?undefined:stationInfo,
           page:tableConfig.value.currentPage,
@@ -524,11 +516,11 @@ export default defineComponent({
                let idList=selectData.map(item=>item.id)
                batchRemove({
                  idList:idList,
-                 validState:false
+                 validState:false,
+                 isBatch:true
                })
                .then(res=>{
-                
-                  this.$message({
+                this.$message({
                  message: res['msg'],
                   type: 'success'
                   })
@@ -539,7 +531,11 @@ export default defineComponent({
                    console.log('remove2',rej)
                })
              }else{
-               removeItem(id).then(res=>{
+               batchRemove({
+                 idList:[id],
+                 validState:false,
+                 isBatch:false
+               }).then(res=>{
                   this.$message({
                    message: '移除成功',
                    type: 'success'
