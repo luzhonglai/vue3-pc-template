@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:40:53
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-31 11:55:06
+ * @LastEditTime: 2021-06-17 09:18:07
  */
 
 import { createApp } from 'vue'
@@ -18,7 +18,7 @@ import { setElement } from '@/plugins/element'
 // import '@/mock/mock-server'
 
 // 引入路由守护（权限）
-// import './permiussion'
+import './permiussion'
 
 /**
  * @description 全局样式引入

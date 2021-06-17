@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-06-04 17:08:22
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-15 15:49:49
+ * @LastEditTime: 2021-06-16 17:08:08
  */
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { Message } from '@/components/Message'
@@ -34,13 +34,15 @@ service.interceptors.request.use(
     if (config.method === 'post' && config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
       config.data = qs.stringify(config.data)
     }
+
     config['startDate'] = Date.now()
-    config.headers.token = 'o::24320CBD08C74AD895AB806799154317'
     if (Storage.get('token')) {
       config.headers.token = Storage.get('token') //携带权限参数
     }
+
     return config
   },
+
   (error: AxiosError) => {
     // Do something with request error
     console.log(error) // for debug
