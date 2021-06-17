@@ -64,12 +64,13 @@
        <!-- 配置表头 -->
       
     <!-- 操作日志 -->
-    <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose">
+    <el-dialog title="操作日志" v-model="dialogVisible" width="456px" :before-close="handleClose" >
       <!-- 表格 -->
       <EvsTablePage
         style="margin-top:16px;"
         :data="tableLogData"
         :border="false" 
+        class="handleDialog"
       />
     </el-dialog>
     <!-- 详情 -->
@@ -207,10 +208,10 @@ export default defineComponent({
             label: '退运',
             value:'11'
           },
-          // {
-          //   label: '维修',
-          //   value: 7
-          // }
+          {
+            label: '维修',
+            value: 8
+          }
         ]
     const formInline = ref([
       { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
@@ -396,9 +397,15 @@ export default defineComponent({
      
       },
       opendialogVisible(id){
-         queryStationOperationRecord(id).then(res=>{
+         queryStationOperationRecord({
+           bean:{
+             operationTableId:id
+           },
+          page:1,
+          pageSize:999
+         }).then(res=>{
             dialogVisible.value=true
-            tableLogData.value['data']=res['result'].map(item=>({
+            tableLogData.value['data']=res['result'].list.map(item=>({
               ...item,
               createdAt:formatDate(item.createdAt,'Y/M/D h:m:s')
             }))
@@ -582,7 +589,10 @@ export default defineComponent({
   padding: 0 24px;
   box-sizing: border-box;
   display: block;
-
+  /deep/.handleDialog{
+    max-height:500px;
+    overflow-y:scroll
+  }
   /deep/#whiteList .el-table {
     // .cell {
     //   padding-right: 10px;

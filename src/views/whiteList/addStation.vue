@@ -81,10 +81,10 @@ export default defineComponent({
             label: '退运',
             value:'11'
           },
-        //   {
-        //     label: '维修',
-        //     value: 7
-        //   }
+          {
+            label: '维修',
+            value: 8
+          }
         ]
     const formInline = ref([
       { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
