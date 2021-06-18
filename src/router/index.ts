@@ -4,10 +4,10 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-07 15:35:43
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-09 19:16:47
+ * @LastEditTime: 2021-06-18 16:00:22
  */
 
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 
 import { AppRouteRecordRaw } from '@/router/types'
 const Layout = () => import('@/layout/index.vue')
@@ -53,7 +53,7 @@ const constantRouterMap: AppRouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes: constantRouterMap as RouteRecordRaw[]
 })
 export { constantRouterMap }

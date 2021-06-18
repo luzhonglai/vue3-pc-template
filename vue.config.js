@@ -6,7 +6,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:58:35
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-17 16:34:47
+ * @LastEditTime: 2021-06-18 17:35:39
  */
 
 // const pageConfig = require("./config/page.config");
@@ -21,12 +21,13 @@ const TerserPlugin = require('terser-webpack-plugin')
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
+const isPro = process.env.NODE_ENV === 'production'
 
 // vue.config.js
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : './',
+  publicPath: isPro ? '/' : './',
   lintOnSave: true,
-  productionSourceMap: process.env.NODE_ENV !== 'production',
+  productionSourceMap: isPro,
   // 跨域代理
   devServer: {
     port: 8080,

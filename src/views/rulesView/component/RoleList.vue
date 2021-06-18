@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-17 14:31:47
+ * @LastEditTime: 2021-06-18 17:19:35
 -->
 <template>
   <div class="content">
@@ -144,7 +144,8 @@ export default defineComponent({
           { label: '待投运', value: 2 },
           { label: '运行', value: 3 },
           { label: '停运', value: 10 },
-          { label: '退运', value: 11 }
+          { label: '退运', value: 11 },
+          { label: '维修', value: 8 }
         ]
       },
       {
@@ -231,6 +232,7 @@ export default defineComponent({
       ],
       data: []
     })
+
     const tableLogData: Ref<object> = ref({
       tableColumn: [
         {
@@ -254,6 +256,7 @@ export default defineComponent({
       data: []
     })
     const resetName: Ref<null> = ref(null)
+
     const tableConfig: Ref<object> = ref({
       currentPage: 1,
       pageSizes: [10, 20, 30],
@@ -263,6 +266,7 @@ export default defineComponent({
     const drawer: Ref<boolean> = ref(false)
     const dialogVisible: Ref<boolean> = ref(false)
     const tableLoading: Ref<boolean> = ref(false)
+
     // 列表查询参数配置
     const findListParams: any = {
       bean: {
@@ -291,8 +295,10 @@ export default defineComponent({
     // 批量开启禁用接口 入参数
     const batchParasm: any = {
       idList: [],
-      validState: false
+      validState: false,
+      isBatch: true
     }
+
     const detailsData: Ref<object> = ref({})
     // 全部表头
     const allTable: any = ref([
