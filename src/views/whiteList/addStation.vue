@@ -89,10 +89,10 @@ export default defineComponent({
         ]
     const formInline = ref([
       { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
-      { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'stationAddress', label: '站地址', type: 'input', placeholder: '请输入站ID' },
       { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
-      { name: 'manageOrganizationCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:[]},
+      { name: 'managementCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:[]},
       {
         name: 'createAt',
         label: '添加时间',
@@ -112,7 +112,7 @@ export default defineComponent({
         { type: 'index', label: '序号' },
         {
           label: '站编码',
-          prop: 'stationNo'
+          prop: 'stationCode'
         },
         {
           label: '站名称',
@@ -124,28 +124,28 @@ export default defineComponent({
         },
         {
           label: '站地址',
-          prop: 'address'
+          prop: 'stationAddress'
         },
          {
           label: '区',
-          prop: 'area'
+          prop: 'districtName'
         },
         {
           label: '市',
-          prop: 'city'
+          prop: 'cityName'
         },
         {
           label: '省',
-          prop: 'province',
+          prop: 'provinceName',
           width:60,
         },
          {
           label: '运营商',
-          prop: 'operator'
+          prop: 'orgOp'
         },
         {
           label: '管理单位',
-          prop: 'manageOrganization'
+          prop: 'management'
         },
         // {
         //   label: '产权单位',
@@ -188,8 +188,8 @@ export default defineComponent({
     const methods= {
       async getList() {
         const { result }: any = await findBelongOrganizationList()
-        const manageOrganizationCode = formInline.value.filter((item) => item.name == 'manageOrganizationCode')[0]
-        manageOrganizationCode.options = methods.getChildren(result)
+        const managementCode = formInline.value.filter((item) => item.name == 'managementCode')[0]
+        managementCode.options = methods.getChildren(result)
       },
       getChildren(list){
         return list.map(item=>{
@@ -228,19 +228,20 @@ export default defineComponent({
         stationInfo['cityCode']=administrative&&administrative[1]
         stationInfo['areaCode']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
-        stationInfo['manageOrganizationCode']=stationInfo['manageOrganizationCode']&&stationInfo['manageOrganizationCode'][2]
+        stationInfo['managementCode']=stationInfo['managementCode']&&stationInfo['managementCode'][2]
         getStationList({
           bean:key.length<=0?undefined:stationInfo,
-          startNumber:tableConfig.value.currentPage,
-          endNumber:tableConfig.value.pageSize
+          startNumber:tableConfig.value.currentPage * tableConfig.value.pageSize,
+          endNumber:(tableConfig.value.currentPage * tableConfig.value.pageSize) + tableConfig.value.pageSize
         }).then(res=>{
-         tableData.value['data']= res['result'].list.map(item=>({
+          let data=res['result'].stationList
+         tableData.value['data']= data.result.map(item=>({
                  ...item,
-                 operateState:item.operateState&&operateStateArr.filter(o=>o.value===item.operateState)[0]?operateStateArr.filter(o=>o.value===item.operateState)[0].label:'',
+                 operateState:JSON.parse(item.lifeCStatus).operatingState
                }))
-          tableConfig.value.total=res['result'].totalNum
-          tableConfig.value.currentPage=res['result'].pageNum+1
-            methods.resetSubmit()
+          tableConfig.value.total=data.totalNum
+          tableConfig.value.currentPage=data.pageNum+1
+          methods.resetSubmit()
         })
       },
       // 表格弹窗逻辑 true 添加选择数据 false 清除选择数据
