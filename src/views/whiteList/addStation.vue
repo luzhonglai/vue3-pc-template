@@ -231,8 +231,8 @@ export default defineComponent({
         stationInfo['managementCode']=stationInfo['managementCode']&&stationInfo['managementCode'][2]
         getStationList({
           bean:key.length<=0?undefined:stationInfo,
-          startNumber:tableConfig.value.currentPage * tableConfig.value.pageSize,
-          endNumber:(tableConfig.value.currentPage * tableConfig.value.pageSize) + tableConfig.value.pageSize
+          startNumber:(tableConfig.value.currentPage -1 ) * tableConfig.value.pageSize,
+          endNumber:((tableConfig.value.currentPage -1 ) * tableConfig.value.pageSize) + tableConfig.value.pageSize
         }).then(res=>{
           let data=res['result'].stationList
          tableData.value['data']= data.result.map(item=>({
