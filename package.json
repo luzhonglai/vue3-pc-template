@@ -19,7 +19,7 @@
     "web-storage-cache": "^1.1.1"
   },
   "devDependencies": {
-    "@evs-pc/evs-pc-component": "^0.2.7",
+    "@evs-pc/evs-pc-component": "0.3.2",
     "@types/mockjs": "^1.0.3",
     "@types/nprogress": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^2.33.0",

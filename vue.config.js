@@ -6,7 +6,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:58:35
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-18 17:35:39
+ * @LastEditTime: 2021-06-21 17:29:18
  */
 
 // const pageConfig = require("./config/page.config");
@@ -25,7 +25,7 @@ const isPro = process.env.NODE_ENV === 'production'
 
 // vue.config.js
 module.exports = {
-  publicPath: isPro ? '/' : './',
+  publicPath: './',
   lintOnSave: true,
   productionSourceMap: isPro,
   // 跨域代理

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-15 10:36:01
+ * @LastEditTime: 2021-06-21 14:36:42
 -->
 <template>
   <div class="content">
@@ -98,7 +98,8 @@ export default defineComponent({
     const tableData: Ref<object> = ref({
       tableColumn: [
         {
-          type: 'selection'
+          type: 'selection',
+          width: '55'
         },
         { type: 'index', label: '序号' },
         {
@@ -117,7 +118,6 @@ export default defineComponent({
           label: '充电桩编号',
           prop: 'stakeNo',
           align: 'center',
-          fixed: true,
           width: '200'
         },
         {
@@ -128,21 +128,18 @@ export default defineComponent({
           label: '充电时长(小时)',
           prop: 'reduceTime',
           align: 'center',
-          fixed: true,
           width: '150'
         },
         {
           label: '减免次数(次)',
           prop: 'reduceTime',
           align: 'center',
-          fixed: true,
           width: '150'
         },
         {
           label: '封顶条件(元)',
           prop: 'limit',
           align: 'left',
-          fixed: true,
           width: '200'
         }
       ],

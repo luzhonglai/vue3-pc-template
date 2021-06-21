@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-18 17:19:35
+ * @LastEditTime: 2021-06-21 15:44:25
 -->
 <template>
   <div class="content">
@@ -113,12 +113,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, onBeforeMount } from 'vue'
+import { defineComponent, ref, Ref, onBeforeMount } from 'vue'
 import { setStoreState } from '@/store/utils'
 import { formatDate } from '@/utils/utils'
 import { findBelongOrganizationList } from '@/api/whiteList'
 import store from '@/store'
-
+import wsCache from '@/utils/cache'
 import { findByPage, overTimeFeeModel, queryStaReacord, findByIdDetail } from '../service'
 
 export default defineComponent({
@@ -190,38 +190,55 @@ export default defineComponent({
         { type: 'index', label: '序号' },
         {
           label: '站编号',
-          prop: 'stationNo',
-          show: true
+          prop: 'stationNo'
         },
         {
           label: '站名称',
-          prop: 'stationName',
-          show: true
+          prop: 'stationName'
         },
         {
           label: '运营态',
-          prop: 'operateState',
-          show: true
+          prop: 'operateState'
         },
         {
           label: '站地址',
-          prop: 'address',
-          show: true
+          prop: 'address'
         },
         {
           label: '超时占位费状态',
-          prop: 'enableStatus',
-          show: true
+          prop: 'enableStatus'
         },
         {
           label: '超时占位费单价（元/分钟）',
-          prop: 'price',
-          show: true
+          prop: 'price'
         },
         {
           label: '减免时长',
-          prop: 'REDUCE_TIME',
-          show: true
+          prop: 'REDUCE_TIME'
+        },
+        {
+          label: '创建时间',
+          prop: 'createdAt',
+          formatter(row, colimn) {
+            return formatDate(row.createdAt, 'Y/M/D')
+          }
+        },
+        {
+          label: '管理单位',
+          prop: 'manageOrganization'
+        },
+        {
+          label: '区',
+          prop: 'districtName'
+        },
+        {
+          label: '市',
+          prop: 'cityName'
+        },
+        {
+          label: '省',
+          prop: 'provinceName',
+          width: 60
         },
         {
           label: '操作',
@@ -357,6 +374,30 @@ export default defineComponent({
         prop: 'limit'
       },
       {
+        label: '创建时间',
+        prop: 'createdAt',
+        formatter(row, colimn) {
+          return formatDate(row.createdAt, 'Y/M/D')
+        }
+      },
+      {
+        label: '管理单位',
+        prop: 'manageOrganization'
+      },
+      {
+        label: '区',
+        prop: 'districtName'
+      },
+      {
+        label: '市',
+        prop: 'cityName'
+      },
+      {
+        label: '省',
+        prop: 'provinceName',
+        width: 60
+      },
+      {
         label: '操作',
         fixed: 'right',
         scope: true,
@@ -375,6 +416,7 @@ export default defineComponent({
         const { result }: any = await findBelongOrganizationList()
         const manageOrganization = formInline.value.filter((item) => item.name == 'manageOrganization')[0]
         manageOrganization.options = methods.getChildren(result)[0].children
+        wsCache.set('manageOrganization', manageOrganization.options)
       },
 
       getChildren(list) {

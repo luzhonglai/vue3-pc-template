@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-15 17:59:00
+ * @LastEditTime: 2021-06-21 17:21:42
 -->
 
 <template>
@@ -23,6 +23,7 @@
               class="rules-table"
               :data="selectTable"
               :border="false"
+              height="auto"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               @cell-click="handleClickChange"
@@ -67,7 +68,7 @@
             </el-form-item>
             <el-form-item label="超时占位费减免时长" prop="reduceTime">
               <el-input v-model="ruleForm.reduceTime">
-                <template #append>小时</template>
+                <template #append>分钟</template>
               </el-input>
             </el-form-item>
             <el-form-item label="超时占位费减免次数" prop="reduceTimes">
@@ -139,9 +140,10 @@
 <script lang="ts">
 import { createOverModel, updateOverTimeFeeModel, findByPageNoAddRule, findByIdDetail } from '../service'
 import { defineComponent, ref, Ref, onBeforeMount, watch, computed } from 'vue'
-import store from '@/store'
 import { setStoreState } from '@/store/utils'
 import cityJson from '@/utils/pca-code'
+import wsCache from '@/utils/cache'
+
 export default defineComponent({
   name: 'newRules',
   props: {
@@ -195,14 +197,7 @@ export default defineComponent({
         label: '管理单位',
         type: 'select',
         placeholder: '请选择',
-        options: [cityJson]
-      },
-      {
-        name: 'belongOrganization',
-        label: '产权单位',
-        type: 'select',
-        placeholder: '请选择',
-        options: [cityJson]
+        options: wsCache.get('manageOrganization') || []
       }
     ])
     // 提现正则
@@ -266,10 +261,6 @@ export default defineComponent({
         {
           label: '站地址',
           prop: 'address'
-        },
-        {
-          label: '产权单位',
-          prop: 'belongOrganization'
         },
         {
           label: '管理单位',
@@ -351,7 +342,7 @@ export default defineComponent({
       },
 
       // 查询
-      async saveSubmit(form = {}) {
+      async saveSubmit(form: any = {}) {
         findListParams.bean = { ...findListParams.bean, ...form }
         try {
           tableLoading.value = true
@@ -371,12 +362,13 @@ export default defineComponent({
       // 提交信息
       submitInt() {
         formRef.value.validate(async (result: boolean) => {
-          const params: any = ruleForm.value
+          const params: any = Object.assign({}, ruleForm.value)
           if (!result) {
             return
           }
           params.startTime = new Date(params.startTime).getTime()
           params.endTime = new Date(params.endTime).getTime()
+
           if (isNewAdd.value == true) {
             // 批量创建规则
             params.stationNoList = selectTable.value['data'].map((item) => item.stationNo)
@@ -435,7 +427,6 @@ export default defineComponent({
         this.$refs.multipleTable.clearSelection()
       }
     }
-
     onBeforeMount(async () => {
       const { id } = props.newRules
       if (Object.keys(props.newRules).length > 0) {
@@ -447,6 +438,14 @@ export default defineComponent({
         isNewAdd.value = false
       }
     })
+    watch(
+      () => ruleForm.value['reduceTime'],
+      (val) => {
+        if (Math.floor(val) != val) {
+          ruleForm.value['reduceTime'] = Math.floor(val)
+        }
+      }
+    )
     return {
       dialogRef,
       isNewAdd,

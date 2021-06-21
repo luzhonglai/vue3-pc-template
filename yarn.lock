@@ -853,10 +853,10 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@evs-pc/evs-pc-component@^0.2.7":
-  version "0.2.7"
-  resolved "http://10.10.18.122:7001/@evs-pc/evs-pc-component/download/@evs-pc/evs-pc-component-0.2.7.tgz#364185b966bbd1d0b192153055ad96658807b8be"
-  integrity sha1-NkGFuWa70dCxkhUwVa2WZYgHuL4=
+"@evs-pc/evs-pc-component@0.3.2":
+  version "0.3.2"
+  resolved "http://10.10.18.122:7001/@evs-pc/evs-pc-component/download/@evs-pc/evs-pc-component-0.3.2.tgz#941660748af52fd44ec3c9b709e7ae2bc267d94a"
+  integrity sha1-lBZgdIr1L9ROw8m3CeeuK8Jn2Uo=
   dependencies:
     core-js "^3.6.5"
     file-saver "^2.0.5"
