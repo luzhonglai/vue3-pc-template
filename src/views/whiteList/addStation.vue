@@ -249,8 +249,24 @@ export default defineComponent({
          if (isPushItem == true) {
             console.log('selectTable',selectTable)
           selectTable.value['data'] = selectData
+        
           if(selectTable.value['data'].length>0){
-        createOverTimeStation({list:selectTable.value['data']}).then(res=>{
+             
+            let list=selectData.map(item=>({      
+                address:item.stationAddress,
+                area: item.districtName,
+                belongOrganization: "",
+                city: item.cityName,
+                convertNum: item.convertNum,
+                manageOrganization: item.management,
+                operateState:item.operateState&&operateStateArr.filter(o=>o.label===item.operateState)[0]?operateStateArr.filter(o=>o.label===item.operateState)[0].value:'',
+                operator: "",
+                operatorAccount: "",
+                province: item.provinceName,
+                stationName: item.stationName,
+                stationNo: item.stationCode 
+            }))
+        createOverTimeStation({list}).then(res=>{
              this.$message({
                 message: '添加成功',
                 type: 'success'
