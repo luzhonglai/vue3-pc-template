@@ -1,5 +1,5 @@
 <template>
-  <router-view class="app" />
+  <router-view class="content" />
 </template>
 
 <script lang="ts">
@@ -23,6 +23,15 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.content {
+  padding: 24px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+
 #app {
   .size;
   background: @appBg;

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-21 14:36:42
+ * @LastEditTime: 2021-06-22 18:43:09
 -->
 <template>
   <div class="content">
@@ -125,7 +125,7 @@ export default defineComponent({
           prop: 'amount'
         },
         {
-          label: '充电时长(小时)',
+          label: '充电时长(分钟)',
           prop: 'reduceTime',
           align: 'center',
           width: '150'
@@ -296,7 +296,7 @@ export default defineComponent({
         // stationName: '',
         // stationNo: '',
         // tradeFlowNo: '',
-        operateState: 1
+        // operateState: 1
       },
       page: 1,
       pageSize: 10,
@@ -360,9 +360,19 @@ export default defineComponent({
         await OrderDetail(row.id).then((res: any) => {
           const { orderTradeFlowNo, startTime, endTime } = res.result.chargeOrderVoList[0]
           res.result.orderTradeFlowNo1 = orderTradeFlowNo
-          res.result.chargeStartTime1 = `${formatDate(startTime, 'Y.M.D')}-${formatDate(endTime, 'Y.M.D')}`
-          res.result.putGunTime = formatDate(res.result.putGunTime, 'Y.M.D')
-          res.result.pllGunTime = formatDate(res.result.pllGunTime, 'Y.M.D')
+          res.result.chargeStartTime1 = `${formatDate(startTime, 'Y-M-D h:m')} / ${formatDate(endTime, 'Y.M.D')}`
+
+          const orderTradeFlowNo2 = res.result.chargeOrderVoList[1] || false
+          if (orderTradeFlowNo2) {
+            res.result.orderTradeFlowNo2 = orderTradeFlowNo2.orderTradeFlowNo
+            res.result.chargeStartTime2 = `${formatDate(orderTradeFlowNo2.startTime, 'Y.M.D')}-${formatDate(
+              orderTradeFlowNo2.endTime,
+              'Y-M-D h:m'
+            )}`
+          }
+
+          res.result.putGunTime = formatDate(res.result.putGunTime, 'Y-M-D h:m')
+          res.result.pllGunTime = formatDate(res.result.pllGunTime, 'Y-M-D h:m')
           detailData.value = res.result
         })
         dialogRef.value.showDialog()

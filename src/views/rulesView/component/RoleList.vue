@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-21 15:44:25
+ * @LastEditTime: 2021-06-22 17:42:44
 -->
 <template>
   <div class="content">
@@ -266,7 +266,6 @@ export default defineComponent({
         {
           label: '操作项',
           prop: 'operatorType',
-          fixed: 'left',
           align: 'left'
         }
       ],
@@ -463,10 +462,9 @@ export default defineComponent({
           bean.province = administrative[1]
           bean.city = administrative[2]
         }
-        // if (manageOrganization) {
-        //   debugger
-        //   from.manageOrganization = manageOrganization.jion('')
-        // }
+        if (manageOrganization) {
+          from.manageOrganizationCode = manageOrganization.pop()
+        }
         findListParams.bean = { ...bean, ...from }
         methods.findByPageData()
       },
