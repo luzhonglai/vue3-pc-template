@@ -15,7 +15,7 @@ const batchRemove = (params) => fetch({ url: `/overTimeStation/v1/batchInvalid`,
 const removeItem = (id) => fetch({ url: `/overTimeStation/v1/invalid/${id}`, method: 'get' })
 
 //添加白名单充电站
-const createOverTimeStation = (params) => fetch({url: `/overTimeStation/v1/createOverTimeStation`, method: 'post', params})
+const createOverTimeStation = (params) => fetch({url: `/overTimeStation/v1/createOverTimeStationList`, method: 'post', params})
 //查看白名单操作日志
 const queryStationOperationRecord = (params) => fetch({url: `/overTimeOperationRecord/v1/queryStationOperationRecordPage`, method: 'post',params})
 const findByPage = (params) => fetch({ url: `/overTimeStation/v1/findByPage`, method: 'post', params })

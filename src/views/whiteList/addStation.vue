@@ -231,8 +231,8 @@ export default defineComponent({
         stationInfo['managementCode']=stationInfo['managementCode']&&stationInfo['managementCode'][2]
         getStationList({
           bean:key.length<=0?undefined:stationInfo,
-          pageNumber :tableConfig.value.currentPage,
-          offset: tableConfig.value.pageSize
+          pageNumber :tableConfig.value.pageSize,
+          offset: (tableConfig.value.currentPage - 1) * (tableConfig.value.pageSize)
         }).then(res=>{
           let data=res['result'].stationList
          tableData.value['data']= data.result.map(item=>({
@@ -255,13 +255,17 @@ export default defineComponent({
             let list=selectData.map(item=>({      
                 address:item.stationAddress,
                 area: item.districtName,
-                belongOrganization: "",
+                areaCode:item.areaCode,
                 city: item.cityName,
+                // cityCode:item.cityCode,
+                // provinceCode:item.provinceCode,
                 convertNum: item.convertNum,
                 manageOrganization: item.management,
+                manageOrganizationCode:item.managementCode,
                 operateState:item.operateState&&operateStateArr.filter(o=>o.label===item.operateState)[0]?operateStateArr.filter(o=>o.label===item.operateState)[0].value:'',
-                operator: "",
-                operatorAccount: "",
+                operator: item.orgOp,
+                operatorCode:item.orgOpCode,
+                // operatorAccount: "",
                 province: item.provinceName,
                 stationName: item.stationName,
                 stationNo: item.stationCode 
