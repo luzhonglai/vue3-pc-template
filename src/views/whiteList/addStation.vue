@@ -230,8 +230,9 @@ export default defineComponent({
         stationInfo['administrative']=undefined
         stationInfo['managementCode']=stationInfo['managementCode']&&stationInfo['managementCode'][2]
         stationInfo['operatingState']=stationInfo['operatingState']&&[stationInfo['operatingState']]
+        let params= key.length<=0?undefined:stationInfo
         getStationList({
-          bean:key.length<=0?undefined:stationInfo,
+          ...params,
           pageNumber :tableConfig.value.pageSize,
           offset: (tableConfig.value.currentPage - 1) * (tableConfig.value.pageSize)
         }).then(res=>{
