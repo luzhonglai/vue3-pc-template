@@ -90,8 +90,8 @@ export default defineComponent({
     const formInline = ref([
       { name: 'nameOrCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
       { name: 'stationAddress', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'administrative ', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
-      { name: 'operateState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
+      { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
+      { name: 'operatingState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
       { name: 'managementCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:[]},
       {
         name: 'createAt',
@@ -223,12 +223,13 @@ export default defineComponent({
         stationInfo['endTime']=new Date(endTime).getTime()
         stationInfo['createAt']=undefined
           }
-         let administrative=stationInfo["administrative"]
+        let administrative=stationInfo["administrative"]
         stationInfo['provinceCode']=administrative&&administrative[0]
         stationInfo['cityCode']=administrative&&administrative[1]
         stationInfo['areaCode']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
         stationInfo['managementCode']=stationInfo['managementCode']&&stationInfo['managementCode'][2]
+        stationInfo['operatingState']=stationInfo['operatingState']&&[stationInfo['operatingState']]
         getStationList({
           bean:key.length<=0?undefined:stationInfo,
           pageNumber :tableConfig.value.pageSize,
