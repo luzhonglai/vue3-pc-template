@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-21 17:21:42
+ * @LastEditTime: 2021-06-23 17:29:39
 -->
 
 <template>
@@ -113,7 +113,7 @@
       <EvsTablePage
         ref="multipleTable"
         :data="tableData"
-        :border="false"
+        height="auto"
         :loading="tableLoading"
         @selection-change="selectionChange"
         @size-change="handleSizeChange"
@@ -173,13 +173,7 @@ export default defineComponent({
         type: 'input',
         placeholder: '请输入站ID'
       },
-      {
-        name: 'administrative',
-        label: '行政单位',
-        type: 'select',
-        placeholder: '请选择',
-        options: [cityJson]
-      },
+      { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择', options: cityJson },
       {
         name: 'operateState',
         label: '运营态',
@@ -189,7 +183,8 @@ export default defineComponent({
           { label: '待投运', value: 2 },
           { label: '运行', value: 3 },
           { label: '停运', value: 10 },
-          { label: '退运', value: 11 }
+          { label: '退运', value: 11 },
+          { label: '维修', value: 8 }
         ]
       },
       {
@@ -342,8 +337,31 @@ export default defineComponent({
       },
 
       // 查询
-      async saveSubmit(form: any = {}) {
-        findListParams.bean = { ...findListParams.bean, ...form }
+      async saveSubmit(from: any = {}) {
+        const { time = false, administrative = false, manageOrganization = false } = from
+        const bean = findListParams.bean
+
+        if (time) {
+          const startTime = new Date(time[0]).getTime()
+          const endTime = new Date(time[1]).getTime()
+          bean.startTime = startTime
+          bean.endTime = endTime
+        }
+
+        // 行政单位 --- 省市区
+        if (administrative.length > 0) {
+          bean['provinceCode'] = administrative && administrative[0]
+          bean['cityCode'] = administrative && administrative[1]
+          bean['areaCode'] = administrative && administrative[2]
+        }
+
+        // 管理单位code
+        if (manageOrganization) {
+          from.manageOrganizationCode = manageOrganization.pop()
+        }
+        findListParams.page = 1
+        findListParams.bean = { ...bean, ...from }
+
         try {
           tableLoading.value = true
           const {
@@ -474,6 +492,7 @@ export default defineComponent({
   box-shadow: 0px 0px 8px 0px #ebebeb;
   position: absolute;
   left: 0;
+  bottom: 0;
   ::before {
     display: tabel;
     content: '';
@@ -483,7 +502,6 @@ export default defineComponent({
   }
 }
 .content {
-  padding: 0 24px;
   box-sizing: border-box;
   display: block;
   .title3 {

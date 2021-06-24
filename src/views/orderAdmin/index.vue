@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-22 18:43:09
+ * @LastEditTime: 2021-06-23 16:38:37
 -->
 <template>
   <div class="content">
@@ -115,6 +115,14 @@ export default defineComponent({
           prop: 'tradeFlowNo'
         },
         {
+          label: '站名称',
+          prop: 'stationName'
+        },
+        {
+          label: '站编号',
+          prop: 'stationNo'
+        },
+        {
           label: '充电桩编号',
           prop: 'stakeNo',
           align: 'center',
@@ -123,6 +131,13 @@ export default defineComponent({
         {
           label: '交易金额(元）',
           prop: 'amount'
+        },
+        {
+          label: '交易时间',
+          prop: 'createdAt',
+          formatter(row, colimn) {
+            return formatDate(row.createdAt, 'Y/M/D')
+          }
         },
         {
           label: '充电时长(分钟)',
@@ -315,6 +330,7 @@ export default defineComponent({
           findTableParams.bean.startTime = startTime
           findTableParams.bean.endTime = endTime
         }
+        findTableParams.page = 1
         findTableParams.bean = { ...findTableParams.bean, ...from }
         methods.findOrderList()
       },
@@ -326,7 +342,11 @@ export default defineComponent({
             code
           } = await FindOrderList(findTableParams).catch((e) => null)
           if (code == 0) return
-          tableData.value['data'] = list
+
+          tableData.value['data'] = list.map((item) => {
+            // item.
+            return item
+          })
           tableConfig.value = { ...tableConfig.value, total, pageSize }
         } catch (e) {
           //
@@ -350,7 +370,7 @@ export default defineComponent({
       },
 
       changeStation() {
-        console.log(resetName.value, '213123')
+        // console.log(resetName.value, '213123')
       },
 
       async handleClickChange(row, column, cell, event) {
@@ -358,19 +378,23 @@ export default defineComponent({
           return false
         }
         await OrderDetail(row.id).then((res: any) => {
+          const status = [
+            { value: '10', text: '创建成功' },
+            { value: '70', text: '等待支付' },
+            { value: '20', text: '正常完成' }
+          ]
           const { orderTradeFlowNo, startTime, endTime } = res.result.chargeOrderVoList[0]
           res.result.orderTradeFlowNo1 = orderTradeFlowNo
-          res.result.chargeStartTime1 = `${formatDate(startTime, 'Y-M-D h:m')} / ${formatDate(endTime, 'Y.M.D')}`
-
+          res.result.chargeStartTime1 = `${formatDate(startTime, 'Y-M-D h:m')} / ${formatDate(endTime, 'Y-M-D h:m')}`
+          res.result.orderState = status.find((item) => item.value == res.result.orderState).text
           const orderTradeFlowNo2 = res.result.chargeOrderVoList[1] || false
           if (orderTradeFlowNo2) {
             res.result.orderTradeFlowNo2 = orderTradeFlowNo2.orderTradeFlowNo
-            res.result.chargeStartTime2 = `${formatDate(orderTradeFlowNo2.startTime, 'Y.M.D')}-${formatDate(
+            res.result.chargeStartTime2 = `${formatDate(orderTradeFlowNo2.startTime, 'Y-M-D h:m')}-${formatDate(
               orderTradeFlowNo2.endTime,
               'Y-M-D h:m'
             )}`
           }
-
           res.result.putGunTime = formatDate(res.result.putGunTime, 'Y-M-D h:m')
           res.result.pllGunTime = formatDate(res.result.pllGunTime, 'Y-M-D h:m')
           detailData.value = res.result
@@ -404,7 +428,6 @@ export default defineComponent({
 </script>
 <style lang="less" scoped>
 .content {
-  padding: 0 24px;
   box-sizing: border-box;
   display: block;
 

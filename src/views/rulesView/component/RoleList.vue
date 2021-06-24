@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-22 17:42:44
+ * @LastEditTime: 2021-06-23 17:22:04
 -->
 <template>
   <div class="content">
@@ -120,7 +120,7 @@ import { findBelongOrganizationList } from '@/api/whiteList'
 import store from '@/store'
 import wsCache from '@/utils/cache'
 import { findByPage, overTimeFeeModel, queryStaReacord, findByIdDetail } from '../service'
-
+import cityJson from '@/utils/pca-code'
 export default defineComponent({
   name: 'roleList',
   setup(props, ctx) {
@@ -131,10 +131,10 @@ export default defineComponent({
       { label: '停运', value: 10 },
       { label: '退运', value: 11 }
     ]
-    const formInline: Ref<any> = ref([
+    const formInline = ref([
       { name: 'seniorSearch', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
       { name: 'address', label: '站地址', type: 'input', placeholder: '请输入站ID' },
-      { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择' },
+      { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择', options: cityJson },
       {
         name: 'operateState',
         label: '运营态',
@@ -457,14 +457,17 @@ export default defineComponent({
         }
 
         // 行政单位 --- 省市区
-        if (administrative) {
-          bean.address = administrative[0]
-          bean.province = administrative[1]
-          bean.city = administrative[2]
+        if (administrative.length > 0) {
+          bean['provinceCode'] = administrative && administrative[0]
+          bean['cityCode'] = administrative && administrative[1]
+          bean['areaCode'] = administrative && administrative[2]
         }
+
+        // 管理单位code
         if (manageOrganization) {
           from.manageOrganizationCode = manageOrganization.pop()
         }
+        findListParams.page = 1
         findListParams.bean = { ...bean, ...from }
         methods.findByPageData()
       },
@@ -605,11 +608,11 @@ export default defineComponent({
           drawer.value = true
 
           result.operateState = status.filter((item) => item.value == result.operateState)[0].label
-          result.endTime = formatDate(result.endTime, 'Y.M.D')
-          result.startTime = formatDate(result.startTime, 'Y.M.D')
-          result.createdAt = formatDate(result.createdAt, 'Y.D.M')
-          result.forbiddenTime = formatDate(result.forbiddenTime, 'Y.M.D')
-          result.enableTime = formatDate(result.enableTime, 'Y.M.D')
+          result.endTime = formatDate(result.endTime, 'Y-M-D h:m')
+          result.startTime = formatDate(result.startTime, 'Y-M-D h:m')
+          result.createdAt = formatDate(result.createdAt, 'Y-M-D h:m')
+          result.forbiddenTime = formatDate(result.forbiddenTime, 'Y-M-D h:m')
+          result.enableTime = formatDate(result.enableTime, 'Y-M-D h:m')
           detailsData.value = result
         }
       },
@@ -654,7 +657,6 @@ export default defineComponent({
 </script>
 <style lang="less" scoped>
 .content {
-  padding: 0 24px;
   box-sizing: border-box;
   display: block;
   .list-switch {
