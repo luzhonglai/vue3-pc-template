@@ -89,7 +89,7 @@ export default defineComponent({
         ]
     const formInline = ref([
       { name: 'nameOrCode', label: '高级筛选', type: 'input', placeholder: '请输入站编码、站名称' },
-      { name: 'stationAddress', label: '站地址', type: 'input', placeholder: '请输入站ID' },
+      { name: 'stationAddress', label: '站地址', type: 'input', placeholder: '请输入站地址' },
       { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operatingState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
       { name: 'managementCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:[]},
@@ -109,7 +109,7 @@ export default defineComponent({
           type: 'selection',
           width: '55'
         },
-        { type: 'index', label: '序号' },
+        { type: 'index', label: '序号'},
         {
           label: '站编码',
           prop: 'stationCode'
@@ -228,7 +228,7 @@ export default defineComponent({
         stationInfo['cityCode']=administrative&&administrative[1]
         stationInfo['areaCode']=administrative&&administrative[2]
         stationInfo['administrative']=undefined
-        stationInfo['managementCode']=stationInfo['managementCode']&&stationInfo['managementCode'][2]
+        stationInfo['managementCode']=stationInfo['managementCode']&&stationInfo['managementCode'][stationInfo['managementCode'].length - 1]
         stationInfo['operatingState']=stationInfo['operatingState']&&[stationInfo['operatingState']]
         let params= key.length<=0?undefined:stationInfo
         getStationList({
@@ -242,7 +242,7 @@ export default defineComponent({
                  operateState:JSON.parse(item.lifeCStatus).operatingState
                }))
           tableConfig.value.total=data.totalNum
-          tableConfig.value.currentPage=data.pageNum+1
+          
           methods.resetSubmit()
         })
       },
