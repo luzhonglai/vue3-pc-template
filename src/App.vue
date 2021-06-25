@@ -28,8 +28,9 @@ body {
   padding: 24px;
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background: #fff;
+  overflow-y: auto;
 }
 
 #app {
