@@ -93,15 +93,15 @@ export default defineComponent({
       { name: 'administrative', label: '行政单位', type: 'cascader', placeholder: '请选择',options:administrativeUnits },
       { name: 'operatingState', label: '运营态', type: 'select', placeholder: '请选择', options:operateStateArr },
       { name: 'managementCode', label: '管理单位', type: 'cascader', placeholder: '请选择' ,options:[]},
-      {
-        name: 'createAt',
-        label: '添加时间',
-        type: 'daterange',
-        rangeSeparator: '~',
-        startPlaceholder: '时间范围起',
-        endPlaceholder: '时间范围止',
-        defaultTime: [new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 1, 1, 23, 59, 59)]
-      }
+      // {
+      //   name: 'createAt',
+      //   label: '添加时间',
+      //   type: 'daterange',
+      //   rangeSeparator: '~',
+      //   startPlaceholder: '时间范围起',
+      //   endPlaceholder: '时间范围止',
+      //   defaultTime: [new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 1, 1, 23, 59, 59)]
+      // }
     ])
     const tableData: Ref<object> = ref({
       tableColumn: [
@@ -216,13 +216,13 @@ export default defineComponent({
         }
         console.log('tableconfig',tableConfig)
         let key=Object.keys(stationInfo)
-        if(stationInfo['createAt']){
-        let startTime=stationInfo['createAt']&&stationInfo['createAt'][0]
-        let endTime=stationInfo['createAt']&&stationInfo['createAt'][1]
-        stationInfo['startTime']=new Date(startTime).getTime()
-        stationInfo['endTime']=new Date(endTime).getTime()
-        stationInfo['createAt']=undefined
-          }
+        // if(stationInfo['createAt']){
+        // let startTime=stationInfo['createAt']&&stationInfo['createAt'][0]
+        // let endTime=stationInfo['createAt']&&stationInfo['createAt'][1]
+        // stationInfo['startTime']=new Date(startTime).getTime()
+        // stationInfo['endTime']=new Date(endTime).getTime()
+        // stationInfo['createAt']=undefined
+        //   }
         let administrative=stationInfo["administrative"]
         stationInfo['provinceCode']=administrative&&administrative[0]
         stationInfo['cityCode']=administrative&&administrative[1]
