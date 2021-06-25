@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-23 17:22:04
+ * @LastEditTime: 2021-06-25 10:22:32
 -->
 <template>
   <div class="content">
@@ -272,7 +272,6 @@ export default defineComponent({
       data: []
     })
     const resetName: Ref<null> = ref(null)
-
     const tableConfig: Ref<object> = ref({
       currentPage: 1,
       pageSizes: [10, 20, 30],
@@ -283,7 +282,6 @@ export default defineComponent({
     const dialogVisible: Ref<boolean> = ref(false)
     const tableLoading: Ref<boolean> = ref(false)
 
-    // 列表查询参数配置
     const findListParams: any = {
       bean: {
         // address: '',
@@ -405,7 +403,6 @@ export default defineComponent({
     ])
 
     const methods = {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
       // 重置表单
       async resetSubmit(val = {}) {
         findListParams.bean = { ...val }
@@ -467,6 +464,7 @@ export default defineComponent({
         if (manageOrganization) {
           from.manageOrganizationCode = manageOrganization.pop()
         }
+
         findListParams.page = 1
         findListParams.bean = { ...bean, ...from }
         methods.findByPageData()
@@ -530,6 +528,7 @@ export default defineComponent({
             batchParasm.validState = false
           })
         }
+
         // 批量开启禁用接口
         const { msg } = await overTimeFeeModel(batchParasm).catch((e) => null)
         this.$refs.multipleTable.clearSelection()
@@ -606,7 +605,6 @@ export default defineComponent({
         if (column.no == 2) {
           const { code, result }: any = await findByIdDetail(row.id)
           drawer.value = true
-
           result.operateState = status.filter((item) => item.value == result.operateState)[0].label
           result.endTime = formatDate(result.endTime, 'Y-M-D h:m')
           result.startTime = formatDate(result.startTime, 'Y-M-D h:m')

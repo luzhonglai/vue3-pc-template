@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-25 09:54:15
+ * @LastEditTime: 2021-06-25 10:43:53
 -->
 <template>
   <div class="content">
@@ -145,7 +145,8 @@ export default defineComponent({
           align: 'center',
           width: '150',
           formatter(row, colimn) {
-            return formatDate(row.rechargeTime, 'h:m')
+            const min = Math.floor((row.rechargeTime / 1000 / 60) << 0)
+            return `${min}`
           }
         },
         {

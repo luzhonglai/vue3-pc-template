@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-23 17:29:39
+ * @LastEditTime: 2021-06-25 10:11:04
 -->
 
 <template>
@@ -109,6 +109,7 @@
           <SelectStation style="width:100%" @EventChangeStation="changeStation" ref="resetName"></SelectStation>
         </template>
       </EvsSearchArea>
+
       <!-- 表格 -->
       <EvsTablePage
         ref="multipleTable"
@@ -148,11 +149,7 @@ export default defineComponent({
   name: 'newRules',
   props: {
     newRules: {
-      type: Object,
-      // eslint-disable-next-line vue/require-valid-default-prop
-      default: () => {
-        //
-      }
+      type: Object
     }
   },
   setup(props: any, { emit }: any) {
@@ -195,6 +192,7 @@ export default defineComponent({
         options: wsCache.get('manageOrganization') || []
       }
     ])
+
     // 提现正则
     const formRules: Ref<object> = ref({
       startTime: [
@@ -298,8 +296,6 @@ export default defineComponent({
       data: []
     })
     let selectData = []
-
-    // 列表查询参数配置
     const findListParams: any = {
       // bean: {
       //   address: '',
@@ -323,6 +319,7 @@ export default defineComponent({
         additionalProp3: ''
       }
     }
+
     const methods = {
       // 返回勤换视图
       closeEvent() {
@@ -445,6 +442,7 @@ export default defineComponent({
         this.$refs.multipleTable.clearSelection()
       }
     }
+
     onBeforeMount(async () => {
       const { id } = props.newRules
       if (Object.keys(props.newRules).length > 0) {
@@ -456,6 +454,7 @@ export default defineComponent({
         isNewAdd.value = false
       }
     })
+
     watch(
       () => ruleForm.value['reduceTime'],
       (val) => {
@@ -464,6 +463,7 @@ export default defineComponent({
         }
       }
     )
+
     return {
       dialogRef,
       isNewAdd,
