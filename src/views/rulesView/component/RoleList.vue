@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-28 13:59:15
+ * @LastEditTime: 2021-06-28 14:37:15
 -->
 <template>
   <div class="content">
@@ -228,6 +228,10 @@ export default defineComponent({
           prop: 'manageOrganization'
         },
         {
+          label: '所属模块',
+          prop: 'modelName'
+        },
+        {
           label: '区',
           prop: 'districtName'
         },
@@ -353,6 +357,10 @@ export default defineComponent({
             return '禁用'
           }
         }
+      },
+      {
+        label: '所属模块',
+        prop: 'modelName'
       },
       {
         label: '超时占位费单价（元/分钟）',
