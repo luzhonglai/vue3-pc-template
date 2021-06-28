@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-25 10:43:53
+ * @LastEditTime: 2021-06-25 15:42:04
 -->
 <template>
   <div class="content">
@@ -140,18 +140,14 @@ export default defineComponent({
           }
         },
         {
-          label: '充电时长(分钟)',
-          prop: 'rechargeTime',
+          label: '减免时长(分钟)',
+          prop: 'reduceTime',
           align: 'center',
-          width: '150',
-          formatter(row, colimn) {
-            const min = Math.floor((row.rechargeTime / 1000 / 60) << 0)
-            return `${min}`
-          }
+          width: '150'
         },
         {
           label: '减免次数(次)',
-          prop: 'reduceTime',
+          prop: 'reduceTimes',
           align: 'center',
           width: '150'
         },
@@ -245,7 +241,7 @@ export default defineComponent({
             key: 'amount'
           },
           {
-            lable: '减免时长（小时）：',
+            lable: '减免时长（分钟）：',
             key: 'reduceTime'
           },
           {
@@ -381,7 +377,7 @@ export default defineComponent({
             { value: '70', text: '等待支付' },
             { value: '20', text: '正常完成' }
           ]
-          const { clearDistribution, closeAccount, paidTime, createTime, payVoList, orderState, payId } = res.result
+          const { clearDistribution, closeAccount, paidTime, createTime, payVoList, orderState } = res.result
           const { orderTradeFlowNo, startTime, endTime } = res.result.chargeOrderVoList[0]
           res.result.orderTradeFlowNo1 = orderTradeFlowNo
           res.result.payId = orderTradeFlowNo
@@ -393,12 +389,15 @@ export default defineComponent({
 
           // 创建订单时间
           res.result.createTime = formatDate(createTime, 'Y/M/D h:m:s')
+
           // 支付订单时间
           if (orderState == 20) {
             res.result.paidTime = formatDate(paidTime, 'Y/M/D h:m:s')
           }
 
-          res.payType = payVoList[0] ? payVoList[0].name : '--'
+          // res.reduceTime =  Math.floor((row.rechargeTime / 1000 / 60) << 0)
+
+          res.result.payType = payVoList[0] ? payVoList[0].name : '--'
           res.result.chargeStartTime1 = `${formatDate(startTime, 'Y-M-D h:m:s')} / ${formatDate(
             endTime,
             'Y-M-D h:m:s'

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-11 17:00:46
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-25 10:11:04
+ * @LastEditTime: 2021-06-28 14:01:43
 -->
 
 <template>
@@ -185,7 +185,7 @@ export default defineComponent({
         ]
       },
       {
-        name: 'manageOrganization',
+        name: 'manageOrganizationCode',
         label: '管理单位',
         type: 'select',
         placeholder: '请选择',
@@ -296,21 +296,8 @@ export default defineComponent({
       data: []
     })
     let selectData = []
+
     const findListParams: any = {
-      // bean: {
-      //   address: '',
-      //   area: 'sing',
-      //   belongOrganization: '',
-      //   city: '',
-      //   endTime: 0,
-      //   manageOrganization: '',
-      //   operateState: 0,
-      //   province: '',
-      //   seniorSearch: '',
-      //   startTime: 0,
-      //   stationName: '',
-      //   stationNo: ''
-      // },
       page: 1,
       pageSize: 10,
       sorts: {
@@ -335,7 +322,7 @@ export default defineComponent({
 
       // 查询
       async saveSubmit(from: any = {}) {
-        const { time = false, administrative = false, manageOrganization = false } = from
+        const { time = false, administrative = false, manageOrganizationCode = false } = from
         const bean = findListParams.bean
 
         if (time) {
@@ -353,9 +340,10 @@ export default defineComponent({
         }
 
         // 管理单位code
-        if (manageOrganization) {
-          from.manageOrganizationCode = manageOrganization.pop()
+        if (manageOrganizationCode) {
+          from.manageOrganizationCode = manageOrganizationCode.pop()
         }
+
         findListParams.page = 1
         findListParams.bean = { ...bean, ...from }
 

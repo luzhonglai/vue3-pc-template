@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-25 10:22:32
+ * @LastEditTime: 2021-06-28 13:59:15
 -->
 <template>
   <div class="content">
@@ -383,15 +383,15 @@ export default defineComponent({
       },
       {
         label: '区',
-        prop: 'districtName'
+        prop: 'area'
       },
       {
         label: '市',
-        prop: 'cityName'
+        prop: 'city'
       },
       {
         label: '省',
-        prop: 'provinceName',
+        prop: 'province',
         width: 60
       },
       {
@@ -403,7 +403,6 @@ export default defineComponent({
     ])
 
     const methods = {
-      // 重置表单
       async resetSubmit(val = {}) {
         findListParams.bean = { ...val }
       },
@@ -411,7 +410,7 @@ export default defineComponent({
       async getList() {
         const { result }: any = await findBelongOrganizationList()
         const manageOrganization = formInline.value.filter((item) => item.name == 'manageOrganization')[0]
-        manageOrganization.options = methods.getChildren(result)[0].children
+        manageOrganization.options = methods.getChildren(result)
         wsCache.set('manageOrganization', manageOrganization.options)
       },
 
@@ -437,7 +436,6 @@ export default defineComponent({
 
       // 勾选更新当前表头
       handleCheckedChangelist(newArr) {
-        tableData.value['tableColumn'] = []
         tableData.value['tableColumn'] = newArr
       },
 
@@ -463,6 +461,7 @@ export default defineComponent({
         // 管理单位code
         if (manageOrganization) {
           from.manageOrganizationCode = manageOrganization.pop()
+          delete from.manageOrganization
         }
 
         findListParams.page = 1
@@ -487,10 +486,6 @@ export default defineComponent({
           //  tableLoading.value = true
         }
         methods.resetSubmit()
-      },
-
-      changeStation(val) {
-        console.log(resetName.value, '213123')
       },
 
       // 弹窗管理
@@ -606,11 +601,11 @@ export default defineComponent({
           const { code, result }: any = await findByIdDetail(row.id)
           drawer.value = true
           result.operateState = status.filter((item) => item.value == result.operateState)[0].label
-          result.endTime = formatDate(result.endTime, 'Y-M-D h:m')
-          result.startTime = formatDate(result.startTime, 'Y-M-D h:m')
-          result.createdAt = formatDate(result.createdAt, 'Y-M-D h:m')
-          result.forbiddenTime = formatDate(result.forbiddenTime, 'Y-M-D h:m')
-          result.enableTime = formatDate(result.enableTime, 'Y-M-D h:m')
+          result.endTime = formatDate(result.endTime, 'Y/M/D h:m:s')
+          result.startTime = formatDate(result.startTime, 'Y/M/D h:m:s')
+          result.createdAt = formatDate(result.createdAt, 'Y/M/D h:m:s')
+          result.forbiddenTime = formatDate(result.forbiddenTime, 'Y/M/D h:m:s')
+          result.enableTime = formatDate(result.enableTime, 'Y/M/D h:m:s')
           detailsData.value = result
         }
       },
@@ -624,6 +619,7 @@ export default defineComponent({
         findListParams.page = val
         methods.findByPageData()
       },
+
       // 选中得数据
       selectionChange(val) {
         batchParasm.idList = val.map((item) => item.id)
