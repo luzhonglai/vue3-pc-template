@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-28 14:37:15
+ * @LastEditTime: 2021-06-28 15:26:42
 -->
 <template>
   <div class="content">
@@ -327,11 +327,13 @@ export default defineComponent({
       { type: 'index', label: '序号' },
       {
         label: '站编号',
-        prop: 'stationNo'
+        prop: 'stationNo',
+        width: '150'
       },
       {
         label: '站名称',
-        prop: 'stationName'
+        prop: 'stationName',
+        width: '200'
       },
       {
         label: '运营态',
@@ -345,7 +347,8 @@ export default defineComponent({
       },
       {
         label: '站地址',
-        prop: 'address'
+        prop: 'address',
+        width: '200'
       },
       {
         label: '超时占位费状态',
@@ -363,8 +366,14 @@ export default defineComponent({
         prop: 'modelName'
       },
       {
+        label: '管理单位',
+        prop: 'manageOrganization',
+        width: '300'
+      },
+      {
         label: '超时占位费单价（元/分钟）',
-        prop: 'price'
+        prop: 'price',
+        width: 100
       },
       {
         label: '减免时长',
@@ -379,17 +388,6 @@ export default defineComponent({
         prop: 'limit'
       },
       {
-        label: '创建时间',
-        prop: 'createdAt',
-        formatter(row, colimn) {
-          return formatDate(row.createdAt, 'Y/M/D')
-        }
-      },
-      {
-        label: '管理单位',
-        prop: 'manageOrganization'
-      },
-      {
         label: '区',
         prop: 'area'
       },
@@ -401,6 +399,14 @@ export default defineComponent({
         label: '省',
         prop: 'province',
         width: 60
+      },
+      {
+        label: '创建时间',
+        prop: 'createdAt',
+        formatter(row, colimn) {
+          return formatDate(row.createdAt, 'Y/M/D')
+        },
+        width: '100'
       },
       {
         label: '操作',

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-25 15:42:04
+ * @LastEditTime: 2021-06-28 15:38:34
 -->
 <template>
   <div class="content">
@@ -112,11 +112,13 @@ export default defineComponent({
         },
         {
           label: '交易流水号',
-          prop: 'tradeFlowNo'
+          prop: 'tradeFlowNo',
+          width: 200
         },
         {
           label: '站名称',
-          prop: 'stationName'
+          prop: 'stationName',
+          width: 200
         },
         {
           label: '站编号',
@@ -137,7 +139,8 @@ export default defineComponent({
           prop: 'createdAt',
           formatter(row, colimn) {
             return formatDate(row.createdAt, 'Y/M/D')
-          }
+          },
+          width: '150'
         },
         {
           label: '减免时长(分钟)',
@@ -202,7 +205,7 @@ export default defineComponent({
           },
           {
             lable: '产权单位：',
-            key: 'stakeOuCode'
+            key: 'belongOrganization'
           },
           {
             lable: '站名称：',
