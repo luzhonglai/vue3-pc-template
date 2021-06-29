@@ -270,7 +270,8 @@ export default defineComponent({
                 // operatorAccount: "",
                 province: item.provinceName,
                 stationName: item.stationName,
-                stationNo: item.stationCode 
+                stationNo: item.stationCode,
+                modelName:item.modelName
             }))
         createOverTimeStation({list}).then(res=>{
              this.$message({
