@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-08 10:41:31
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-06-28 15:26:42
+ * @LastEditTime: 2021-06-29 09:38:40
 -->
 <template>
   <div class="content">
@@ -362,7 +362,7 @@ export default defineComponent({
         }
       },
       {
-        label: '所属模块',
+        label: '所属模型',
         prop: 'modelName'
       },
       {
