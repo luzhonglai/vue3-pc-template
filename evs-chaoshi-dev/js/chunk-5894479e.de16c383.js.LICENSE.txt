@@ -1,1 +1,0 @@
-/*! @source http://purl.eligrey.com/github/Blob.js/blob/master/Blob.js */
