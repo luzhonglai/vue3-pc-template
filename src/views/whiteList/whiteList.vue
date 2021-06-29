@@ -177,7 +177,7 @@ export default defineComponent({
         // },
          {
           label: '所属模型',
-          prop: 'owningModel'
+          prop: 'modelName'
         },
          {
           label: '添加时间',
@@ -281,7 +281,7 @@ export default defineComponent({
         // },
          {
           label: '所属模型',
-          prop: 'owningModel'
+          prop: 'modelName'
         },
          {
           label: '添加时间',
