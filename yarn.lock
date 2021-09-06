@@ -861,6 +861,20 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@evs-pc/evs-pc-component@^0.5.2":
+  version "0.5.2"
+  resolved "http://10.10.18.122:7001/@evs-pc/evs-pc-component/download/@evs-pc/evs-pc-component-0.5.2.tgz#3df52f8fa5a2eb657673a96efb9c7bff6fa1bbf1"
+  integrity sha1-PfUvj6Wi62V2c6lu+5x7/2+hu/E=
+  dependencies:
+    core-js "^3.6.5"
+    file-saver "^2.0.5"
+    less "^4.1.1"
+    less-loader "^5.0.0"
+    node-sass "4.14.1"
+    sass-loader "7.3.1"
+    vue "^3.0.0"
+    xlsx "^0.16.9"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -10677,20 +10691,6 @@ terser@^5.5.1:
     commander "^2.20.0"
     source-map "~0.7.2"
     source-map-support "~0.5.19"
-
-test-evs-components@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/test-evs-components/-/test-evs-components-0.1.2.tgz#82909ca1c40c2ab499035fa349dcec60479ea636"
-  integrity sha512-AY9TaeyxQntZ2CiDf803wXoiaBiidNHKtzxRvhMzFOcBT9wiAQoHSFydhc78jsGitTh+oetPaV+AJ+QivASjDQ==
-  dependencies:
-    core-js "^3.6.5"
-    file-saver "^2.0.5"
-    less "^4.1.1"
-    less-loader "^5.0.0"
-    node-sass "4.14.1"
-    sass-loader "7.3.1"
-    vue "^3.0.0"
-    xlsx "^0.16.9"
 
 test-exclude@^5.2.3:
   version "5.2.3"

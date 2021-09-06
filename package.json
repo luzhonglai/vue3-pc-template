@@ -9,18 +9,18 @@
     "lint": "vue-cli-service lint --fix"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.31",
     "element-resize-detector": "^1.2.2",
-    "test-evs-components": "^0.1.2",
+    "mockjs": "^1.1.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "mockjs": "^1.1.0",
     "vuex": "^4.0.0-0",
-    "axios": "^0.21.1",
     "web-storage-cache": "^1.1.1"
   },
   "devDependencies": {
+    "@evs-pc/evs-pc-component": "^0.5.2",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",

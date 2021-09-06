@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-23 23:53:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-03 01:40:02
+ * @LastEditTime: 2021-09-06 15:39:22
 -->
 
 # multiple-vue3-pc (vue3 与 tsx 体验版)
@@ -23,26 +23,24 @@
 - Axios 封装
 - Eslint+Pettier 代码规范
 
-### 组织结构
+### vue 3.0 记录
 
-```base
-├── mock        ---- mock数据
-│   └── modules
-├── public
-├── src
-│   ├── api     ---- api管理
-│   ├── assets  ---- 静态资源
-│   ├── common  ---- 公共资源
-│   ├── layout  ---- 公告布局
-│   ├── plugins ---- 模版插件
-│   ├── router  ---- 路由模块
-│   ├── store   ---- 全局vuex
-│   ├── styles  ---- 全局样式
-│   ├── types   ---- 类型配置
-│   ├── utils   ---- 公共函数
-│   └── views   ---- 视图页面
-└── tests
-    └── unit
+```javascrip
+// 全局api
+app.config.globalProperties.$api = { ...api }
+app.config.globalProperties.$fetch = fetch
+app.config.globalProperties.$wsCache = wsCache
+
+// 如何去使用
+const { ctx }: any = getCurrentInstance() // 获取全局方法
+
+ctx.$api.user.getInfo()
+ctx.fetch.get()
+
+
+ctx.$wsCache.get('userInfo')
+ctx.$wsCache.set('token')
+
 ```
 
 ### 功能、组件的封装
@@ -65,17 +63,6 @@ yarn install
 #启动
 yarn run serve
 ```
-
-### 多页面配置
-
-```javascript
-// 脚本指定目录进行打包
-yarn run serve  appName 'demo'
-
-// 配置打包多页面
-```
-
-<img src="./src/assets/code.png" width="100%" height="300" alt="多页面 配置">
 
 ### 优化总结
 

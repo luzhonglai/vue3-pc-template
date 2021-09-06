@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { reactive, getCurrentInstance, toRefs, onMounted } from 'vue'
-const { ctx }: any = getCurrentInstance()
+const { ctx }: any = getCurrentInstance() // 获取全局方法
 
 const state = reactive({
   pagination: {
