@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-01-29 16:02:15
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-08-08 23:29:14
+ * @LastEditTime: 2021-09-04 18:56:12
  */
 
 import config from './index'
@@ -61,9 +61,9 @@ if (appName.length > 0) {
   }
 }
 
-const config = {
+const mode = {
   apps: Object.keys(pages).length > 0 ? pages : apps,
   mode: process.env.NODE_ENV || 'development'
 }
 
-module.exports = config
+module.exports = mode

@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-08-14 11:21:29
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-08-20 16:28:31
+ * @LastEditTime: 2021-09-04 18:41:01
  */
 
 /* --------------------------------- 性能监控试上传 -------------------------------- */
@@ -91,17 +91,11 @@ class Performance {
     const { timing, memory, navigation } = window.performance as any
     const {
       navigationStart = 0, // 准备加载页面的起始时间
-      //   unloadEventStart = 0, // 如果前一个文档和当前文档同源,返回前一个文档开始unload的时间
-      //   unloadEventEnd = 0, // 如果前一个文档和当前文档同源,返回前一个文档开始unload结束的时间
-      //   redirectStart = 0, // 如果有重定向,这里是重定向开始的时间.
-      //   redirectEnd = 0, // 如果有重定向,这里是重定向结束的时间.
       fetchStart = 0, // 开始检查缓存或开始获取资源的时间
       domainLookupStart = 0, //  开始进行dns查询的时间
       domainLookupEnd = 0, //  dns查询结束的时间
       connectStart = 0, // 开始建立连接请求资源的时间
       connectEnd = 0, // 建立连接成功的时间.
-      //   secureConnectionStart = 0, // 如果是https请求.返回ssl握手的时间
-      //   requestStart = 0, // 开始请求文档时间(包括从服务器,本地缓存请求)
       responseStart = 0, // 接收到第一个字节的时间
       responseEnd = 0, // 接收到最后一个字节的时间.
       //   domLoading = 0, // ‘current document readiness’ 设置为 loading的时间 (这个时候还木有开始解析文档)
@@ -109,7 +103,6 @@ class Performance {
       //   domContentLoadedEventStart = 0, // DOMContentLoaded事件开始的时间
       domContentLoadedEventEnd = 0, // DOMContentLoaded事件结束的时间
       domComplete = 0, // current document readiness被设置 complete的时间
-      //   loadEventStart = 0, // 触发onload事件的时间
       loadEventEnd = 0 // onload事件结束的时间
     } = timing
 
@@ -146,5 +139,5 @@ export default new Performance({
   reportUrl: 'http://localhost:10300/performanceMonitor', // 性能上报地址
   appId: 'performanceMonitor-1559318109525', // 项目ID
   appName: 'performanceMonitor', // 项目名称
-  env: 'dev' // 环境：dev、test、uat、pro
+  env: 'dev' // 环境：dev、test、prod
 })

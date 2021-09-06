@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:40:53
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-03 14:56:53
+ * @LastEditTime: 2021-09-04 18:53:57
  */
 
 module.exports = {
@@ -37,7 +37,9 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'prefer-const': 'off',
-    '@typescript-eslint/no-var-requires': 0 // 关闭require警告
+    '@typescript-eslint/no-var-requires': 0, // 关闭require警告
+    'no-empty-funcstion': 'off',
+    '@typescript-eslint/no-empty-function': 0
   },
   overrides: [
     {

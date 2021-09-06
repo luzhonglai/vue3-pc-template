@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-02 23:23:49
+ * @LastEditTime: 2021-09-04 18:46:51
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
@@ -38,7 +38,8 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
   if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
     config.data = qs.stringify(config.data)
   }
-  if (!headers.token || token) headers.token = token
+
+  if (token || !headers.token) headers.token = token
   return config
 })
 
@@ -64,8 +65,7 @@ service.interceptors.response.use(
   async (error: AxiosError) => {
     const response: any = error.response
     ElMessage.error(error.message || NETWORK_ERROR)
-    if (config.env !== 'prod') debugInfo(response)
-    return Promise.reject(error.message || NETWORK_ERROR)
+    return Promise.reject(error || NETWORK_ERROR)
   }
 )
 
@@ -73,6 +73,7 @@ function fetch(options?: any): AxiosPromise {
   if (options.method.toLowerCase() == 'post') {
     options.data = options.params
   }
+
   let isMock = config.isMock
   if (typeof options.mock !== 'undefined') {
     isMock = options.mock

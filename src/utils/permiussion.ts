@@ -12,7 +12,7 @@ NProgress.configure({ showSpinner: false }) // NProgress configuration
 
 router.beforeEach(async (to, from, next) => {
   // 获取用户token状态
-  const hasToken = wsCache.get('token')
+  const hasToken = wsCache.get('token') || false
   NProgress.start()
 
   if (hasToken) {

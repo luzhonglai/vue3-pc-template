@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, getCurrentInstance } from 'vue'
+import { reactive, getCurrentInstance, toRefs, onMounted } from 'vue'
 const { ctx }: any = getCurrentInstance()
 
 const state = reactive({
@@ -50,7 +50,16 @@ const state = reactive({
   ]
 })
 
-ctx.$api.test.getInfo()
+const { tableData, pagination } = toRefs(state)
+const methods = {
+  async getUserInfo() {
+    const res = await ctx.$api.test.getInfo()
+    console.log('res', res)
+  }
+}
+onMounted(() => {
+  methods.getUserInfo()
+})
 </script>
 
 <style lang="less" scoped></style>

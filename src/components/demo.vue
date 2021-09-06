@@ -1,16 +1,16 @@
-<!--
- * @Descripttion: 
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-08-27 15:02:19
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-08-27 15:02:19
--->
-
 <template>
-  <div>hello</div>
+  <div>{{ msg }}</div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { defineProps, onMounted, ref, toRef } from 'vue'
+
+const props = defineProps({
+  msg: {
+    type: String,
+    default: 111
+  }
+})
+</script>
 
 <style scoped></style>
