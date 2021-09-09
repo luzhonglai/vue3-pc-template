@@ -4,10 +4,11 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-08-14 16:45:00
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-06 15:34:15
+ * @LastEditTime: 2021-09-09 17:28:47
  */
 
-import evsComponent from '@evs-pc/evs-pc-component'
+// import evsComponent from '@evs-pc/evs-pc-component'
+import evsComponent from 'evs-components-pro'
 
 export const setupCustomComponents = (app?): void => {
   const files = require.context('../components/', true, /\.(vue|jsx|tsx)$/)

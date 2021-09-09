@@ -2,7 +2,7 @@
   <div>
     <div class="left" />
     <div class="right">
-      <EvsTablePage :pagination="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+      <evs-table-page :pagination="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange">
         <template #table>
           <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="date" label="日期" width="180" />
@@ -10,7 +10,7 @@
             <el-table-column prop="address" label="地址" />
           </el-table>
         </template>
-      </EvsTablePage>
+      </evs-table-page>
     </div>
   </div>
 </template>

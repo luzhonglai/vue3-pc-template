@@ -4,13 +4,13 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:58:35
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-03 14:28:42
+ * @LastEditTime: 2021-09-09 11:02:02
  */
 
 const path = require('path')
 // 代码压缩
 const TerserPlugin = require('terser-webpack-plugin')
-const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
+// const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
 // gzip压缩
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
@@ -41,7 +41,7 @@ module.exports = {
     }
   },
   chainWebpack: (config) => {
-    config.plugin('cache').use(HardSourWebpackPlugin)
+    // config.plugin('cache').use(HardSourWebpackPlugin)
     config.resolve.alias
       .set('@', resolve('src'))
       .set('_v', resolve('src/views'))
