@@ -4,10 +4,10 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-23 23:53:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-06 15:39:22
+ * @LastEditTime: 2021-09-21 12:06:58
 -->
 
-# multiple-vue3-pc (vue3 与 tsx 体验版)
+# multiple-vue3-pc (tsx 体验版)
 
 > 🔥 🎉 Vue 3.0 + TypeScript + Vue-Router 4.0 + Element-Plus + Axios + Vuex 多页面开发模版
 

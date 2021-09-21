@@ -1,10 +1,14 @@
 <template>
   <div>
-    <div class="left" />
+    <demo msg="sdaasd"></demo>
     <div class="right">
-      <evs-table-page :pagination="pagination" @size-change="handleSizeChange" @current-change="handleCurrentChange">
+      <evs-table-page
+        :pagination="state.pagination"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      >
         <template #table>
-          <el-table :data="tableData" style="width: 100%">
+          <el-table :data="state.tableData" style="width: 100%">
             <el-table-column prop="date" label="日期" width="180" />
             <el-table-column prop="name" label="姓名" width="180" />
             <el-table-column prop="address" label="地址" />
@@ -16,8 +20,15 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, getCurrentInstance, toRefs, onMounted } from 'vue'
-const { ctx }: any = getCurrentInstance() // 获取全局方法
+import { useAttrs, reactive, getCurrentInstance, onMounted, defineProps } from 'vue'
+
+const {
+  ctx: { $api, $wetcht }
+}: any = getCurrentInstance() // 获取全局方法
+
+const props = defineProps({
+  name: String
+})
 
 const state = reactive({
   pagination: {
@@ -50,13 +61,15 @@ const state = reactive({
   ]
 })
 
-const { tableData, pagination } = toRefs(state)
-const methods = {
+const methods: any = {
   async getUserInfo() {
-    const res = await ctx.$api.test.getInfo()
+    const res = await $api.test.getInfo()
     console.log('res', res)
-  }
+  },
+  handleSizeChange() {},
+  handleCurrentChange() {}
 }
+
 onMounted(() => {
   methods.getUserInfo()
 })

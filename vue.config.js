@@ -4,21 +4,20 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 10:58:35
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-09 11:02:02
+ * @LastEditTime: 2021-09-16 17:46:04
  */
 
 const path = require('path')
 // 代码压缩
 const TerserPlugin = require('terser-webpack-plugin')
-// const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
+const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
 // gzip压缩
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
-function resolve(dir) {
+const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
 
-// vue.config.js
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/' : './',
   lintOnSave: true,
@@ -41,14 +40,11 @@ module.exports = {
     }
   },
   chainWebpack: (config) => {
-    // config.plugin('cache').use(HardSourWebpackPlugin)
     config.resolve.alias
       .set('@', resolve('src'))
       .set('_v', resolve('src/views'))
       .set('_c', resolve('src/components'))
 
-    // 配置svg规则排除icons目录中svg文件处理
-    // 目标给svg规则增加一个排除选项exclude:['path/to/icon']
     config.module.rule('svg').exclude.add(resolve('src/icons'))
     config.module
       .rule('icons')
@@ -58,8 +54,13 @@ module.exports = {
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
       .options({ symbolId: 'icon-[name]' })
+    config.module
+      .rule('pug')
+      .test(/\.pug$/)
+      .use('pug-html-loader')
+      .loader('pug-html-loader')
+      .end()
 
-    // 生产环境
     config.when(process.env.NODE_ENV === 'production', (config) => {
       // gzip压缩
       const productionGzipExtensions = ['html', 'js', 'css']
@@ -73,24 +74,23 @@ module.exports = {
           deleteOriginalAssets: false // 删除原文件
         })
       )
-      //   // 代码压缩
-      config.plugin('TerserPlugin').use(
-        new TerserPlugin({
-          terserOptions: {
-            // 生产环境自动删除console
-            // compress: {
-            //   drop_debugger: true,
-            //   drop_console: true,
-            //   pure_funcs: ['console.log']
-            // }
-          },
-          sourceMap: false,
-          parallel: true
-        })
-      )
+
+      config
+        .plugin('TerserPlugin')
+        .use(
+          new TerserPlugin({
+            terserOptions: {
+              compress: true
+            },
+            sourceMap: false,
+            parallel: true
+          })
+        )
+        .end()
 
       // 持久化缓存
       config.optimization.runtimeChunk('single')
+      config.plugin('cache').use(HardSourWebpackPlugin)
     })
   }
 }
