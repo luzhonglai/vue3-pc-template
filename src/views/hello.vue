@@ -1,11 +1,10 @@
 <template>
   <div>
-    <demo msg="sdaasd"></demo>
     <div class="right">
       <evs-table-page
         :pagination="state.pagination"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @size-change="methods.handleSizeChange"
+        @current-change="methods.handleCurrentChange"
       >
         <template #table>
           <el-table :data="state.tableData" style="width: 100%">
@@ -20,11 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import { useAttrs, reactive, getCurrentInstance, onMounted, defineProps } from 'vue'
+import { reactive, getCurrentInstance, onMounted, defineProps } from 'vue'
 
 const {
-  ctx: { $api, $wetcht }
-}: any = getCurrentInstance() // 获取全局方法
+  proxy: { $api, $fetch, $wsCache }
+}: any = getCurrentInstance() // 获取挂在全局方法
 
 const props = defineProps({
   name: String
@@ -63,8 +62,8 @@ const state = reactive({
 
 const methods: any = {
   async getUserInfo() {
-    const res = await $api.test.getInfo()
-    console.log('res', res)
+    const res = await $api.test.changeRcardCardTypeGround()
+    const reus = await $api.test.selectThemeSpecificationTree()
   },
   handleSizeChange() {},
   handleCurrentChange() {}

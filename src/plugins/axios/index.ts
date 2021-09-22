@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-04 18:46:51
+ * @LastEditTime: 2021-09-22 16:45:32
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
@@ -45,7 +45,7 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
 
 service.interceptors.response.use(
   (response) => {
-    const { code, msg, data } = response.data
+    const { code, message: msg, data } = response.data
 
     if (config.env !== 'prod') debugInfo(response)
     if (code == resultCode) {

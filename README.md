@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-23 23:53:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-21 12:06:58
+ * @LastEditTime: 2021-09-22 16:46:58
 -->
 
 # multiple-vue3-pc (tsx 体验版)
@@ -26,20 +26,20 @@
 ### vue 3.0 记录
 
 ```javascrip
-// 全局api
+
+// 添加全局api
 app.config.globalProperties.$api = { ...api }
 app.config.globalProperties.$fetch = fetch
 app.config.globalProperties.$wsCache = wsCache
 
 // 如何去使用
-const { ctx }: any = getCurrentInstance() // 获取全局方法
+const { proxy:{ $api, $fetch, $wsCache }: any = getCurrentInstance() // 获取全局方法
 
-ctx.$api.user.getInfo()
-ctx.fetch.get()
+$api.user.getInfo()
+$fetch.get()
 
-
-ctx.$wsCache.get('userInfo')
-ctx.$wsCache.set('token')
+$wsCache.get('userInfo')
+$wsCache.set('token')
 
 ```
 
