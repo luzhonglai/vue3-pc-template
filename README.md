@@ -34,7 +34,7 @@ app.config.globalProperties.$wsCache = wsCache
 
 // 如何去使用
 const { proxy:{ $api, $fetch, $wsCache }: any = getCurrentInstance() // 获取全局方法
-
+ 
 $api.user.getInfo()
 $fetch.get()
 
