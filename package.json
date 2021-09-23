@@ -6,11 +6,11 @@
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "test": "vue-cli-service build --mode test",
+    "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint --fix"
   },
   "dependencies": {
     "@evs-pc/evs-ui-pro": "^1.0.0",
-    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.31",
     "element-resize-detector": "^1.2.2",
@@ -21,9 +21,7 @@
     "web-storage-cache": "^1.1.1"
   },
   "devDependencies": {
-    "pug": "^3.0.2",
-    "pug-html-loader": "^1.1.5",
-    "pug-plain-loader": "^1.1.0",
+    "axios": "^0.21.1",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
@@ -47,12 +45,14 @@
     "msw": "^0.28.0",
     "nprogress": "^0.2.0",
     "prettier": "^1.19.1",
+    "pug": "^3.0.2",
+    "pug-html-loader": "^1.1.5",
+    "pug-plain-loader": "^1.1.0",
     "script-loader": "^0.7.2",
     "svg-sprite-loader": "^6.0.9",
     "terser-webpack-plugin": "^5.1.1",
     "typescript": "~3.9.3",
     "vue-jest": "^5.0.0-0",
-    "vue-template-compiler": "^2.6.11",
     "vuex-persistedstate": "^4.0.0-beta.3"
   },
   "engines": {

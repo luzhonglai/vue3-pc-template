@@ -4,9 +4,6 @@ div {{ msg }}
 
 <script setup lang="ts">
 import { defineProps, onMounted, useAttrs, useSlots } from 'vue'
-const cetx = useAttrs()
-const add = useSlots
-console.log('cetx', cetx, add)
 
 const props = defineProps({
   msg: {
