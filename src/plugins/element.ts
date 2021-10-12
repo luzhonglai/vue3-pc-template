@@ -92,10 +92,6 @@ import {
   ElDescriptions,
   ElDescriptionsItem
 } from 'element-plus'
-console.log(use)
-
-// 设置语言
-use(lang)
 
 const components = [
   ElSkeleton,
@@ -196,7 +192,9 @@ const plugins = [
  * @return {*}
  * @param {App} new vue
  */
+// import element from 'element-plus'
 export function setElement(app: App<Element>): void {
+  use(lang)
   components.forEach((component: any) => {
     app.component(component.name, component)
   })
@@ -205,6 +203,5 @@ export function setElement(app: App<Element>): void {
     app.use(plugin)
   })
 
-  // 全局配置
-  app.config.globalProperties.$ELEMENT = { size: 'mini', zIndex: 2000 }
+  app.config.globalProperties.$ELEMENT = { size: 'medium', zIndex: 2000 }
 }
