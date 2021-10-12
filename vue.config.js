@@ -1,12 +1,3 @@
-/*
- * @Descripttion:
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-02-05 10:58:35
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-16 17:46:04
- */
-
 const path = require('path')
 // 代码压缩
 const TerserPlugin = require('terser-webpack-plugin')
@@ -18,9 +9,12 @@ const resolve = (dir) => {
   return path.join(__dirname, dir)
 }
 
+const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
+const IS_DEV = ['development', 'dev'].includes(process.env.NODE_ENV)
+
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : './',
-  lintOnSave: true,
+  publicPath: process.env.BASE_URL,
+  lintOnSave: false, // 关闭eslint 检查
   productionSourceMap: false,
   devServer: {
     port: 8080,
@@ -31,7 +25,7 @@ module.exports = {
     },
     proxy: {
       '/dev': {
-        target: 'http://10.10.18.150:8080/ecard-admin-web',
+        target: 'http://10.10.18.150:8080',
         changeOrigin: true,
         pathRewrite: {
           '^/dev': ''
@@ -44,6 +38,7 @@ module.exports = {
       .set('@', resolve('src'))
       .set('_v', resolve('src/views'))
       .set('_c', resolve('src/components'))
+      .end()
 
     config.module.rule('svg').exclude.add(resolve('src/icons'))
     config.module
@@ -51,17 +46,19 @@ module.exports = {
       .test(/\.svg$/)
       .include.add(resolve('./src/icons'))
       .end()
+
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
       .options({ symbolId: 'icon-[name]' })
+      .end()
+
     config.module
       .rule('pug')
       .test(/\.pug$/)
       .use('pug-html-loader')
       .loader('pug-html-loader')
       .end()
-
-    config.when(process.env.NODE_ENV === 'production', (config) => {
+    config.when(IS_PROD, (config) => {
       // gzip压缩
       const productionGzipExtensions = ['html', 'js', 'css']
       config.plugin('CompressionWebpackPlugin').use(
@@ -75,22 +72,28 @@ module.exports = {
         })
       )
 
-      config
-        .plugin('TerserPlugin')
-        .use(
-          new TerserPlugin({
-            terserOptions: {
-              compress: true
-            },
-            sourceMap: false,
-            parallel: true
-          })
-        )
-        .end()
+      //   // 代码压缩
+      config.plugin('TerserPlugin').use(
+        new TerserPlugin({
+          terserOptions: {
+            warnings: false,
+            // 生产环境自动删除console
+            compress: {
+              drop_debugger: true,
+              drop_console: true,
+              pure_funcs: ['console.log']
+            }
+          },
+          sourceMap: false,
+          parallel: true
+        })
+      )
+    })
 
-      // 持久化缓存
+    config.when(IS_DEV, (config) => {
       config.optimization.runtimeChunk('single')
       config.plugin('cache').use(HardSourWebpackPlugin)
     })
-  }
+  },
+  configureWebpack: (config) => {}
 }

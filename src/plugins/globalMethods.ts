@@ -1,12 +1,3 @@
-/*
- * @Descripttion:
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-08-14 16:42:52
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-22 15:59:04
- */
-
 import api from '@/api'
 import fetch from '@/plugins/axios'
 import wsCache from '@/utils/cache'

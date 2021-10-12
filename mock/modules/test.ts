@@ -2,14 +2,12 @@
  * @Descripttion:
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
- * @Date: 2021-02-02 15:30:17
+ * @Date: 2021-10-11 16:11:21
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-02-07 15:31:48
+ * @LastEditTime: 2021-10-11 17:54:08
  */
-
-let Mock = require('mockjs')
+const Mock = require('mockjs')
 import { RegExpUrl } from '@/mock/utils'
-
 
 const userInfo = Mock.mock({
   id: '@id()', //得到随机的id
@@ -23,16 +21,16 @@ const userInfo = Mock.mock({
 
 // 测试数据
 Mock.mock(RegExpUrl('/user/list'), {
-  "status": 0,
-  "code": 1,
-  "data": {
-    "id|1001-11000": 0,
-    "username": "@cname",
-    "email": "admin@51purse.com",
-    "phone": null,
-    "role": 0,
-    "createTime": 1479048325000,
-    "updateTime": 1479048325000
+  status: 0,
+  code: 1,
+  data: {
+    'id|1001-11000': 0,
+    username: '@cname',
+    email: 'admin@51purse.com',
+    phone: null,
+    role: 0,
+    createTime: 1479048325000,
+    updateTime: 1479048325000
   }
 })
 

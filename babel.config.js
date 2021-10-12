@@ -15,6 +15,16 @@ module.exports = {
         libraryName: 'element-plus',
         styleLibraryName: 'theme-chalk'
       }
+    ],
+    // 按需加载样式
+    [
+      'import',
+      {
+        libraryName: 'element-plus',
+        customStyleName: (name) => {
+          return `element-plus/lib/theme-chalk/${name}.css`
+        }
+      }
     ]
   ]
 }

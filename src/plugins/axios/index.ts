@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-22 16:45:32
+ * @LastEditTime: 2021-10-12 10:50:47
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
@@ -32,7 +32,7 @@ const service: AxiosInstance = axios.create({
 
 service.interceptors.request.use((config: AxiosRequestConfig) => {
   const headers = config.headers
-  const { token } = Storage.get('userInfo') || ''
+  const { token } = Storage.get('userInfo') || 'o::A73F5B99B59B43F7B306A41F7B01E664'
   headers.startDate = Date.now()
 
   if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
@@ -40,26 +40,27 @@ service.interceptors.request.use((config: AxiosRequestConfig) => {
   }
 
   if (token || !headers.token) headers.token = token
+  // headers.token = 'o::A73F5B99B59B43F7B306A41F7B01E664'
   return config
 })
 
 service.interceptors.response.use(
   (response) => {
-    const { code, message: msg, data } = response.data
+    const { code, message, data } = response.data
 
     if (config.env !== 'prod') debugInfo(response)
     if (code == resultCode) {
-      return data
+      return response.data
     } else if (API_AUTH_STATUS.includes(code)) {
       setTimeout(() => {
         Storage.clear()
-        router.replace('/login')
+        // router.replace('/login')
       }, 1500)
       ElMessage.error(TOKEN_INVALID)
       return Promise.reject(TOKEN_INVALID)
     } else {
-      ElMessage.error(msg || NETWORK_ERROR)
-      return Promise.reject(msg || NETWORK_ERROR)
+      ElMessage.error(message || NETWORK_ERROR)
+      return Promise.reject(message || NETWORK_ERROR)
     }
   },
   async (error: AxiosError) => {
@@ -70,8 +71,8 @@ service.interceptors.response.use(
 )
 
 function fetch(options?: any): AxiosPromise {
-  if (options.method.toLowerCase() == 'post') {
-    options.data = options.params
+  if (options.method.toLowerCase() == 'get') {
+    options.params = options.data
   }
 
   let isMock = config.isMock

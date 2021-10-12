@@ -1,6 +1,6 @@
 // 按需加载element
 import { App } from 'vue'
-import locale from 'element-plus/lib/locale'
+import { use } from 'element-plus/lib/locale'
 import lang from 'element-plus/lib/locale/lang/zh-cn'
 import {
   ElSkeleton,
@@ -92,9 +92,10 @@ import {
   ElDescriptions,
   ElDescriptionsItem
 } from 'element-plus'
+console.log(use)
 
 // 设置语言
-locale.use(lang)
+use(lang)
 
 const components = [
   ElSkeleton,

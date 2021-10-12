@@ -63,17 +63,17 @@ export const formatDate = (number: string, format: string) => {
  */
 
 export const getBase64 = (file: Blob) => {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     const reader = new FileReader()
     let imgResult: any = ''
     reader.readAsDataURL(file)
-    reader.onload = function() {
+    reader.onload = function () {
       imgResult = reader.result
     }
-    reader.onerror = function(error) {
+    reader.onerror = function (error) {
       reject(error)
     }
-    reader.onloadend = function() {
+    reader.onloadend = function () {
       resolve(imgResult)
     }
   })

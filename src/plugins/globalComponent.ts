@@ -1,14 +1,6 @@
-/*
- * @Descripttion:
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-08-14 16:45:00
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-14 16:43:13
- */
-
 import evsComponent from '@evs-pc/evs-ui-pro'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const setupCustomComponents = (app?): void => {
   const files = require.context('../components/', true, /\.(vue|jsx|tsx)$/)
   app.use(evsComponent)

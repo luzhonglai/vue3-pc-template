@@ -4,12 +4,13 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-05-07 15:35:43
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-05-08 10:08:22
+ * @LastEditTime: 2021-10-11 17:32:05
  */
 // import ParentLayout from '_c/ParentView/index.vue'
 import { RouteLocationNormalized, RouteRecordNormalized } from 'vue-router'
 
 export const getParentLayout = (name: string) => {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   return () =>
     new Promise((resolve) => {
       resolve({
