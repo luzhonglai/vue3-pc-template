@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-10-12 10:50:47
+ * @LastEditTime: 2021-10-12 13:09:36
  */
 
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
@@ -72,7 +72,7 @@ service.interceptors.response.use(
 
 function fetch(options?: any): AxiosPromise {
   if (options.method.toLowerCase() == 'get') {
-    options.params = options.data
+    options.params = options.data || options.params
   }
 
   let isMock = config.isMock

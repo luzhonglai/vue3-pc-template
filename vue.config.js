@@ -25,7 +25,7 @@ module.exports = {
     },
     proxy: {
       '/dev': {
-        target: 'http://10.10.18.150:8080',
+        target: 'https://api.imjad.cn',
         changeOrigin: true,
         pathRewrite: {
           '^/dev': ''

@@ -2,17 +2,12 @@
  * @Descripttion:
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
- * @Date: 2021-08-10 17:32:47
+ * @Date: 2021-10-12 11:27:22
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-22 16:42:37
+ * @LastEditTime: 2021-10-12 13:12:01
  */
-
 import fetch from '@/plugins/axios'
 
-const changeRcardCardTypeGround = (params) =>
-  fetch({ url: '/rcardTheme/changeRcardCardTypeGround', method: 'post', params })
-
-const selectThemeSpecificationTree = (params) =>
-  fetch({ url: '/rcardTheme/selectThemeSpecificationTree', method: 'post', params })
-
-export default { changeRcardCardTypeGround, selectThemeSpecificationTree }
+const test = (params) => fetch({ url: '/cloudmusic/', method: 'get', params })
+// const getBanner = (params) => fetch({ url: '/banner', method: 'post', params }) //个性推荐轮播
+export default { test }

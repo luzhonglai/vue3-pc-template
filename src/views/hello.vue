@@ -62,8 +62,8 @@ const state = reactive({
 
 const methods: any = {
   async getUserInfo() {
-    const res = await $api.test.changeRcardCardTypeGround()
-    const reus = await $api.test.selectThemeSpecificationTree()
+    const res = await $api.test.test({ type: 'djradio', id: 1306231997 })
+    // const getBanner = await $api.test.getBanner()
   },
   handleSizeChange() {},
   handleCurrentChange() {}
