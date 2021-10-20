@@ -11,6 +11,7 @@ console.log('环境变量---->', process.env)
 import '@/styles/reset.css'
 import '@/styles/index.less'
 import '@/assets/icons/svg'
+import '@evs-pc/evs-ui-pro/lib/index.css'
 
 setupElement(app)
 setupDirectives(app)

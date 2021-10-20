@@ -2,7 +2,7 @@
   "name": "vue-multiple-pages",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
+  "scripts": {   
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint  \"{src,mock}/**/*.{vue,ts,tsx}\"  --fix",
@@ -79,6 +79,5 @@
       "^.+\\.vue$": "vue-jest"
     }
   },
-  "_id": "vue-multiple-pages@0.1.0",
   "readme": "ERROR: No README data found!"
 }

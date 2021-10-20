@@ -7,8 +7,7 @@ import { defineProps, onMounted, useAttrs, useSlots } from 'vue'
 
 const props = defineProps({
   msg: {
-    type: String,
-    default: 111
+    type: String
   }
 })
 </script>
