@@ -2,7 +2,7 @@
   "name": "vue-multiple-pages",
   "version": "1.0.0",
   "private": true,
-  "scripts": {   
+  "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint  \"{src,mock}/**/*.{vue,ts,tsx}\"  --fix",
@@ -11,7 +11,6 @@
     "prettier": "prettier --write --loglevel warn \"src/**/*.{js,json,tsx,css,less,scss,vue}\""
   },
   "dependencies": {
-    "@evs-pc/evs-ui-pro": "^1.0.2",
     "axios": "^0.21.1",
     "element-plus": "^1.0.2-beta.31",
     "element-resize-detector": "^1.2.2",
@@ -61,6 +60,10 @@
     "svg-sprite-loader": "^6.0.9",
     "terser-webpack-plugin": "^4.1.0",
     "typescript": "~3.9.3",
+    "less": "^3.0.4",
+    "less-loader": "^5.0.0",
+    "sass": "^1.27.0",
+    "sass-loader": "^10.0.4",
     "vue-eslint-parser": "^7.11.0",
     "vue-jest": "^5.0.0-0",
     "vuex-persistedstate": "^4.0.0-beta.3"

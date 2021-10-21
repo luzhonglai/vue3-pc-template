@@ -1,9 +1,9 @@
-import evsComponent from '@evs-pc/evs-ui-pro'
+// import evsComponent from '@evs-pc/evs-ui-pro'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const setupCustomComponents = (app?): void => {
   const files = require.context('../components/', true, /\.(vue|jsx|tsx)$/)
-  app.use(evsComponent)
+  // app.use(evsComponent)
   files.keys().forEach((key) => {
     const config = files(key)
     const name = key

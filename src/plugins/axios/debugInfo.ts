@@ -4,12 +4,11 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 14:26:10
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-04 18:35:31
+ * @LastEditTime: 2021-10-21 10:29:15
  */
 
 import config from './config'
 
-const { isDebugInfo } = config
 /**
  * @name:
  * @msg: 接口日志信息

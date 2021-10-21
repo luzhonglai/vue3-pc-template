@@ -77,7 +77,6 @@ module.exports = {
         new TerserPlugin({
           terserOptions: {
             warnings: false,
-            // 生产环境自动删除console
             compress: {
               drop_debugger: true,
               drop_console: true,
