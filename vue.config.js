@@ -1,9 +1,15 @@
+/*
+ * @Descripttion:
+ * @repository: https://github.com/luzhonglai
+ * @Author: ZhongLai Lu
+ * @Date: 2021-10-18 17:23:14
+ * @LastEditors: Zhonglai Lu
+ * @LastEditTime: 2021-11-02 13:52:03
+ */
 const path = require('path')
-// 代码压缩
-const TerserPlugin = require('terser-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin') // 代码压缩
 const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
-// gzip压缩
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
+
 
 const resolve = (dir) => {
   return path.join(__dirname, dir)
@@ -27,9 +33,6 @@ module.exports = {
       '/dev': {
         target: 'https://api.imjad.cn',
         changeOrigin: true,
-        pathRewrite: {
-          '^/dev': ''
-        }
       }
     }
   },
@@ -58,41 +61,31 @@ module.exports = {
       .use('pug-html-loader')
       .loader('pug-html-loader')
       .end()
-    config.when(IS_PROD, (config) => {
-      // gzip压缩
-      const productionGzipExtensions = ['html', 'js', 'css']
-      config.plugin('CompressionWebpackPlugin').use(
-        new CompressionWebpackPlugin({
-          filename: '[path][base].gz', // Compression6.0+ 弃用[path].gz[query]
-          algorithm: 'gzip',
-          test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'),
-          threshold: 10240, // 只有大小大于该值的资源会被处理 10240
-          minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
-          deleteOriginalAssets: false // 删除原文件
-        })
-      )
 
-      //   // 代码压缩
+    /* 生产部署处理 */
+    config.when(IS_PROD, (config) => {
       config.plugin('TerserPlugin').use(
         new TerserPlugin({
+          extractComments: false, // 是否将注释提取到一个单独的文件中
           terserOptions: {
-            warnings: false,
+            warnings: false, // 打包提示
             compress: {
-              drop_debugger: true,
+              drop_debugger: true, // 注视点console
               drop_console: true,
-              pure_funcs: ['console.log']
+              pure_funcs: ['console.log'] // 去除console
             }
           },
+          cache: true,
           sourceMap: false,
-          parallel: true
+          parallel: false
         })
       )
     })
 
+    /* 开发处理 */
     config.when(IS_DEV, (config) => {
       config.optimization.runtimeChunk('single')
       config.plugin('cache').use(HardSourWebpackPlugin)
     })
-  },
-  configureWebpack: (config) => {}
+  }
 }
