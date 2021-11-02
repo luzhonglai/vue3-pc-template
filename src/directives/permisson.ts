@@ -1,22 +1,16 @@
-/*
- * @Descripttion:
- * @repository: https://github.com/luzhonglai
- * @Author: ZhongLai Lu
- * @Date: 2021-08-14 23:21:58
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-08-14 23:45:57
- */
-
-/* -------------------------------------------------------------------------- */
 import { getStoreGetter } from '@/store/utils'
 
+/**
+ * @name: 按钮指令
+ * @return {*}
+ */
 export default {
   mounted(el: Element, binding: any) {
-    const { value } = binding
     const buttonPermissions = getStoreGetter('permission', 'buttonPermissions')
+    const { value } = binding
+
     if (value && value instanceof Array && value.length > 0) {
       const vPermissions = value
-
       const hasPermission = buttonPermissions.some((item: any) => {
         return vPermissions.includes(item)
       })

@@ -1,33 +1,8 @@
-<template>
-  <div>
-    <div class="right">
-      <evs-table-page
-        :pagination="state.pagination"
-        @size-change="methods.handleSizeChange"
-        @current-change="methods.handleCurrentChange"
-      >
-        <template #table>
-          <el-table :data="state.tableData" style="width: 100%">
-            <el-table-column prop="date" label="日期" width="180" />
-            <el-table-column prop="name" label="姓名" width="180" />
-            <el-table-column prop="address" label="地址" />
-          </el-table>
-        </template>
-      </evs-table-page>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { reactive, getCurrentInstance, onMounted, defineProps } from 'vue'
-
+import { defineExpose, reactive, getCurrentInstance, onMounted, defineProps, toRefs, ref } from 'vue'
 const {
   proxy: { $api, $fetch, $wsCache }
 }: any = getCurrentInstance() // 获取挂在全局方法
-
-const props = defineProps({
-  name: String
-})
 
 const state = reactive({
   pagination: {
@@ -57,21 +32,23 @@ const state = reactive({
       name: '王小虎',
       address: '上海市普陀区金沙江路 1516 弄'
     }
-  ]
+  ],
+  num: 111
 })
 
 const methods: any = {
   async getUserInfo() {
     const res = await $api.test.test({ type: 'djradio', id: 1306231997 })
-    // const getBanner = await $api.test.getBanner()
   },
   handleSizeChange() {},
   handleCurrentChange() {}
 }
 
-onMounted(() => {
-  methods.getUserInfo()
-})
+methods.getUserInfo()
 </script>
+<template>
+  <div>{{ state.num }}</div>
+  <button @click="methods.add"></button>
+</template>
 
 <style lang="less" scoped></style>

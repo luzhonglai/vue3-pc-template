@@ -4,16 +4,16 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-10-12 13:09:36
+ * @LastEditTime: 2021-11-02 13:52:39
  */
 
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
 import qs from 'qs'
 import router from '@/router'
 import config from './config'
 import Storage from '@/utils/cache'
 import { debugInfo } from './debugInfo'
 import { ElMessage } from 'element-plus'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
 
 // 鉴权失败状态码
 const { resultCode, isMock, requestTimeout, defaultHeaders } = config
@@ -23,7 +23,6 @@ const NETWORK_ERROR = '网络请求异常，请稍后重试'
 
 // 创建axios实例
 const service: AxiosInstance = axios.create({
-  baseURL: config.baseApi,
   timeout: requestTimeout || 5000,
   headers: {
     'Content-Type': defaultHeaders
@@ -32,15 +31,12 @@ const service: AxiosInstance = axios.create({
 
 service.interceptors.request.use((config: AxiosRequestConfig) => {
   const headers = config.headers
-  const { token } = Storage.get('userInfo') || 'o::A73F5B99B59B43F7B306A41F7B01E664'
+  const { token } = Storage.get('userInfo') || ''
+
   headers.startDate = Date.now()
+  if (headers['Content-Type'] === 'application/x-www-form-urlencoded') config.data = qs.stringify(config.data)
 
-  if (headers['Content-Type'] === 'application/x-www-form-urlencoded') {
-    config.data = qs.stringify(config.data)
-  }
-
-  if (token || !headers.token) headers.token = token
-  // headers.token = 'o::A73F5B99B59B43F7B306A41F7B01E664'
+  if (!headers.token && token) headers.token = token
   return config
 })
 
@@ -60,7 +56,7 @@ service.interceptors.response.use(
       return Promise.reject(TOKEN_INVALID)
     } else {
       ElMessage.error(message || NETWORK_ERROR)
-      return Promise.reject(message || NETWORK_ERROR)
+      return Promise.resolve(response.data)
     }
   },
   async (error: AxiosError) => {

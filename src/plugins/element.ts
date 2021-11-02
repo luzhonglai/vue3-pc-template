@@ -195,6 +195,7 @@ const plugins = [
 // import element from 'element-plus'
 export function setElement(app: App<Element>): void {
   use(lang)
+  
   components.forEach((component: any) => {
     app.component(component.name, component)
   })
