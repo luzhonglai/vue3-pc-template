@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-02 13:52:39
+ * @LastEditTime: 2021-11-09 17:04:42
  */
 
 import qs from 'qs'
@@ -69,6 +69,11 @@ service.interceptors.response.use(
 function fetch(options?: any): AxiosPromise {
   if (options.method.toLowerCase() == 'get') {
     options.params = options.data || options.params
+    delete options.data
+  }
+  if (options.method.toLowerCase() == 'post') {
+    options.data = options.data || options.params
+    delete options.params
   }
 
   let isMock = config.isMock
