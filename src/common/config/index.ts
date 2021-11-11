@@ -4,12 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-04-29 18:07:01
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-14 16:51:55
+ * @LastEditTime: 2021-11-11 15:57:36
  */
 
 /* --------------------------------- 环境配置 封装 -------------------------------- */
 
-const env = process.env.NODE_ENV || 'prod'
+const mode = process.env.BABEL_MODE || 'prod'
 
 const EnvConfig = {
   dev: {
@@ -33,7 +33,7 @@ const EnvPage = {
 }
 
 export default {
-  env,
+  mode,
   EnvPage,
-  ...EnvConfig[env]
+  ...EnvConfig[mode]
 }

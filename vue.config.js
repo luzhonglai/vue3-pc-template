@@ -4,12 +4,11 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-10-18 17:23:14
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-02 13:52:03
+ * @LastEditTime: 2021-11-11 17:28:09
  */
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin') // 代码压缩
 const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
-
 
 const resolve = (dir) => {
   return path.join(__dirname, dir)
@@ -32,7 +31,7 @@ module.exports = {
     proxy: {
       '/dev': {
         target: 'https://api.imjad.cn',
-        changeOrigin: true,
+        changeOrigin: true
       }
     }
   },

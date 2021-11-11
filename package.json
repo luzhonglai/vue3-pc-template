@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --open",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint  \"{src,mock}/**/*.{vue,ts,tsx}\"  --fix",
-    "build:test": "vue-cli-service build --mode test",
+    "serve:dev": "vue-cli-service  serve --mode serve.dev  --open",
+    "serve:test": "vue-cli-service serve --mode serve.test --open",
+    "build:prod": "vue-cli-service build --mode build.prod",
+    "build:test": "vue-cli-service build --mode build.test",
     "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint  \"{src,mock}/**/*.{vue,ts,tsx}\"  --fix",
     "prettier": "prettier --write --loglevel warn \"src/**/*.{js,json,tsx,css,less,scss,vue}\""
   },
   "dependencies": {
