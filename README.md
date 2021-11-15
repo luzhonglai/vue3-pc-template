@@ -4,10 +4,10 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-23 23:53:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-02 16:20:19
+ * @LastEditTime: 2021-11-15 11:00:56
 -->
 
-# multiple-vue3-pc (tsx 体验版)
+# multiple-vue3-pc
 
 > 🔥 🎉 Vue 3.0 + TypeScript + Vue-Router 4.0 + Element-Plus + Axios + Vuex
 
@@ -20,6 +20,10 @@
 - 封装 API 请求
 - 请求日志窗口
 - 权限管理
+- 多环境发布 (对应 serve,build)
+  - dev
+  - test
+  - prod
 
 ## 插件介绍
 
