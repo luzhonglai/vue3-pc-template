@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-09 17:04:42
+ * @LastEditTime: 2021-11-24 14:40:27
  */
 
 import qs from 'qs'
@@ -16,7 +16,7 @@ import { ElMessage } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
 
 // 鉴权失败状态码
-const { resultCode, isMock, requestTimeout, defaultHeaders } = config
+const { resultCode, isMock, requestTimeout, defaultHeaders, isDebugInfo } = config
 const API_AUTH_STATUS = [403, 70000001, 70000003]
 const TOKEN_INVALID = 'Token认证失败，请重新登录'
 const NETWORK_ERROR = '网络请求异常，请稍后重试'
@@ -44,7 +44,7 @@ service.interceptors.response.use(
   (response) => {
     const { code, message, data } = response.data
 
-    if (config.env !== 'prod') debugInfo(response)
+    if (config.env !== 'prod' && isDebugInfo) debugInfo(response)
     if (code == resultCode) {
       return response.data
     } else if (API_AUTH_STATUS.includes(code)) {
@@ -61,6 +61,8 @@ service.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const response: any = error.response
+    if (config.env !== 'prod' && isDebugInfo) debugInfo(response)
+
     ElMessage.error(error.message || NETWORK_ERROR)
     return Promise.reject(error || NETWORK_ERROR)
   }
@@ -80,6 +82,7 @@ function fetch(options?: any): AxiosPromise {
   if (typeof options.mock !== 'undefined') {
     isMock = options.mock
   }
+
   if (config.env === 'prod') {
     service.defaults.baseURL = config.baseApi
   } else {

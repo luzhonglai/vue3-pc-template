@@ -1,4 +1,4 @@
-import api from '@/api'
+import api from '@/apis'
 import fetch from '@/plugins/axios'
 import wsCache from '@/utils/cache'
 

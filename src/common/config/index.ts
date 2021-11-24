@@ -4,12 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-04-29 18:07:01
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-11 15:57:36
+ * @LastEditTime: 2021-11-24 14:41:19
  */
 
 /* --------------------------------- 环境配置 封装 -------------------------------- */
 
-const mode = process.env.BABEL_MODE || 'prod'
+const mode = process.env.VUE_APP_MODE || 'prod'
 
 const EnvConfig = {
   dev: {
@@ -17,7 +17,7 @@ const EnvConfig = {
     mockApi: 'https://www.fastmock.site/mock/c1c302e8baed9894c48c17e4738c092e/api'
   },
   test: {
-    baseApi: '/dev',
+    baseApi: '/test',
     mockApi: 'https://www.fastmock.site/mock/c1c302e8baed9894c48c17e4738c092e/api'
   },
   prod: {
@@ -26,14 +26,38 @@ const EnvConfig = {
   }
 }
 
-/* -------------------------------- 多页面 打包配置 -------------------------------- */
+const axiosConfig = {
+  /**
+   * 开启接口日志调试窗口
+   *
+   */
+  isDebugInfo: true,
 
-const EnvPage = {
-  buildMoudle: 'buildView'
+  /**
+   *
+   * 开启mock
+   */
+  isMock: false,
+
+  /**
+   * 接口成功返回状态码
+   */
+  resultCode: '1',
+
+  /**
+   * 接口请求超时时间
+   */
+  requestTimeout: 5000,
+
+  /**
+   * 默认接口请求类型
+   * 可选值：application/x-www-form-urlencoded multipart/form-data
+   */
+  defaultHeaders: 'application/json'
 }
 
 export default {
   mode,
-  EnvPage,
-  ...EnvConfig[mode]
+  ...EnvConfig[mode],
+  ...axiosConfig
 }
