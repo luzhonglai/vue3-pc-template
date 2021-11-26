@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-24 14:40:27
+ * @LastEditTime: 2021-11-26 16:57:35
  */
 
 import qs from 'qs'
@@ -12,7 +12,7 @@ import router from '@/router'
 import config from './config'
 import Storage from '@/utils/cache'
 import { debugInfo } from './debugInfo'
-import { ElMessage } from 'element-plus'
+import { Toast } from 'vant'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
 
 // 鉴权失败状态码
@@ -52,15 +52,18 @@ service.interceptors.response.use(
         Storage.clear()
         // router.replace('/login')
       }, 1500)
-      ElMessage.error(TOKEN_INVALID)
+      // ElMessage.error(TOKEN_INVALID)
+      Toast.fail(TOKEN_INVALID)
       return Promise.reject(TOKEN_INVALID)
     } else {
-      ElMessage.error(message || NETWORK_ERROR)
+      Toast.fail(message || NETWORK_ERROR)
+      // ElMessage.error(message || NETWORK_ERROR)
       return Promise.resolve(response.data)
     }
   },
   async (error: AxiosError) => {
     const response: any = error.response
+    // ElMessage.error(error.message || NETWORK_ERROR)
     if (config.env !== 'prod' && isDebugInfo) debugInfo(response)
 
     ElMessage.error(error.message || NETWORK_ERROR)

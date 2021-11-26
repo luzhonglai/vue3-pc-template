@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-10-18 17:23:14
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-11 17:28:09
+ * @LastEditTime: 2021-11-26 16:52:50
  */
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin') // 代码压缩
@@ -34,6 +34,21 @@ module.exports = {
         changeOrigin: true
       }
     }
+  },
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          require('postcss-px-to-viewport')({
+            viewportWidth: 375
+          })
+        ]
+      }
+    }
+  },
+  configureWebpack: {
+    name: 'demo', // 单页面名称title
+    externals: {}
   },
   chainWebpack: (config) => {
     config.resolve.alias
