@@ -4,14 +4,14 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-23 23:53:50
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-15 11:00:56
+ * @LastEditTime: 2021-11-30 14:04:18
 -->
 
-# multiple-vue3-pc
+# vue3-h5-template
 
-> 🔥 🎉 Vue 3.0 + TypeScript + Vue-Router 4.0 + Element-Plus + Axios + Vuex
+> 🔥 🎉 Vue 3.0 + TypeScript + Vue-Router 4.0 + Vant + Axios + Vuex
 
-## 支持
+## 基础支持
 
 > 模版开发之前、我们做了以下准备工作
 
@@ -26,9 +26,6 @@
   - prod
 
 ## 插件介绍
-
-- @evs-pc/evs-ui-pro 基于 Element-plus 业务组件库
-- @evs-plugin/axios 基于 Axios 封装的 request，内置请求日志、错误处理等功能
 
 ### vue3
 
