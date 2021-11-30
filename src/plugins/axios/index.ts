@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-26 16:57:35
+ * @LastEditTime: 2021-11-26 17:20:48
  */
 
 import qs from 'qs'
@@ -18,7 +18,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, 
 // 鉴权失败状态码
 const { resultCode, isMock, requestTimeout, defaultHeaders, isDebugInfo } = config
 const API_AUTH_STATUS = [403, 70000001, 70000003]
-const TOKEN_INVALID = 'Token认证失败，请重新登录'
+const TOKEN_INVALID = '登录过期，请重新登录'
 const NETWORK_ERROR = '网络请求异常，请稍后重试'
 
 // 创建axios实例
@@ -48,25 +48,22 @@ service.interceptors.response.use(
     if (code == resultCode) {
       return response.data
     } else if (API_AUTH_STATUS.includes(code)) {
-      setTimeout(() => {
-        Storage.clear()
-        // router.replace('/login')
-      }, 1500)
-      // ElMessage.error(TOKEN_INVALID)
+      // setTimeout(() => {
+      // Storage.clear()
+      // router.replace('/login')
+      // }, 1500)
       Toast.fail(TOKEN_INVALID)
       return Promise.reject(TOKEN_INVALID)
     } else {
       Toast.fail(message || NETWORK_ERROR)
-      // ElMessage.error(message || NETWORK_ERROR)
       return Promise.resolve(response.data)
     }
   },
   async (error: AxiosError) => {
     const response: any = error.response
-    // ElMessage.error(error.message || NETWORK_ERROR)
+    Toast.fail(error.message || NETWORK_ERROR)
     if (config.env !== 'prod' && isDebugInfo) debugInfo(response)
 
-    ElMessage.error(error.message || NETWORK_ERROR)
     return Promise.reject(error || NETWORK_ERROR)
   }
 )
