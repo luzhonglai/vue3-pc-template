@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineExpose, reactive, getCurrentInstance, onMounted, defineProps, toRefs, ref } from 'vue'
 const {
-  proxy: { $api, $fetch, $wsCache }
+  proxy: { $api, $fetch, $wsCache, $echarts }
 }: any = getCurrentInstance() // 获取挂在全局方法
 
 const state = reactive({
@@ -44,11 +44,42 @@ const methods: any = {
   handleCurrentChange() {}
 }
 
+const myEcharts = () => {
+  console.log($echarts, '----')
+  const mycharts = $echarts.init(document.getElementById('box'))
+  const options = {
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        data: [150, 230, 224, 218, 135, 147, 260],
+        type: 'line'
+      }
+    ]
+  }
+  mycharts.setOption(options)
+}
+onMounted(() => {
+  myEcharts()
+})
 methods.getUserInfo()
 </script>
 <template>
-  <div>{{ state.num }}</div>
-  <button @click="methods.add"></button>
+  <div>
+    <div>{{ state.num }}</div>
+    <button @click="methods.add"></button>
+    <div id="box"></div>
+  </div>
 </template>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+#box {
+  width: 100%;
+  height: 800px;
+}
+</style>
