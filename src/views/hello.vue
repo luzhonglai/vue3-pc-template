@@ -1,8 +1,24 @@
+<!--
+ * @Descripttion: 
+ * @repository: https://github.com/luzhonglai
+ * @Author: ZhongLai Lu
+ * @Date: 2021-12-22 11:28:20
+ * @LastEditors: Zhonglai Lu
+ * @LastEditTime: 2022-01-17 00:52:43
+-->
 <script setup lang="ts">
 import { defineExpose, reactive, getCurrentInstance, onMounted, defineProps, toRefs, ref } from 'vue'
 const {
   proxy: { $api, $fetch, $wsCache }
 }: any = getCurrentInstance() // 获取挂在全局方法
+
+// pinia demo
+import { storeUser } from '@/store/modules/user'
+console.log(storeUser())
+console.log(storeUser().nameLength, 'getter')
+storeUser().addNum('1111')
+console.log(storeUser().name, '新name')
+console.log(storeUser().nameLength, 'getter')
 
 const state = reactive({
   pagination: {

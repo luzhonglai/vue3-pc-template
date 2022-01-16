@@ -4,13 +4,13 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-11-15 14:12:48
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-26 16:03:32
+ * @LastEditTime: 2022-01-09 18:57:01
  */
 import App from './App.vue'
 import store from './store'
 import router from './router'
 import { createApp } from 'vue'
-import { setupGlobalMethods, setupCustomComponents, setupDirectives, vantPlugins } from './plugins'
+import { setupGlobalMethods, setupCustomComponents, vantPlugins } from './plugins'
 
 const app = createApp(App)
 console.log('环境变量---->', process.env)
@@ -21,7 +21,7 @@ import '@/styles/index.less'
 import '@/assets/icons/svg'
 
 vantPlugins(app)
-setupDirectives(app)
+// setupDirectives(app)
 setupGlobalMethods(app)
 setupCustomComponents(app)
 

@@ -1,26 +1,15 @@
-import { createStore, createLogger, Store } from 'vuex'
-import createPersistedState from 'vuex-persistedstate' // vuex缓存
-import modules from './modules'
-import mutations from './mutations'
-import { StateType } from '@/types'
+/*
+ * @Descripttion:
+ * @repository: https://github.com/luzhonglai
+ * @Author: ZhongLai Lu
+ * @Date: 2021-05-06 11:08:05
+ * @LastEditors: Zhonglai Lu
+ * @LastEditTime: 2022-01-17 00:49:59
+ */
 
-const store: Store<StateType> = createStore({
-  strict: true,
-  mutations,
-  modules: { ...modules },
-  plugins:
-    process.env.NODE_ENV !== 'production'
-      ? [
-          createLogger(),
-          createPersistedState({
-            paths: ['permission']
-          })
-        ]
-      : [
-          createPersistedState({
-            paths: ['permission']
-          })
-        ]
-})
+import { createPinia } from 'pinia'
+import piniaPluginPersist from 'pinia-plugin-persist'
+const store = createPinia()
+store.use(piniaPluginPersist)
 
 export default store

@@ -4,12 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-08-14 16:42:38
  * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-26 16:03:24
+ * @LastEditTime: 2022-01-09 19:00:12
  */
 
 import { createApp } from 'vue'
 
-export { setupDirectives } from '@/plugins/directives'
+// export { setupDirectives } from '@/plugins/directives'
 export { setupCustomComponents } from '@/plugins/globalComponent'
 export { setupGlobalMethods } from '@/plugins/globalMethods'
 export { vantPlugins } from '@/plugins/setVant'
