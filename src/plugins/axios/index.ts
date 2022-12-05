@@ -3,8 +3,8 @@
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
  * @Date: 2021-07-21 11:12:56
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-09 17:04:42
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2022-12-05 02:41:11
  */
 
 import qs from 'qs'
@@ -12,7 +12,7 @@ import router from '@/router'
 import config from './config'
 import Storage from '@/utils/cache'
 import { debugInfo } from './debugInfo'
-import { ElMessage } from 'element-plus'
+// import { ElMessage } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosPromise, AxiosResponse, AxiosError } from 'axios'
 
 // 鉴权失败状态码
@@ -52,16 +52,17 @@ service.interceptors.response.use(
         Storage.clear()
         // router.replace('/login')
       }, 1500)
-      ElMessage.error(TOKEN_INVALID)
+      // ElMessage.error(TOKEN_INVALID)
       return Promise.reject(TOKEN_INVALID)
     } else {
-      ElMessage.error(message || NETWORK_ERROR)
+      // ElMessage.error(message || NETWORK_ERROR)
       return Promise.resolve(response.data)
     }
   },
   async (error: AxiosError) => {
+    if (config.env !== 'prod') debugInfo(error)
     const response: any = error.response
-    ElMessage.error(error.message || NETWORK_ERROR)
+    // ElMessage.error(error.message || NETWORK_ERROR)
     return Promise.reject(error || NETWORK_ERROR)
   }
 )

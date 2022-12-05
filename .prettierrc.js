@@ -1,3 +1,11 @@
+/*
+ * @Description: 
+ * @Author: luzhonglai
+ * @Date: 2022-12-04 22:01:00
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2022-12-05 02:07:28
+ * @FilePath: \vue3-pc-template\.prettierrc.js
+ */
 module.exports = {
   printWidth: 120, // 换行字符串阈值
   tabWidth: 2, // 设置工具每一个水平缩进的空格数
