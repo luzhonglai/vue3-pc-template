@@ -4,12 +4,11 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-10-18 17:23:14
  * @LastEditors: luzhonglai
- * @LastEditTime: 2022-12-05 02:45:03
+ * @LastEditTime: 2022-12-05 10:43:10
  */
 
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin') // 代码压缩
-const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
 const  AutoImport = require('unplugin-auto-import/webpack')
 const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
