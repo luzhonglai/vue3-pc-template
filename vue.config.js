@@ -3,12 +3,16 @@
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
  * @Date: 2021-10-18 17:23:14
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-11 17:28:09
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2022-12-05 02:45:03
  */
+
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin') // 代码压缩
 const HardSourWebpackPlugin = require('hard-source-webpack-plugin')
+const  AutoImport = require('unplugin-auto-import/webpack')
+const Components = require('unplugin-vue-components/webpack')
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 
 const resolve = (dir) => {
   return path.join(__dirname, dir)
@@ -24,9 +28,11 @@ module.exports = {
   devServer: {
     port: 8080,
     open: true,
-    overlay: {
-      warnings: false,
-      errors: false
+    client: {
+      overlay: {
+        warnings: false, //不显示警告
+        errors: false   //不显示错误
+      }
     },
     proxy: {
       '/dev': {
@@ -61,6 +67,8 @@ module.exports = {
       .loader('pug-html-loader')
       .end()
 
+
+
     /* 生产部署处理 */
     config.when(IS_PROD, (config) => {
       config.plugin('TerserPlugin').use(
@@ -84,7 +92,18 @@ module.exports = {
     /* 开发处理 */
     config.when(IS_DEV, (config) => {
       config.optimization.runtimeChunk('single')
-      config.plugin('cache').use(HardSourWebpackPlugin)
     })
+  },
+
+  configureWebpack:{
+    plugins: [
+      AutoImport({
+        imports: ["vue", "vue-router"],
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
+    ],
   }
 }

@@ -3,8 +3,8 @@
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
  * @Date: 2021-08-14 11:21:29
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-09-04 18:41:01
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2022-12-05 01:55:55
  */
 
 /* --------------------------------- 性能监控试上传 -------------------------------- */
@@ -55,7 +55,7 @@ class Performance {
   async savePerformanceData(obj) {
     const performanceInfo = this.getPerformanceData()
     await Object.assign(performanceInfo, obj, {
-      timeSpan: new Date.now()
+      // timeSpan: new Date.now()
     })
     this.reqStallList.push(Object.assign({}, this.options, performanceInfo))
     await this.asyncSendReport()

@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Author: luzhonglai
+ * @Date: 2022-12-04 22:01:00
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2022-12-05 10:04:48
+ * @FilePath: \vue3-pc-template\src\views\hello.vue
+-->
 <script setup lang="ts">
 import { defineExpose, reactive, getCurrentInstance, onMounted, defineProps, toRefs, ref } from 'vue'
 const {
@@ -38,7 +46,11 @@ const state = reactive({
 
 const methods: any = {
   async getUserInfo() {
-    const res = await $api.test.test({ type: 'djradio', id: 1306231997 })
+    try {
+      const res = await $api.test.test({ type: 'djradio', id: 1306231997 })
+    } catch(e) {
+      
+    }
   },
   handleSizeChange() {},
   handleCurrentChange() {}
@@ -70,11 +82,16 @@ onMounted(() => {
 methods.getUserInfo()
 </script>
 <template>
-  <div>
-    <div>{{ state.num }}</div>
-    <button @click="methods.add"></button>
-    <div id="box"></div>
-  </div>
+  <div>{{ state.num }}</div>
+  <button @click="methods.add"></button>
+  <el-row class="mb-4">
+    <el-button>Default</el-button>
+    <el-button type="primary">Primary</el-button>
+    <el-button type="success">Success</el-button>
+    <el-button type="info">Info</el-button>
+    <el-button type="warning">Warning</el-button>
+    <el-button type="danger">Danger</el-button>
+  </el-row>
 </template>
 
 <style lang="less" scoped>

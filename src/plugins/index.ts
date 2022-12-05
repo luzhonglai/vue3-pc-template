@@ -3,13 +3,11 @@
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
  * @Date: 2021-08-14 16:42:38
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-15 10:34:44
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2022-12-05 10:04:43
  */
 
-import { createApp } from 'vue'
-
-export { setElement as setupElement } from '@/plugins/element'
+// export { setElement as setupElement } from '@/plugins/element'
 export { setupDirectives } from '@/plugins/directives'
 export { setupCustomComponents } from '@/plugins/globalComponent'
 export { setupGlobalMethods } from '@/plugins/globalMethods'

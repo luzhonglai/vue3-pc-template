@@ -1,15 +1,26 @@
-import router from './router'
+/*
+ * @Description: 
+ * @Author: luzhonglai
+ * @Date: 2022-12-04 22:01:00
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2022-12-05 02:53:56
+ * @FilePath: \vue3-pc-template\src\utils\permiussion.ts
+ */
+import router from '@/router'
+import store from '@/store'
 import NProgress from 'nprogress' // 引入进度条
 import 'nprogress/nprogress.css' // 进度条样式
-import store from '@/store'
 import wsCache from '@/utils/cache'
-import getPageTitle from '@/utils/getPageTitle'
-import { PermissionActionsType } from '@/store/modules/permission/actions'
 import { dispatchAction, setStoreState } from '@/store/utils'
+// import { PermissionActionsType } from '@/store/modules/permission/actions'
+
 
 const whiteList: string[] = ['/login'] // 白名单
-NProgress.configure({ showSpinner: false }) // NProgress configuration
 
+
+
+
+NProgress.configure({ showSpinner: false })
 router.beforeEach(async (to, from, next) => {
   // 获取用户token状态
   const hasToken = wsCache.get('token') || false
@@ -26,7 +37,7 @@ router.beforeEach(async (to, from, next) => {
         const accessoRoutes = await store.dispatch('permission/GenerateRoutes', roles)
 
         // 添加到路由
-        router.addRouters(accessoRoutes)
+        router.addRoute(accessoRoutes)
         // replace true 确保路由添加完毕
         next({ ...to, replace: true })
       } catch (error) {
@@ -48,6 +59,6 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.afterEach((to: any) => {
-  document.title = getPageTitle(to.meta.title, store.state.app.title)
+  document.title = to.meta.title || "",
   NProgress.done() // 结束进度条
 })
