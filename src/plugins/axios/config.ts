@@ -25,7 +25,7 @@ const axiosConfig: ConfigOptions = {
   isDebugInfo: true,
   isMock: false,
   isLocalMock: false,
-  resultCode: '1',
+  resultCode: '0',
   requestTimeout: 5000,
   defaultHeaders: 'application/json',
   ...config

@@ -4,12 +4,12 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-10-18 17:23:14
  * @LastEditors: luzhonglai
- * @LastEditTime: 2022-12-05 10:43:10
+ * @LastEditTime: 2023-02-20 14:13:48
  */
 
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin') // 代码压缩
-const  AutoImport = require('unplugin-auto-import/webpack')
+const AutoImport = require('unplugin-auto-import/webpack')
 const Components = require('unplugin-vue-components/webpack')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
 
@@ -30,13 +30,16 @@ module.exports = {
     client: {
       overlay: {
         warnings: false, //不显示警告
-        errors: false   //不显示错误
+        errors: false //不显示错误
       }
     },
     proxy: {
-      '/dev': {
-        target: 'https://api.imjad.cn',
-        changeOrigin: true
+      '/touguan': {
+        target: 'https://aims-qa.cicccapital.cn',
+        changeOrigin: true, //支持跨域
+        pathRewrite: {
+          '^/touguan': '/'
+        }
       }
     }
   },
@@ -66,8 +69,6 @@ module.exports = {
       .loader('pug-html-loader')
       .end()
 
-
-
     /* 生产部署处理 */
     config.when(IS_PROD, (config) => {
       config.plugin('TerserPlugin').use(
@@ -94,15 +95,15 @@ module.exports = {
     })
   },
 
-  configureWebpack:{
+  configureWebpack: {
     plugins: [
       AutoImport({
-        imports: ["vue", "vue-router"],
-        resolvers: [ElementPlusResolver()],
+        imports: ['vue', 'vue-router'],
+        resolvers: [ElementPlusResolver()]
       }),
       Components({
-        resolvers: [ElementPlusResolver()],
-      }),
-    ],
+        resolvers: [ElementPlusResolver()]
+      })
+    ]
   }
 }

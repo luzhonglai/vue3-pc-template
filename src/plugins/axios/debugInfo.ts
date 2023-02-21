@@ -4,7 +4,7 @@
  * @Author: ZhongLai Lu
  * @Date: 2021-02-05 14:26:10
  * @LastEditors: luzhonglai
- * @LastEditTime: 2022-12-05 02:53:03
+ * @LastEditTime: 2023-02-20 14:32:53
  */
 
 /**
@@ -15,7 +15,6 @@
  */
 export function debugInfo(options: any, error = '') {
   const { headers, method, url, params, baseURL, data } = options.config
-  debugger
   const requstConfig = {
     url,
     method,
@@ -33,10 +32,10 @@ export function debugInfo(options: any, error = '') {
     const code = error.substr(error.length - 3)
     stagingRes = '后端接口' + code + '异常'
   }
-  if (options.response.status == 200) {
+  if (options.status == 200) {
     stagingRes = options.data
   }
-  if (options.response.status == 404) {
+  if (options.status == 404) {
     stagingRes = options.message
   }
   console.group('%c当前请求详细信息：', 'background:#000;color:#bada55')

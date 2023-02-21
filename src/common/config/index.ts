@@ -3,8 +3,8 @@
  * @repository: https://github.com/luzhonglai
  * @Author: ZhongLai Lu
  * @Date: 2021-04-29 18:07:01
- * @LastEditors: Zhonglai Lu
- * @LastEditTime: 2021-11-24 14:41:19
+ * @LastEditors: luzhonglai
+ * @LastEditTime: 2023-02-20 14:14:18
  */
 
 /* --------------------------------- 环境配置 封装 -------------------------------- */
@@ -13,7 +13,7 @@ const mode = process.env.VUE_APP_MODE || 'prod'
 
 const EnvConfig = {
   dev: {
-    baseApi: '/dev',
+    baseApi: '/touguan',
     mockApi: 'https://www.fastmock.site/mock/c1c302e8baed9894c48c17e4738c092e/api'
   },
   test: {

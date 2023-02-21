@@ -3,95 +3,76 @@
  * @Author: luzhonglai
  * @Date: 2022-12-04 22:01:00
  * @LastEditors: luzhonglai
- * @LastEditTime: 2022-12-05 10:04:48
+ * @LastEditTime: 2023-02-21 18:26:11
  * @FilePath: \vue3-pc-template\src\views\hello.vue
 -->
 <script setup lang="ts">
-import { defineExpose, reactive, getCurrentInstance, onMounted, defineProps, toRefs, ref } from 'vue'
+import { defineExpose, reactive, getCurrentInstance, onMounted } from 'vue'
 const {
-  proxy: { $api, $fetch, $wsCache, $echarts }
+  proxy: { $api, $fetch, $wsCache }
 }: any = getCurrentInstance() // 获取挂在全局方法
+import { searchFormConfig } from './test'
 
 const state = reactive({
-  pagination: {
-    currentPage: 1,
-    pageSizes: [10, 20, 30],
-    pageSize: 10,
-    total: 0
-  },
-  tableData: [
-    {
-      date: '2016-05-02',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1518 弄'
-    },
-    {
-      date: '2016-05-04',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1517 弄'
-    },
-    {
-      date: '2016-05-01',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1519 弄'
-    },
-    {
-      date: '2016-05-03',
-      name: '王小虎',
-      address: '上海市普陀区金沙江路 1516 弄'
-    }
-  ],
-  num: 111
+  searchFormConfig
 })
-
 const methods: any = {
   async getUserInfo() {
-    try {
-      const res = await $api.test.test({ type: 'djradio', id: 1306231997 })
-    } catch(e) {
-      
-    }
+    //  const res = await $api.test.findChildOptions({
+    //    currentPage: 1,
+    //    keyWord: {},
+    //    parentApiName: 'country',
+    //    parentValue: 'ZM'
+    //  })
+    // const { result } = await $api.test.getFormOp()
+    const result = searchFormConfig.result
+    state.searchFormConfig.formItems = []
+
+    const mdataList = result.layout.sections.chosedPools
+    const objRules = result.describe.fields
+    debugger
+    state.searchFormConfig.modelValue = {}
+    mdataList.map((item) => {
+      if (item.isActive == false) return
+      const key = item.apiName
+
+      if (item.apiName == 'Field_34ti__u') {
+        Object.values(item.subFields).map((items: any) => {
+          if (items.isActive) {
+            const key = items.apiName
+            items['field'] = key
+            items.type = 'select'
+            items['options'] = []
+            items.config = objRules[key].config
+            state.searchFormConfig.modelValue[key] = ''
+            state.searchFormConfig.formItems.push(items)
+          }
+        })
+      } else {
+        item['field'] = key
+        ;['text'].includes(item.type) && (item.type = 'input')
+        ;['long_text'].includes(item.type) && (item.type = 'textarea')
+        ;['select_one'].includes(item.type) && (item.type = 'select')
+        item.dateFormat && (item.dateFormat = item.dateFormat.toUpperCase()).replaceAll('-', '/')
+        item.selectOptions && (item['options'] = item.selectOptions)
+        item.config = objRules[key].config
+        state.searchFormConfig.modelValue[key] = ''
+        state.searchFormConfig.formItems.push(item)
+      }
+    })
+    console.log(searchFormConfig)
   },
   handleSizeChange() {},
   handleCurrentChange() {}
 }
 
-const myEcharts = () => {
-  console.log($echarts, '----')
-  const mycharts = $echarts.init(document.getElementById('box'))
-  const options = {
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        data: [150, 230, 224, 218, 135, 147, 260],
-        type: 'line'
-      }
-    ]
-  }
-  mycharts.setOption(options)
-}
 onMounted(() => {
-  myEcharts()
+  // myEcharts()
+  methods.getUserInfo()
 })
-methods.getUserInfo()
 </script>
 <template>
-  <div>{{ state.num }}</div>
-  <button @click="methods.add"></button>
-  <el-row class="mb-4">
-    <el-button>Default</el-button>
-    <el-button type="primary">Primary</el-button>
-    <el-button type="success">Success</el-button>
-    <el-button type="info">Info</el-button>
-    <el-button type="warning">Warning</el-button>
-    <el-button type="danger">Danger</el-button>
-  </el-row>
+  <Form v-bind="state.searchFormConfig"></Form>
 </template>
 
 <style lang="less" scoped>
